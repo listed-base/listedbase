@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declarationMap": true,
+    "declaration": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "lib": ["es2022", "dom"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2022",
+    "customConditions": ["@listedbase/source"],
+    "paths": {
+      "@listedbase/uni-reactive": [
+        "packages/uni-reactive/core/src/index.ts"
+      ],
+      "@listedbase/angular-reactive": [
+        "packages/uni-reactive/adapters/angular-reactive/src/index.ts"
+      ]
+    }
+  }
+}
