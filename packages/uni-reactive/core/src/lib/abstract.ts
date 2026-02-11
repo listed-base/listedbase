@@ -86,14 +86,11 @@ export interface UniRBaseController<T> {
  * const count = adapter.from(0)
  * count.modify(v => v + 1)
  * count.set(10)
- * console.log(count.state)
+ * console.log(count.value)
  * ```
  */
-export interface UniRControllerInterface<
-T,
-ReactiveType=any,
- StatusType=any
-> extends UniRBaseController<T> {
+export interface UniRControllerInterface<T, ReactiveType, StatusType>
+  extends UniRBaseController<T> {
   /**
    * Framework-native reactive primitive.
    *
@@ -117,7 +114,7 @@ ReactiveType=any,
    * - Solid: Accessor<T>
    * - RxJS: Observable<T>
    */
-  state: StatusType;
+  value: StatusType;
 }
 
 /* ============================================================
@@ -146,33 +143,42 @@ ReactiveType=any,
  * })
  *
  * user.refresh()
- * console.log(user.state, user.status, user.error)
+ * console.log(user.value, user.status, user.error)
  * ```
  */
-export interface UniRAsyncControllerInterface<T> extends UniRBaseController<T> {
+export interface UniRAsyncControllerInterface<
+  T,
+  AsyncReactuveType,
+  ValueType,
+  StatusReactiveType,
+  ErrorReactiveType,
+  StatusValueType,
+  ErrorValueType
+> extends UniRBaseController<T> {
   /** Internal reactive primitive for the value */
-  reactive: unknown;
+  reactive: AsyncReactuveType;
 
   /** Read-only derived state */
-  state: unknown;
+  value: ValueType;
 
   /**
    * INTERNAL reactive status primitive.
    * Adapter-controlled.
    */
-  statusReactive: unknown;
+  statusReactive: StatusReactiveType;
 
   /**
    * INTERNAL reactive error primitive.
    * Adapter-controlled.
    */
-  errorReactive: unknown;
+  errorReactive: ErrorReactiveType;
 
   /** Read-only status */
-  status: unknown;
+  status: StatusValueType;
+
 
   /** Read-only error */
-  error: unknown;
+  error: ErrorValueType;
 
   /** Re-trigger source resolution */
   refresh(): boolean;
@@ -201,16 +207,16 @@ export interface UniRAsyncControllerInterface<T> extends UniRBaseController<T> {
  * const adapter = new UniRAngular()
  *
  * const count = adapter.from(0)
- * const doubled = adapter.computed(() => count.state * 2)
+ * const doubled = adapter.computed(() => count.value * 2)
  *
  * adapter.effect(() => {
- *   console.log(count.state)
+ *   console.log(count.value)
  * })
  * ```
  */
 export interface UniRAdapterInterface {
   /** Create a local reactive state */
-  from<T>(initialValue: T): UniRControllerInterface<T>;
+  from<T>(initialValue: T): UniRControllerInterface<T, unknown, unknown>;
 
   /** Create a derived/source-based reactive state */
   fromAsync<T, P>(
@@ -218,7 +224,7 @@ export interface UniRAdapterInterface {
     reactiveParams?: unknown,
     defaultValue?: T,
     ...deps: any
-  ): UniRAsyncControllerInterface<T>;
+  ): UniRAsyncControllerInterface<T, unknown, unknown, unknown, unknown, unknown, unknown>;
 
   /** Create a computed/derived reactive value */
   computed<T>(compute: () => T, ...deps: any[]): T;
