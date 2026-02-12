@@ -89,9 +89,9 @@ class AngularDerivedController<T, P>
   error: Signal<ErrorType | null>;
 
   constructor(
-    private loader: (params?: P) => Promise<T>,
-    private params: Signal<P>,
-    private defaultValue: T,
+    public loader: (params?: P) => Promise<T>,
+    public params?: Signal<P>,
+    public defaultValue?: T,
     ...deps: any
   ) {
     this.statusReactive = signal<StatusType>('idle');
@@ -101,7 +101,7 @@ class AngularDerivedController<T, P>
     this.error = this.errorReactive.asReadonly();
 
     this.reactive = resource({
-      params: () => ({ q: this.params() }),
+      params: () => ({ q: this.params?.() }),
       loader: ({ params }) => this.loader(params.q),
       defaultValue: this.defaultValue,
     });
@@ -150,8 +150,8 @@ export class UinRAngular implements UniRAdapterInterface {
 
   fromAsync<T, P>(
     loader: (params?: P) => Promise<T>,
-    params: Signal<P>,
-    defaultValue: T,
+    params?: Signal<P>,
+    defaultValue?: T,
   ) {
     return new AngularDerivedController<T, P>(
       loader,

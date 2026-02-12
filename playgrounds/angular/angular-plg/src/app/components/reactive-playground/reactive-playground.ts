@@ -3,7 +3,6 @@ import {
   Component,
   inject,
   Injector,
-  OnInit,
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -26,7 +25,7 @@ export interface User {
   imports: [CommonModule],
   standalone: true,
 })
-export class ReactivePlaygroundComponent implements OnInit {
+export class ReactivePlaygroundComponent {
   injector = inject(Injector);
   reactiveAdp = new UinRAngular(this.injector);
 
@@ -51,35 +50,28 @@ export class ReactivePlaygroundComponent implements OnInit {
 
   // 2️⃣ Async
   query = signal('');
-  protected users = this.reactiveAdp.fromAsync<User[], string>(
+  public users = this.reactiveAdp.fromAsync<User[], string>(
     (p) => this.fetchUsers(p),
     this.query,
-    [],
   );
 
-  ngOnInit() {
-    // Fetch users on component init
-    this.fetchUsers();
+  updateQuery(newQuery: string) {
+    this.query.update(() => newQuery);
   }
 
-  private async fetchUsers() {
-    try {
+  private async fetchUsers(query?: string) {
+  
       const response = await fetch(
-        'https://jsonplaceholder.typicode.com/users',
+        'https://jsonplaceholder.typicode.com/users/' + (query ? `?username=${query}` : ''),
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data: User[] = await response.json();
-      this.users.set(data);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      this.users.set([]);
-    }
-    }
+      console.log(data);
+      
+      return data;
   }
 
-  get isLoading(): boolean {
-    return !this.users.value() || this.users.value().length === 0;
-  }
+  
 }

@@ -221,7 +221,7 @@ export interface UniRAdapterInterface {
   /** Create a derived/source-based reactive state */
   fromAsync<T, P>(
     loader: (params?: P) => Promise<T>,
-    reactiveParams?: unknown,
+    params?: unknown,
     defaultValue?: T,
     ...deps: any
   ): UniRAsyncControllerInterface<T, unknown, unknown, unknown, unknown, unknown, unknown>;
