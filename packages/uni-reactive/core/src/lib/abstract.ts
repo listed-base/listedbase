@@ -190,6 +190,50 @@ export interface UniRAsyncControllerInterface<
   setError(error: ErrorType | null): void;
 }
 
+export interface UniRStreamControllerInterface<
+  T,
+  StreamReactiveType,
+  ValueType,
+  StatusReactiveType,
+  ErrorReactiveType,
+  StatusValueType,
+  ErrorValueType
+> extends UniRBaseController<T> {
+  /** Internal reactive primitive for the value */
+  reactive: StreamReactiveType;
+  
+  /** Read-only derived state */
+  value: ValueType;
+  /**
+   * INTERNAL reactive status primitive.
+   * Adapter-controlled.
+   */
+  statusReactive: StatusReactiveType;
+
+  /**
+   * INTERNAL reactive error primitive.
+   * Adapter-controlled.
+   */
+  errorReactive: ErrorReactiveType;
+
+  /** Read-only status */
+  status: StatusValueType;
+
+  /** Read-only error */
+  error: ErrorValueType;
+
+  /** Re-trigger source resolution */
+  refresh(): boolean;
+
+  /** Manually update status */
+  setStatus(status: StatusType): void;
+
+  /** Manually set or clear error */
+  setError(error: ErrorType | null): void;
+}
+
+
+
 /* ============================================================
  * ADAPTER INTERFACE
  * ============================================================ */
@@ -226,8 +270,10 @@ export interface UniRAdapterInterface {
     ...deps: any
   ): UniRAsyncControllerInterface<T, unknown, unknown, unknown, unknown, unknown, unknown>;
 
+  fromStream?<T>(stream: unknown): UniRStreamControllerInterface<T, unknown, unknown, unknown, unknown, unknown, unknown>;
   /** Create a computed/derived reactive value */
-  computed<T>(compute: () => T, ...deps: any[]): T;
+  linked?<T>(compute: () => T, ...deps: any[]): UniRControllerInterface<T, unknown, unknown>;
+  drived?<T>(compute: () => T, ...deps: any[]): unknown;
 
   /** Register a reactive side-effect */
   effect(fn: () => void, ...deps: any[]): void;

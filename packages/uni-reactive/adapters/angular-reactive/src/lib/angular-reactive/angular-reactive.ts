@@ -18,6 +18,9 @@ import {
   resource,
   ResourceRef,
   Injector,
+  computed,
+  linkedSignal,
+  ValueEqualityFn,
 } from '@angular/core';
 
 import {
@@ -40,13 +43,40 @@ class AngularFromController<T>
   /** Read-only signal exposed to consumers */
   value: Signal<T>;
 
-  constructor(initialValue: T) {
+  constructor(initialValue: T ) {
     this.reactive = signal(initialValue);
     this.value = this.reactive.asReadonly();
   }
 
   modify(fn: (current: T) => T): void {
     this.reactive.update(fn);
+  }
+
+  set(value: T): void {
+    this.reactive.set(value);
+  }
+}
+
+class AngularLinkedController<T>
+  implements UniRControllerInterface<T, WritableSignal<T>, Signal<T>>
+{
+  /** Angular linked signal (internal) */
+  reactive: WritableSignal<T>;
+
+  /** Read-only signal exposed to consumers */
+  value: Signal<T>;
+
+  constructor(compute: () => T,  options?: {
+    equal?: ValueEqualityFn<NoInfer<T>> | undefined;
+    debugName?: string;
+} | undefined) {
+    this.reactive = linkedSignal(compute, options);
+    this.value = this.reactive.asReadonly();
+  }
+
+  modify(fn: (current: T) => T): void {
+   
+  this.reactive.update(fn);
   }
 
   set(value: T): void {
@@ -161,8 +191,11 @@ export class UinRAngular implements UniRAdapterInterface {
     );
   }
 
-  computed<T>(compute: () => T): T {
-    return compute();
+  linked<T>(compute: () => T, ...deps: any[]): UniRControllerInterface<T, WritableSignal<T>, Signal<T>> {
+    return new AngularLinkedController<T>(compute, ...deps);
+  }
+  derived<T>(compute: () => T): Signal<T> {
+    return computed(compute);
   }
 
   effect(fn: () => void): void {
