@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "declarationMap": true,
-    "declaration": true,
+    "declarationMap": false,
+    "declaration": false,
     "importHelpers": true,
     "isolatedModules": true,
     "lib": ["es2022", "dom"],
@@ -18,12 +18,11 @@
     "target": "es2022",
     "customConditions": ["@listedbase/source"],
     "paths": {
-      "@listedbase/uni-reactive": [
-        "packages/uni-reactive/core/src/index.ts"
-      ],
+      "@listedbase/uni-reactive": ["packages/uni-reactive/core/src/index.ts"],
       "@listedbase/angular-reactive": [
         "packages/uni-reactive/adapters/angular-reactive/src/index.ts"
-      ]
+      ],
+      "@listedbase/duct": ["packages/duct/core/src/index.ts"]
     }
   }
 }

@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UinRAngular } from '@listedbase/angular-reactive';
-import { uniReactive } from '@listedbase/uni-reactive';
 
 export interface User {
   id: number;
@@ -29,23 +28,20 @@ export class ReactivePlaygroundComponent {
   injector = inject(Injector);
   reactiveAdp = new UinRAngular(this.injector);
 
-  constructor() {
-    uniReactive(this.reactiveAdp);
-  }
-
-  protected items = this.reactiveAdp.from(['العنصر 1', 'العنصر 2', 'العنصر 3']);
-  protected newItem = this.reactiveAdp.from('');
+  items = this.reactiveAdp.from<string[]>(['العنصر 1', 'العنصر 2', 'العنصر 3']);
+  newItem = this.reactiveAdp.from<string>('');
 
   addItem() {
     const item = this.newItem.value().trim();
     if (item) {
-      this.items.modify((list) => [...list, item]);
-      this.newItem.set('');
+      this.items.modify((list) => [...(list as string[]), item]);
     }
   }
 
   removeItem(index: number) {
-    this.items.modify((list) => list.filter((_, i) => i !== index));
+    this.items.modify((list) =>
+      (list as string[]).filter((_, i) => i !== index),
+    );
   }
 
   // 2️⃣ Async
@@ -60,18 +56,16 @@ export class ReactivePlaygroundComponent {
   }
 
   private async fetchUsers(query?: string) {
-  
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/users/' + (query ? `?username=${query}` : ''),
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data: User[] = await response.json();
-      console.log(data);
-      
-      return data;
-  }
+    const response = await fetch(
+      'https://jsonplaceholder.typicode.com/users/' +
+        (query ? `?username=${query}` : ''),
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data: User[] = await response.json();
+    console.log(data);
 
-  
+    return data;
+  }
 }

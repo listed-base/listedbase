@@ -19,12 +19,15 @@
     "@nx/js": "22.4.5",
     "@nx/playwright": "22.4.5",
     "@nx/react": "^22.4.5",
+    "@nx/rollup": "22.4.5",
+    "@nx/vite": "22.4.5",
     "@nx/vitest": "22.4.5",
     "@nx/vue": "^22.4.5",
     "@nx/web": "22.4.5",
     "@playwright/test": "^1.36.0",
     "@schematics/angular": "~21.1.0",
     "@swc-node/register": "~1.9.1",
+    "@swc/cli": "~0.6.0",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
     "@types/node": "20.19.9",
@@ -42,6 +45,8 @@
     "postcss": "^8.4.5",
     "postcss-url": "~10.1.3",
     "prettier": "~3.6.2",
+    "rollup": "^4.14.0",
+    "swc-loader": "0.1.15",
     "tailwindcss": "^3.0.2",
     "tslib": "^2.3.0",
     "typescript": "~5.9.2",
@@ -52,7 +57,8 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/uni-reactive/*"
+    "packages/uni-reactive/*",
+    "packages/duct/*"
   ],
   "dependencies": {
     "@angular/common": "~21.1.0",

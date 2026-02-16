@@ -26,61 +26,72 @@ import {
 import {
   UniRAdapterInterface,
   UniRControllerInterface,
-  UniRAsyncControllerInterface,
   StatusType,
   ErrorType,
+  AbstractController,
+  AbstractAsyncController,
 } from '@listedbase/uni-reactive';
 
 /* ============================================================
  * FROM / LOCAL CONTROLLER
  * ============================================================ */
-class AngularFromController<T>
-  implements UniRControllerInterface<T, WritableSignal<T>, Signal<T>>
-{
+class AngularFromController<T> extends AbstractController<
+  T,
+  WritableSignal<T>,
+  Signal<T>
+> {
   /** Writable Angular signal (internal) */
   reactive: WritableSignal<T>;
 
   /** Read-only signal exposed to consumers */
   value: Signal<T>;
 
-  constructor(initialValue: T ) {
+  constructor(initialValue: T) {
+    super();
     this.reactive = signal(initialValue);
     this.value = this.reactive.asReadonly();
   }
 
-  modify(fn: (current: T) => T): void {
-    this.reactive.update(fn);
+  protected set(value: T): void {
+    this.reactive.set(value);
   }
 
-  set(value: T): void {
-    this.reactive.set(value);
+  protected update(fn: (current: T) => T): void {
+    this.reactive.update(fn);
   }
 }
 
-class AngularLinkedController<T>
-  implements UniRControllerInterface<T, WritableSignal<T>, Signal<T>>
-{
+class AngularLinkedController<T> extends AbstractController<
+  T,
+  WritableSignal<T>,
+  Signal<T>
+> {
   /** Angular linked signal (internal) */
   reactive: WritableSignal<T>;
 
   /** Read-only signal exposed to consumers */
   value: Signal<T>;
 
-  constructor(compute: () => T,  options?: {
-    equal?: ValueEqualityFn<NoInfer<T>> | undefined;
-    debugName?: string;
-} | undefined) {
+  constructor(
+    compute: () => T,
+    options?:
+      | {
+          equal?: ValueEqualityFn<NoInfer<T>> | undefined;
+          debugName?: string;
+        }
+      | undefined,
+  ) {
+    super();
     this.reactive = linkedSignal(compute, options);
     this.value = this.reactive.asReadonly();
   }
 
-  modify(fn: (current: T) => T): void {
-   
-  this.reactive.update(fn);
+  protected set(value: T): void {
+    this.reactive.set(value);
   }
 
-  set(value: T): void {
-    this.reactive.set(value);
+  protected update(fn: (current: T) => T): void {
+    this.reactive.update(fn);
   }
 }
 
@@ -88,18 +99,15 @@ class AngularLinkedController<T>
  * DERIVED / SOURCE CONTROLLER
  * ============================================================ */
 
-class AngularDerivedController<T, P>
-  implements
-    UniRAsyncControllerInterface<
-      T,
-      ResourceRef<T | undefined>,
-      Signal<T | undefined>,
-      WritableSignal<StatusType>,
-      WritableSignal<ErrorType | null>,
-      Signal<StatusType>,
-      Signal<ErrorType | null>
-    >
-{
+class AngularAsyncController<T, P> extends AbstractAsyncController<
+  T,
+  ResourceRef<T | undefined>,
+  Signal<T | undefined>,
+  WritableSignal<StatusType>,
+  WritableSignal<ErrorType | null>,
+  Signal<StatusType>,
+  Signal<ErrorType | null>
+> {
   /** Angular resource primitive */
   reactive: ResourceRef<T | undefined>;
 
@@ -124,6 +132,7 @@ class AngularDerivedController<T, P>
     public defaultValue?: T,
     ...deps: any
   ) {
+    super();
     this.statusReactive = signal<StatusType>('idle');
     this.errorReactive = signal<ErrorType | null>(null);
 
@@ -139,12 +148,12 @@ class AngularDerivedController<T, P>
     this.value = this.reactive.asReadonly().value;
   }
 
-  modify(fn: (current: T | undefined) => T): void {
-    this.reactive.update(fn);
+  protected set(value: T): void {
+    this.reactive.set(value);
   }
 
-  set(value: T): void {
-    this.reactive.set(value);
+  protected update(fn: (current: T | undefined) => T): void {
+    this.reactive.update(fn);
   }
 
   refresh() {
@@ -159,6 +168,7 @@ class AngularDerivedController<T, P>
   setError(error: ErrorType | null): void {
     this.errorReactive.set(error);
   }
+
 }
 
 /* ============================================================
@@ -183,7 +193,7 @@ export class UinRAngular implements UniRAdapterInterface {
     params?: Signal<P>,
     defaultValue?: T,
   ) {
-    return new AngularDerivedController<T, P>(
+    return new AngularAsyncController<T, P>(
       loader,
       params,
       defaultValue,
@@ -191,7 +201,10 @@ export class UinRAngular implements UniRAdapterInterface {
     );
   }
 
-  linked<T>(compute: () => T, ...deps: any[]): UniRControllerInterface<T, WritableSignal<T>, Signal<T>> {
+  linked<T>(
+    compute: () => T,
+    ...deps: any[]
+  ): UniRControllerInterface<T, Signal<T>> {
     return new AngularLinkedController<T>(compute, ...deps);
   }
   derived<T>(compute: () => T): Signal<T> {
@@ -199,6 +212,6 @@ export class UinRAngular implements UniRAdapterInterface {
   }
 
   effect(fn: () => void): void {
-    effect(fn);
+    effect(fn, { injector: this.injector });
   }
 }

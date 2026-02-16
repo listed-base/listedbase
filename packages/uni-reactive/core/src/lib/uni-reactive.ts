@@ -1,4 +1,4 @@
-import { UniRAdapterInterface } from './abstract.js';
+import { UniRAdapterInterface } from './types.js';
 
 
 export function createUniReactive() {
@@ -21,5 +21,5 @@ export function createUniReactive() {
   return uniReactive;
 }
 
-export const uniReactive = createUniReactive();
+export const uniReactive = createUniReactive(); 
 

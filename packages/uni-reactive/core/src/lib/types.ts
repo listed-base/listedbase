@@ -15,6 +15,7 @@
  * to native reactive primitives.
  */
 
+
 /* ============================================================
  * PUBLIC TYPES
  * ============================================================ */
@@ -45,6 +46,12 @@ export interface ErrorType {
  * Defines how state can be mutated.
  * Does NOT define how state is stored.
  */
+
+export type Updater<T>= (prv: T | undefined) => T | T  
+
+export  function isUpdater<T>(value: Updater<T>): value is Updater<T> { 
+  return typeof value === 'function';
+}
 export interface UniRBaseController<T> {
   /**
    * Modify the current state using a function.
@@ -56,12 +63,9 @@ export interface UniRBaseController<T> {
    * - Solid: setter(fn)
    * - RxJS: subject.next(fn(prev))
    */
-  modify(fn: (current: T | undefined) => T): void;
+  modify(updater: Updater<T>): void;
 
-  /**
-   * Directly replace the current state.
-   */
-  set(value: T): void;
+  
 }
 
 /* ============================================================
@@ -89,7 +93,7 @@ export interface UniRBaseController<T> {
  * console.log(count.value)
  * ```
  */
-export interface UniRControllerInterface<T, ReactiveType, StatusType>
+export interface UniRControllerInterface<T, ValueType>
   extends UniRBaseController<T> {
   /**
    * Framework-native reactive primitive.
@@ -102,7 +106,6 @@ export interface UniRControllerInterface<T, ReactiveType, StatusType>
    * - Vue: Ref<T>
    * - RxJS: BehaviorSubject<T>
    */
-  reactive: ReactiveType;
 
   /**
    * Read-only reactive state exposed to consumers.
@@ -114,7 +117,7 @@ export interface UniRControllerInterface<T, ReactiveType, StatusType>
    * - Solid: Accessor<T>
    * - RxJS: Observable<T>
    */
-  value: StatusType;
+  value: ValueType;
 }
 
 /* ============================================================
@@ -148,30 +151,14 @@ export interface UniRControllerInterface<T, ReactiveType, StatusType>
  */
 export interface UniRAsyncControllerInterface<
   T,
-  AsyncReactuveType,
   ValueType,
-  StatusReactiveType,
-  ErrorReactiveType,
   StatusValueType,
   ErrorValueType
 > extends UniRBaseController<T> {
   /** Internal reactive primitive for the value */
-  reactive: AsyncReactuveType;
 
   /** Read-only derived state */
   value: ValueType;
-
-  /**
-   * INTERNAL reactive status primitive.
-   * Adapter-controlled.
-   */
-  statusReactive: StatusReactiveType;
-
-  /**
-   * INTERNAL reactive error primitive.
-   * Adapter-controlled.
-   */
-  errorReactive: ErrorReactiveType;
 
   /** Read-only status */
   status: StatusValueType;
@@ -190,47 +177,7 @@ export interface UniRAsyncControllerInterface<
   setError(error: ErrorType | null): void;
 }
 
-export interface UniRStreamControllerInterface<
-  T,
-  StreamReactiveType,
-  ValueType,
-  StatusReactiveType,
-  ErrorReactiveType,
-  StatusValueType,
-  ErrorValueType
-> extends UniRBaseController<T> {
-  /** Internal reactive primitive for the value */
-  reactive: StreamReactiveType;
-  
-  /** Read-only derived state */
-  value: ValueType;
-  /**
-   * INTERNAL reactive status primitive.
-   * Adapter-controlled.
-   */
-  statusReactive: StatusReactiveType;
 
-  /**
-   * INTERNAL reactive error primitive.
-   * Adapter-controlled.
-   */
-  errorReactive: ErrorReactiveType;
-
-  /** Read-only status */
-  status: StatusValueType;
-
-  /** Read-only error */
-  error: ErrorValueType;
-
-  /** Re-trigger source resolution */
-  refresh(): boolean;
-
-  /** Manually update status */
-  setStatus(status: StatusType): void;
-
-  /** Manually set or clear error */
-  setError(error: ErrorType | null): void;
-}
 
 
 
@@ -249,7 +196,6 @@ export interface UniRStreamControllerInterface<
  * @example
  * ```ts
  * const adapter = new UniRAngular()
- *
  * const count = adapter.from(0)
  * const doubled = adapter.computed(() => count.value * 2)
  *
@@ -260,21 +206,23 @@ export interface UniRStreamControllerInterface<
  */
 export interface UniRAdapterInterface {
   /** Create a local reactive state */
-  from<T>(initialValue: T): UniRControllerInterface<T, unknown, unknown>;
+  from<T>(initialValue: T): UniRControllerInterface<T, unknown>;
 
   /** Create a derived/source-based reactive state */
   fromAsync<T, P>(
     loader: (params?: P) => Promise<T>,
     params?: unknown,
     defaultValue?: T,
-    ...deps: any
-  ): UniRAsyncControllerInterface<T, unknown, unknown, unknown, unknown, unknown, unknown>;
+    ...deps: unknown[]
+  ): UniRAsyncControllerInterface<T, unknown, unknown, unknown>;
 
-  fromStream?<T>(stream: unknown): UniRStreamControllerInterface<T, unknown, unknown, unknown, unknown, unknown, unknown>;
   /** Create a computed/derived reactive value */
-  linked?<T>(compute: () => T, ...deps: any[]): UniRControllerInterface<T, unknown, unknown>;
-  drived?<T>(compute: () => T, ...deps: any[]): unknown;
+  linked?<T>(compute: () => T, ...deps: unknown[]): UniRControllerInterface<T, unknown>;
+  derived?<T>(compute: () => T, ...deps: unknown[]): unknown;
 
   /** Register a reactive side-effect */
-  effect(fn: () => void, ...deps: any[]): void;
+  effect(fn: () => void, ...deps: unknown[]): void;
 }
+
+// helpers
+export { AbstractBaseController, AbstractController, AbstractAsyncController } from './abstract-controllers';
