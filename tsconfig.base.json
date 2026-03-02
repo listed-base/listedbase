@@ -22,7 +22,8 @@
       "@listedbase/angular-reactive": [
         "packages/uni-reactive/adapters/angular-reactive/src/index.ts"
       ],
-      "@listedbase/duct": ["packages/duct/core/src/index.ts"]
+      "@listedbase/duct": ["packages/duct/core/src/index.ts"],
+      "@listedbase/core": ["packages/core/src/index.ts"]
     }
   }
 }

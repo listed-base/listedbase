@@ -9,6 +9,7 @@
  * - Derived state → resource()
  * - State view    → Signal<T>
  */
+import { Container, inject, injectable } from 'inversify';
 
 import {
   signal,
@@ -30,6 +31,8 @@ import {
   ErrorType,
   AbstractController,
   AbstractAsyncController,
+  container,
+  REACTIVE_ADAPTER
 } from '@listedbase/uni-reactive';
 
 /* ============================================================
@@ -180,7 +183,7 @@ class AngularAsyncController<T, P> extends AbstractAsyncController<
  *
  * Maps Angular reactive primitives to uniReactive interfaces.
  */
-
+@injectable()
 export class UinRAngular implements UniRAdapterInterface {
   constructor(private injector: Injector) {}
 
@@ -215,3 +218,4 @@ export class UinRAngular implements UniRAdapterInterface {
     effect(fn, { injector: this.injector });
   }
 }
+

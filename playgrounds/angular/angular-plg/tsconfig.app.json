@@ -12,6 +12,7 @@
     },
     {
       "path": "../../../packages/uni-reactive/adapters/angular-reactive/tsconfig.lib.json"
-    }
+    },
+   
   ]
 }

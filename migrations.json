@@ -1,0 +1,9 @@
+{
+  "nx-console": {
+    "initialGitRef": {
+      "ref": "6a21f7d8fa3f8105acff681e2cef5d2e2b7a75b0",
+      "subject": "feat: restructure uni-reactive library and introduce duct system"
+    },
+    "targetVersion": "latest"
+  }
+}
