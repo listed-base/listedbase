@@ -7,9 +7,7 @@
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "references": [
-    {
-      "path": "../../../packages/uni-reactive/core/tsconfig.lib.json"
-    },
+ 
     {
       "path": "../../../packages/uni-reactive/adapters/angular-reactive/tsconfig.lib.json"
     },

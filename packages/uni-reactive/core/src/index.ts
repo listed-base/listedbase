@@ -1,12 +1,37 @@
-import { TypedContainer } from '@inversifyjs/strongly-typed';
-import { Container } from 'inversify';
-import { UniRAdapterInterface } from './lib/types.js';
+
+// core/types.ts
+// core/types.ts
+export interface ReactiveTypeMap<T> {
+  default: T
+}
+
+/**
+ * كل adapter يضيف المفتاح الخاص به هنا
+ */
+export interface RegisteredReactiveAdapters { }
+
+export type ActiveReactiveKind = keyof RegisteredReactiveAdapters
+
+export type TReadonlyState<T> =
+  ReactiveTypeMap<T>[ActiveReactiveKind]
 
 
-export * from './lib/types.js';
-export * from './lib/abstract-controllers.js';
 
-export * from './lib/from.js';
+export interface IReactive<T> {
+  value: TReadonlyState<T>
+  modify: (next: (prev: T) => T) => void
+  init(initial: T): void
+}
 
-export const container = new TypedContainer<UniRAdapterInterface>()
-export const  REACTIVE_ADAPTER  = Symbol.for('UniRAdapterInterface');
+export type ReactiveFactory = <T>() => IReactive<T>;
+
+let factory: ReactiveFactory | null = null;
+
+export function registerReactive(f: ReactiveFactory) {
+  factory = f;
+}
+
+export function createReactive<T>(): IReactive<T> {
+  if (!factory) throw new Error("Reactive adapter not registered");
+  return factory<T>();
+}

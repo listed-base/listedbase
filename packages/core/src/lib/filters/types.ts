@@ -1,4 +1,3 @@
-import { UniRControllerInterface } from '@listedbase/uni-reactive';
 // الترتيب التصاعدي أو التنازلي
 export type SortOrder = 'asc' | 'desc'
 
@@ -123,6 +122,5 @@ export interface CreateInput<T> {
 
 
 
-export  type LReactiveFilterType<T> = UniRControllerInterface<LFilterInput<T>, unknown>
 
 

@@ -1,0 +1,39 @@
+// Uncomment this line to use CSS modules
+// import styles from './app.module.css';
+import NxWelcome from './nx-welcome';
+import { reactReactive } from "@listedbase/react-reactive";
+import { registerReactive } from '@listedbase/uni-reactive';
+registerReactive(reactReactive)
+
+import { lField, lSchema, list } from '@listedbase/core';
+import { z } from 'zod/v4';
+
+
+
+const sUser = lSchema({
+    name: 'users',
+    fields: {
+        id: lField.id.autouuid(),
+        name: lField.index(z.string()),
+        age: z.number().optional(),
+    }
+})
+
+const users = list(sUser);
+
+
+users.create({
+    name: 'Alice',
+})
+
+console.log(users.items);
+
+export function App() {
+  return (
+    <div>
+      <NxWelcome title="react-plg" />
+    </div>
+  );
+}
+
+export default App;

@@ -1,0 +1,9 @@
+{
+  "name": "vue-plg-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "playgrounds/vue-e2e/src",
+  "implicitDependencies": ["vue-plg"],
+  "// targets": "to see all targets run: nx show project vue-plg-e2e --web",
+  "targets": {}
+}
