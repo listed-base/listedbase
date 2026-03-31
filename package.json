@@ -2,7 +2,9 @@
   "name": "@listedbase/source",
   "version": "0.0.1",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "autopush": "git add . && git commit -m \"Auto-commit: Changes saved on $(date)\" && git push origin main"
+  },
   "private": true,
   "devDependencies": {
     "@angular-devkit/core": "21.1.4",

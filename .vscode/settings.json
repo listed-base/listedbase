@@ -1,8 +1,11 @@
 {
-  "runOnSave.commands": [
-    {
-      "match": ".*",
-      "cmd": "task Auto Git Push" 
-    }
-  ]
+  "achilleshr.runonsave": {
+    "commands": [
+      {
+        // Run whenever any file is saved
+        "match": ".*",
+        "cmd": "npm run autopush"
+      }
+    ]
+  }
 }
