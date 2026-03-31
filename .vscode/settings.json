@@ -2,7 +2,7 @@
   "runOnSave.commands": [
     {
       "match": ".*",
-      "cmd": "Auto Git Commit and Push" 
+      "cmd": "task Auto Git Push" 
     }
   ]
 }
