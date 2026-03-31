@@ -1,7 +1,7 @@
 export class Drive {
     name = "sqlite"
 
-    any = "ftouh"
+    any = "ftouhGumri est"
 
     
 }
