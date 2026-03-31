@@ -1,10 +1,9 @@
 {
-  "achilleshr.runonsave": {
+  "emeraldwalk.runonsave": {
     "commands": [
       {
-        // Run whenever any file is saved
         "match": ".*",
-        "cmd": "task Auto Git Push"
+        "cmd": "git add . && git commit -m \"Auto-commit\" && git push origin main"
       }
     ]
   }
