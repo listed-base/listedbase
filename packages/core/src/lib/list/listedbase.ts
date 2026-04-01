@@ -21,7 +21,6 @@ export function list<S extends z.ZodObject>(schema: S) {
   return { items: [] as Item[] }
 }
 
-import { LReactive } from "./reactive/abstract";
 import type { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from './typing';
 import { TSchemaRef } from "./schema-class";
 
