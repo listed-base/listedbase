@@ -1,4 +1,3 @@
-import { createReactive } from '@listedbase/uni-reactive';
 import { TSchemaRef } from '../schema/schema';
 import { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/typing/main';
 
