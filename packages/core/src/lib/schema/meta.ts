@@ -15,7 +15,7 @@ const register = z.registry<TMeta>()
 type RequiredMeta<T> = { [P in keyof T]-?: ZodLiteral<true>; }
 
 export function addMeta<T extends ZodType, C extends TMeta>(schema: T, meta: C) {
-    let marks = {} as RequiredMeta<C>
+    const marks = {} as RequiredMeta<C>
     for (const key in meta) {
         (marks as any)[key] = z.literal(true)
     }
