@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "ign"
     "declarationMap": false,
     "declaration": false,
     "importHelpers": true,
