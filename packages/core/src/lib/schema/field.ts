@@ -17,7 +17,7 @@ interface TFieldIndex extends z.ZodType {
     unique(): z.ZodUnion<[this, z.ZodObject<{ unique: z.ZodLiteral<true> }>]>;
     index(): z.ZodUnion<[this, z.ZodObject<{ index: z.ZodLiteral<true> }>]>;
 }
-
+// ts
 declare module "zod/v4" {
     interface ZodString extends TFieldIndex { }
     interface ZodNumber extends TFieldIndex { }
