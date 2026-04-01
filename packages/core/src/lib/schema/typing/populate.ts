@@ -1,4 +1,4 @@
-import { LCreateInput, LCreateInputWithType, LWhereUniqueInput, PickUniqueProps } from "./typing";
+import { LCreateInput, LCreateInputWithType, PickUniqueProps } from "./typing";
 
 type UnwrapArray<T> = T extends (infer U)[] ? U : T;
 
