@@ -5,7 +5,7 @@ export class BaseList<TOutput, TShap extends ZodRawShape> {
     // protected state = createReactive<TOutput[]>();
     protected schema!: any;
     constructor() {
-        this.state.init([]);
+        // this.state.init([]);
     }
 
     items = this.state.value
