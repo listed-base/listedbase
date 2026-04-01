@@ -10,3 +10,6 @@ export const sPosts = lSchema({
         user: () => lField.oneFrom(sUser)
     }
 })
+
+
+cons
