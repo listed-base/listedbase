@@ -2,14 +2,14 @@ import { createReactive } from "@listedbase/uni-reactive";
 import { z, ZodObject, ZodRawShape } from "zod/v4";
 // import { SchemaRef } from "../schema/schema";
 
-export class BaseList<TOutput, TShap extends ZodRawShape> {
-    protected state = createReactive<TOutput[]>();
-    protected schema!: SchemaRef<TShap>;
-    constructor() {
-        this.state.init([]);
-    }
+// export class BaseList<TOutput, TShap extends ZodRawShape> {
+//     protected state = createReactive<TOutput[]>();
+//     protected schema!: SchemaRef<TShap>;
+//     constructor() {
+//         this.state.init([]);
+//     }
 
-    items = this.state.value
+//     items = this.state.value
 
 
-}
+// }
