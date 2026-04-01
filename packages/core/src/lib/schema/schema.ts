@@ -81,7 +81,7 @@ export function lSchema<
 
     return {
         schema,
-        zodSchema: sc,
+        zodSchema: schema,
     }
 }
 
