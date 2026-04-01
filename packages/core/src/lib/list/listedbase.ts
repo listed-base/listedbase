@@ -134,7 +134,7 @@ export function list<S extends TSchemaRef>(
     findMany<S extends SelectConfig<Item>>(config?: S) {
       return {} as ApplySelect<Item, S>
     },
-    findUniqrete(input: LWhereUniqueInput<S>) {
+    findUniqe(input: LWhereUniqueInput<S>) {
 
     },
 
