@@ -32,27 +32,7 @@ function applySelect<T extends object, S extends SelectConfig<T>>(
   }, {} as ApplySelect<T, S>);
 }
 
-// ─── Example Usage ───────────────────────────────────────────────────────────
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-};
-
-function findUser<S extends SelectConfig<User>>(
-  config: { select: S }
-): ApplySelect<User, S> {
-  const user: User = {
-    id: 1,
-    name: "Fathi",
-    email: "fathi@example.com",
-    password: "secret",
-  };
-
-  return applySelect(user, config);
-}
 
 // ✅ result type => Pick<User, "name" | "email">
 const result = findUser({
