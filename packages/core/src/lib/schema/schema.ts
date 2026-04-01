@@ -58,7 +58,7 @@ export function lSchema<
 
 
         if (field instanceof ZodUnion) {
-            if (field.options[1] instanceof ZodObject && field.options[1].shape.hasOwnProperty("idField")) {
+            if (field.options[1] instanceof ZodObject && Object.prototype.hasOwnProperty.call(field.options[1].shape, "idField")) {
                 hasIdFiled = true
             }
             resolvedShape[key] = field.options[0];
