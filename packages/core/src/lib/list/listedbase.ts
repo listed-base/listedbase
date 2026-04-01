@@ -21,5 +21,159 @@ export function list<S extends z.ZodObject>(schema: S) {
   return { items: [] as Item[] }
 }
 
+import { z, ZodObject, ZodType } from "zod/v4";
+import { CreateIndexArgs, ObjectStoreSchema } from "./upgrade/types";
+import { LFilterInput } from "./filter.types";
+import { useDB } from "./database";
+import { normalizeFieldsToSchema } from "./idb-schema/normalize";
+import { gatheringSchema } from "./idb-schema/gatheringSchema";
+import { LReactive } from "./reactive/abstract";
+import type { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from './typing';
+import { TSchemaRef } from "./schema-class";
+
+export type ListEventType = 'create' | 'update' | 'remove';
+
+export interface ListEvent<T> {
+    type: ListEventType;
+    index: number;
+    item: T;
+}
+
+type HasAuto<T> = Extract<T, { __auto: true }> extends never ? false : true;
+
+type OmitMarkedAutoFields<T> = {
+    [K in keyof T as HasAuto<T[K]> extends true ? never : K]: T[K]
+};
+
+
+export interface ConnectOptions {
+    provider: 'firestore' | 'RestApi' | 'graphql' | 'mango-atlase',
+
+}
+export type LReactiveFilterInput<T> =
+    LReactive extends { from(value: LFilterInput<T>): infer R } ? R : never;
+// export type ReactiveFilterInput<T> = ReturnType<LReactive["from"]>
+export interface ListRef<T> {
+    items: T[];
+
+
+
+    create: (data: T) => T;
+    update: (where: Partial<T>, data: Partial<T>) => T | undefined;
+    filigree: (data: Partial<T> | Partial<T>[]) => void;
+    remove: (where: Partial<T>) => boolean;
+
+    findUnique: (where: Partial<T>) => T | undefined;
+    findFirst: (options?: LFilterInput<T>) => T | undefined;
+    findMany: (options?: LFilterInput<T>) => T[];
+
+    onChange: (listener: (event: ListEvent<T>) => void) => void;
+    connect?: (options: ConnectOptions) => void
+
+}
+
+
+// ─── Types ───────────────────────────────────────────────────────────────────
+
+type SelectConfig<T> = {
+    [K in keyof T]?: true;
+  };
+  
+  type ApplySelect<T, S extends SelectConfig<T>> = Pick<T, keyof S & keyof T>;
+  
+//   type QueryConfig<T> = {
+//     select: S extends SelectConfig<T> ? S : SelectConfig<T>;
+//   };
+  
+  // ─── Runtime Utility ─────────────────────────────────────────────────────────
+  
+  function applySelect<T extends object, S extends SelectConfig<T>>(
+    data: T,
+    config: { select: S }
+  ): ApplySelect<T, S> {
+    const keys = Object.keys(config.select) as (keyof S & keyof T)[];
+    return keys.reduce((acc, key) => {
+      acc[key] = data[key];
+      return acc;
+    }, {} as ApplySelect<T, S>);
+  }
+  
+  // ─── Example Usage ───────────────────────────────────────────────────────────
+  
+  type User = {
+    id: number;
+    name: string;
+    email: string;
+    password: string;
+  };
+  
+  function findUser<S extends SelectConfig<User>>(
+    config: { select: S }
+  ): ApplySelect<User, S> {
+    const user: User = {
+      id: 1,
+      name: "Fathi",
+      email: "fathi@example.com",
+      password: "secret",
+    };
+  
+    return applySelect(user, config);
+  }
+  
+  // ✅ result type => Pick<User, "name" | "email">
+  const result = findUser({
+    select: { name: true, email: true },
+  });
+  
+  result.name;     // ✅ string
+  result.email;    // ✅ string
+export function list<S extends TSchemaRef>(
+    schema: S,
+) {
+
+    type Item = LItem<S>
+    const json = schema.schema.toJSONSchema()
+    const props = json.properties as any
+    const oneFromFields = Object.entries(props).filter(([key, value]: any) => value.oneFrom).map(([key, value]) => ({ [key]: value }))
+    const manyFromFields = Object.entries(props).filter(([key, value]: any) => value.manyFrom).map(([key, value]) => ({ [key]: value }))
+    console.log(manyFromFields);
+
+    return Object.assign({ items: [] as Item[] }, {
+
+
+        async create(input: LCreateInput<S>) {
+            if (oneFromFields.length) {
+                for (const field of oneFromFields) {
+                    const key = Object.keys(field)[0]
+                    const value = (input as Record<string, any>)[key]
+                    if (value.hasOwnProperty('create')) {
+                        (input as any)[key] = value.create
+                    }
+
+                }
+
+            }
+            // const parsed = schema.schema.parse(input);
+            // console.log(input);
+
+
+            // console.log(parsed);
+
+
+
+        },
+        update(input: LUpdateInput<S>) {
+
+        },
+
+        findMany<S extends SelectConfig<Item>>( config?: S) {
+            return {} as ApplySelect<Item, S>
+        },
+        findUniqe(input: LWhereUniqueInput<S>) {
+
+        },
+
+    })
+}
 
 
