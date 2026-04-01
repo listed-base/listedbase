@@ -1,5 +1,4 @@
 import { lField, lSchema } from "@listedbase/core";
-import { z } from "zod/v4";
 import { sPosts } from "./post";
 
 export const sUser = lSchema({
