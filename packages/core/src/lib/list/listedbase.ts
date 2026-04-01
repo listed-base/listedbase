@@ -60,11 +60,7 @@ export function list<S extends TSchemaRef>(
         }
 
       }
-      // const parsed = schema.schema.parse(input);
-      // console.log(input);
-
-
-      // console.log(parsed);
+     
 
 
 
