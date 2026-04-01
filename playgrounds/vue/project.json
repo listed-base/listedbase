@@ -4,5 +4,6 @@
   "projectType": "application",
   "sourceRoot": "playgrounds/vue/src",
   "// targets": "to see all targets run: nx show project vue-plg --web",
-  "targets": {}
+  "targets": {},
+  "tags": ["framowork-vue"]
 }

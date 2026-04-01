@@ -1,9 +1,9 @@
-import { SchemaRef } from '../schema/schema';
-import { z } from 'zod/v4';
+import { z, ZodObject, ZodRawShape } from 'zod/v4';
 import { CreateInput, ListMutationsImpl, UpdateInput } from './mutation';
 import { TReadonlyState } from '@listedbase/uni-reactive';
 import { LFilterInput } from '../filters/types';
-export interface ListRef<TOutput, TInput, S extends z.ZodObject> {
+import { SchemaRef } from '../schema/schema';
+export interface ListRef<TOutput, TInput> {
     items: TReadonlyState<TOutput[]>;
     findUnique: (where: Partial<TOutput>) => TOutput | undefined;
     findFirst: (options?: LFilterInput<TOutput>) => TOutput | undefined;
@@ -14,12 +14,13 @@ export interface ListRef<TOutput, TInput, S extends z.ZodObject> {
     delete: (where: LFilterInput<TOutput>) => boolean;
 }
 
-export class ListImpl<TOutput, TInput, S extends z.ZodObject> extends ListMutationsImpl<TOutput, TInput, S>
-    implements ListRef<TOutput, TInput, S> {
-    constructor(schema: SchemaRef<S>) {
+export class ListImpl<TOutput, TInput, TShape extends ZodRawShape> extends ListMutationsImpl<TOutput, TInput, TShape>
+    implements ListRef<TOutput, TInput> {
+    constructor(schema: SchemaRef<TShape>) {
         super();
         this.schema = schema;
     }
+    
 }
 
 

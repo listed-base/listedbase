@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "playgrounds/react/src",
   "projectType": "application",
-  "tags": [],
+  "tags": ["framowork-react"],
   "// targets": "to see all targets run: nx show project react-plg --web",
   "targets": {}
 }

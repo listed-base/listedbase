@@ -28,7 +28,7 @@ class AngularReactive<T> implements IReactive<T> {
   init(initial: T) {
     this.state = signal(initial);
   }
-  get value() {
+  get value(): Signal<T> {
     return this.state.asReadonly()
   }
 

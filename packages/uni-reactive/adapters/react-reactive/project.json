@@ -3,7 +3,7 @@
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/uni-reactive/adapters/react-reactive/src",
   "projectType": "library",
-  "tags": [],
+  "tags": ["uni-recative", "framowork-react"],
   "targets": {
     "nx-release-publish": {
       "options": {

@@ -1,10 +1,10 @@
-import { z } from "zod/v4";
+import { z, ZodRawShape } from "zod/v4";
 import { LFilterInput } from "../filters/types";
 import { ListItemsImpl } from "./items";
 
 
-export class FindImpl<TOutput, S extends z.ZodObject>
-    extends ListItemsImpl<TOutput, S> {
+export class FindImpl<TOutput, TShape extends ZodRawShape>
+    extends ListItemsImpl<TOutput, TShape> {
     findUnique = (where: Partial<TOutput>): TOutput | undefined => {
         console.log(where);
 

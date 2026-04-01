@@ -1,11 +1,7 @@
 import { Component, inject, Injector } from '@angular/core';
 
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { angularReactive } from '@listedbase/angular-reactive';
-import { registerReactive } from '@listedbase/uni-reactive';
 
-
-registerReactive(angularReactive); 
 
 
 
