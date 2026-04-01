@@ -24,18 +24,6 @@ export function listb<S extends z.ZodObject>(schema: S) {
 }
 
 
-export interface ListEvent<T> {
-  type: ListEventType;
-  index: number;
-  item: T;
-}
-
-type HasAuto<T> = Extract<T, { __auto: true }> extends never ? false : true;
-
-type OmitMarkedAutoFields<T> = {
-  [K in keyof T as HasAuto<T[K]> extends true ? never : K]: T[K]
-};
-
 
 
 
