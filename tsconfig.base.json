@@ -24,12 +24,12 @@
         "packages/uni-reactive/adapters/angular-reactive/src/index.ts"
       ],
       "@listedbase/core": ["packages/core/src/index.ts"],
-      "@listedbase/vue-reactive": [
-        "packages/uni-reactive/adapters/vue-reactive/src/index.ts"
-      ],
-      "@listedbase/react-reactive": [
-        "packages/uni-reactive/adapters/react-reactive/src/index.ts"
-      ]
+      // "@listedbase/vue-reactive": [
+      //   "packages/uni-reactive/adapters/vue-reactive/src/index.ts"
+      // ],
+      // "@listedbase/react-reactive": [
+      //   "packages/uni-reactive/adapters/react-reactive/src/index.ts"
+      // ]
     }
   }
 }
