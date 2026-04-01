@@ -19,8 +19,8 @@ interface TFieldIndex extends z.ZodType {
 }
 declare module "zod/v4" {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
+  interface ZodString extends TFieldIndex { }
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
-    interface ZodString extends TFieldIndex { }
     interface ZodNumber extends TFieldIndex { }
     interface ZodDate extends TFieldIndex { }
     interface ZodBigInt extends TFieldIndex { }
