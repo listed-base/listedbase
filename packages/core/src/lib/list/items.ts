@@ -1,11 +1,9 @@
-import { z } from "zod/v4";
+import { z, ZodRawShape } from "zod/v4";
 import { BaseList } from "./base";
 
-export class ListItemsImpl<TOutput, S extends z.ZodObject> extends BaseList<TOutput, S> {
+export class ListItemsImpl<TOutput, TShape extends ZodRawShape> extends BaseList<TOutput, TShape> {
     constructor() {
         super();
     }
-    get items() {
-        return this.state.value
-    }
+   
 }     

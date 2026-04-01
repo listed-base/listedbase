@@ -1,13 +1,15 @@
 
 // core/types.ts
 // core/types.ts
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
 export interface ReactiveTypeMap<T> {
-  default: T
 }
 
 /**
  * كل adapter يضيف المفتاح الخاص به هنا
  */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
 export interface RegisteredReactiveAdapters { }
 
 export type ActiveReactiveKind = keyof RegisteredReactiveAdapters
@@ -18,7 +20,7 @@ export type TReadonlyState<T> =
 
 
 export interface IReactive<T> {
-  value: TReadonlyState<T>
+  value: ReactiveTypeMap<T>[keyof RegisteredReactiveAdapters]
   modify: (next: (prev: T) => T) => void
   init(initial: T): void
 }

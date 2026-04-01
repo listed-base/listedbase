@@ -5,7 +5,6 @@ export default [
   {
     files: ['**/*.json'],
     rules: {
-      '@typescript-eslint/no-empty-object-type': 'off',
       '@nx/dependency-checks': [
         'error',
         {

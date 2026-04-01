@@ -7,7 +7,7 @@
     <section class="bg-white p-6 rounded-lg shadow">
       <h2 class="text-2xl font-bold mb-6 text-slate-800">uniReactive List</h2>
       <div class="mb-4 flex gap-2">
-        <input 
+        <input
           type="text"
           [value]="newItemName()"
           (input)="newItemName.set(($any($event.target)).value)"
@@ -15,31 +15,42 @@
           placeholder="أضف عنصر جديد..."
           class="flex-1 px-4 py-2 border-2 border-slate-300 rounded focus:outline-none focus:border-blue-500"
         />
-        <button (click)="addItem()" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-semibold">Add</button>
+        <button
+          (click)="addItem()"
+          class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-semibold"
+        >
+          Add
+        </button>
       </div>
       <ul class="space-y-2">
         @for (item of users.items(); track $index) {
-          <li class="flex items-center justify-between bg-slate-100 p-3 rounded">
-            <span class="text-slate-800">{{ item.name }}</span>
-            <button (click)="removeItem(item.id)" class="text-red-500 hover:text-red-700 text-lg font-bold">✕</button>
-          </li>
+        <li class="flex items-center justify-between bg-slate-100 p-3 rounded">
+          <span class="text-slate-800">{{ item.name }}</span>
+          <button
+            (click)="removeItem(item.id)"
+            class="text-red-500 hover:text-red-700 text-lg font-bold"
+          >
+            ✕
+          </button>
+        </li>
         }
       </ul>
     </section>
 
     <!-- Async Example -->
     <section class="bg-white p-6 rounded-lg shadow mt-8">
-      <h2 class="text-2xl font-bold mb-6 text-slate-800">⏳ Async Users (fromAsync)</h2>
+      <h2 class="text-2xl font-bold mb-6 text-slate-800">
+        ⏳ Async Users (fromAsync)
+      </h2>
       // Search input
       <div class="mb-4 flex gap-2">
-        <input 
+        <input
           type="text"
           (input)="updateQuery(($any($event.target)).value)"
           placeholder="ابحث عن مستخدم (username)..."
           class="flex-1 px-4 py-2 border-2 border-slate-300 rounded focus:outline-none focus:border-blue-500"
         />
       </div>
-     
     </section>
   </main>
 </div>
