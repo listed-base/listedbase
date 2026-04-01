@@ -8,7 +8,7 @@
  *
  */
 import * as z from 'zod/v4';
-import { addMeta } from ".";
+import { addMeta } from "./";
 import { TSchemaRef } from './schema.ts';
 
 type IndexType = z.ZodString | z.ZodNumber | z.ZodDate | z.ZodBigInt;
