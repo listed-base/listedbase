@@ -40,11 +40,11 @@ export interface ConnectOptions {
 
 }
 
-// export type LReactiveFilterInput<T> =
-//     LReactive extends { from(value: LFilterInput<T>): infer R } ? R : never;
-// // export type ReactiveFilterInput<T> = ReturnType<LReactive["from"]>
-// export interface ListRef<T> {
-//     items: T[];
+export type LReactiveFilterInput<T> =
+    LReactive extends { from(value: LFilterInput<T>): infer R } ? R : never;
+// export type ReactiveFilterInput<T> = ReturnType<LReactive["from"]>
+export interface ListRef<T> {
+    items: T[];
 
 
 
