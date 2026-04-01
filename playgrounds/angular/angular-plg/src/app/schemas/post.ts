@@ -12,4 +12,4 @@ export const sPosts = lSchema({
 })
 
 
-const post = list
+const post = list()
