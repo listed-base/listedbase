@@ -40,27 +40,7 @@ export interface ConnectOptions {
 
 }
 
-export type LReactiveFilterInput<T> =
-    LReactive extends { from(value: LFilterInput<T>): infer R } ? R : never;
-// export type ReactiveFilterInput<T> = ReturnType<LReactive["from"]>
-export interface ListRef<T> {
-    items: T[];
 
-
-
-    create: (data: T) => T;
-    update: (where: Partial<T>, data: Partial<T>) => T | undefined;
-    filigree: (data: Partial<T> | Partial<T>[]) => void;
-    remove: (where: Partial<T>) => boolean;
-
-    findUnique: (where: Partial<T>) => T | undefined;
-    findFirst: (options?: LFilterInput<T>) => T | undefined;
-    findMany: (options?: LFilterInput<T>) => T[];
-
-    onChange: (listener: (event: ListEvent<T>) => void) => void;
-    connect?: (options: ConnectOptions) => void
-
-}
 
 
 // ─── Types ───────────────────────────────────────────────────────────────────
