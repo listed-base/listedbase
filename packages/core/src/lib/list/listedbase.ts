@@ -46,7 +46,7 @@ export function list<S extends TSchemaRef>(
   const manyFromFields = Object.entries(props).filter(([key, value]: any) => value.manyFrom).map(([key, value]) => ({ [key]: value }))
   console.log(manyFromFields);
 
-  return Object.assign({ items: s }, {
+  return Object.assign({ items: store. }, {
 
 
     async create(input: LCreateInput<S>) {
