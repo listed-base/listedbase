@@ -82,7 +82,6 @@ export function lSchema<
     return {
         schema,
         zodSchema: z.object(def).meta({ name }) as any,
-        // jsonSchema: zodToJsonSchema(z.object(def), { name })
     }
 }
 
