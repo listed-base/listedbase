@@ -2,7 +2,7 @@ import { Item } from './../../duct/types';
 import { z, ZodObject, ZodRawShape } from 'zod/v4';
 import * as v4 from 'zod/v4/core';
 import { TSchemaRef } from '../schema/schema';
-import { LCreateInput, LCreateInput, LItem } from '../schema/typing/main';
+import { LCreateInput, LCreateInput, LItem, LUpdateInput } from '../schema/typing/main';
 
 export type ListEventType = 'create' | 'update' | 'remove';
 
