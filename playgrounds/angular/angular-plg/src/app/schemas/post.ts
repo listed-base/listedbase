@@ -12,4 +12,4 @@ export const sPosts = lSchema({
 })
 
 
-cons
+const
