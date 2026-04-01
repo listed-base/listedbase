@@ -81,7 +81,7 @@ export function lSchema<
 
     return {
         schema,
-        zodSchema: z.object(def).meta({ name }) as any,
+        zodSchema: S,
     }
 }
 
