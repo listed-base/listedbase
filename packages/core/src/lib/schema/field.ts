@@ -17,8 +17,8 @@ interface TFieldIndex extends z.ZodType {
     unique(): z.ZodUnion<[this, z.ZodObject<{ unique: z.ZodLiteral<true> }>]>;
     index(): z.ZodUnion<[this, z.ZodObject<{ index: z.ZodLiteral<true> }>]>;
 }
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
 declare module "zod/v4" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
     interface ZodString extends TFieldIndex { }
     interface ZodNumber extends TFieldIndex { }
     interface ZodDate extends TFieldIndex { }
