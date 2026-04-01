@@ -21,7 +21,7 @@ export function list<S extends z.ZodObject>(schema: S) {
   return { items: [] as Item[] }
 }
 
-import { gatheringSchema } from "./idb-schema/gatheringSchema";
+import { gatheringSchema } from "./Kidb-schema/gatheringSchema";
 import { LReactive } from "./reactive/abstract";
 import type { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from './typing';
 import { TSchemaRef } from "./schema-class";
