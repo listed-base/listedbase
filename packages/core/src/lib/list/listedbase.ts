@@ -37,7 +37,7 @@ function applySelect<T extends object, S extends SelectConfig<T>>(
 export function list<S extends TSchemaRef>(
   schema: S,
 ) {
-  CONST
+  const 
   type Item = LItem<S>
   const json = schema.schema.toJSONSchema()
   const props = json.properties as any
