@@ -45,7 +45,7 @@ class LField {
     const id = <T extends IndexType>(schema: T) => {
       return addMeta(schema, { idField: true }) as z.ZodUnion<[T, z.ZodObject<{ idField: z.ZodLiteral<true> }>]>;
     };
-    id.autouuid = () => addMeta(z.uuid().default(() => crypto.randomUUID()), {
+    id.autouuid = () => addMeta(z.uuid().default(() => .randomUUID()), {
       autogen: true, idField: true,
       unique: true, index: true
     });
