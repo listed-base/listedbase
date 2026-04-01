@@ -9,7 +9,7 @@ export const sUser = lSchema({
     createdAt: lField.now(),
     updatedAt: lField.updatedAt(),
     name: lField.string().index(),
-    email: lField.str().unique(),
+    email: lField.strictObject().unique(),
     posts: () => lField.manyFrom(sPosts)
   }
 })
