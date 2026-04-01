@@ -5,7 +5,7 @@ import { sUser } from './user';
 export const sPosts = lSchema({
     name: "posts",
     fields: {
-        id: lField.id.a(),
+        id: lField.id.autouuid(),
         obj: z.object({ one: z.string() }),
         user: () => lField.oneFrom(sUser)
     }
