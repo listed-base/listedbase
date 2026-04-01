@@ -1,24 +1,6 @@
 import { TSchemaRef } from '../schema/schema';
 import { LCreateInput, LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/typing/main';
 
-export type ListEventType = 'create' | 'update' | 'remove';
-
-export interface ListEvent<T> {
-  type: ListEventType;
-  index: number;
-  item: T;
-}
-
-// type RemoveAuotMarks<T> = {
-//   [P in keyof T]: Exclude<T[P], { __auto: true }>
-// }
-export function listb<S extends z.ZodObject>(schema: S) {
-
-  type Item = z.output<S>
-  type ItemInput = z.input<S>
-
-  return { items: [] as Item[] }
-}
 
 
 
