@@ -4,7 +4,7 @@ import { z, ZodObject, ZodRawShape } from "zod/v4";
 
 export class BaseList<TOutput, TShap extends ZodRawShape> {
     protected state = createReactive<TOutput[]>();
-    protected schema!: SchemaRef<TShap>;
+    protected schema!: ANY;
     constructor() {
         this.state.init([]);
     }
