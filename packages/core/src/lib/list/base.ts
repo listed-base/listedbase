@@ -8,7 +8,7 @@ export class BaseList<TOutput, TShap extends ZodRawShape> {
         // this.state.init([]);
     }
 
-    items = this.state.value
+    // items = this.state.value
 
 
 }
