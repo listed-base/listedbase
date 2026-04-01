@@ -128,7 +128,7 @@ export function list<S extends TSchemaRef>(
 
     },
     update(input: LUpdateInput<S>) {
-
+      
     },
 
     findMany<S extends SelectConfig<Item>>(config?: S) {
