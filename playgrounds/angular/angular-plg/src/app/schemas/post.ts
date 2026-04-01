@@ -13,5 +13,5 @@ export const sPosts = lSchema({
 
 
 const post = list(sPosts)
-post.items()[0].user.
+post.items()[0].
 export type Post = LItem<typeof sPosts>
