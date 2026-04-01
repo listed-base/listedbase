@@ -135,7 +135,7 @@ export function list<S extends TSchemaRef>(
       return {} as ApplySelect<Item, S>
     },
     findUniqe(input: LWhereUniqueInput<S>) {
-
+      return {} as Item
     },
 
   })
