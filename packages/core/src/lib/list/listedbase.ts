@@ -1,6 +1,6 @@
 import { TSchemaRef } from '../schema/schema';
 import { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/typing/main';
-import { BaseList } from './base';
+// import { BaseList } from './base';
 
 
 
