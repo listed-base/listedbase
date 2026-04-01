@@ -16,7 +16,7 @@ export interface ListRef<TOutput, TInput> {
 
 export class ListImpl<TOutput, TInput, TShape extends ZodRawShape> extends ListMutationsImpl<TOutput, TInput, TShape>
     implements ListRef<TOutput, TInput> {
-    constructor(schema: SchemaRef<TShape>) {
+    constructor(schema: TSchemaRef<TShape>) {
         super();
         this.schema = schema;
     }
