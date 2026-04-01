@@ -21,7 +21,6 @@ export function list<S extends z.ZodObject>(schema: S) {
   return { items: [] as Item[] }
 }
 
-import { CreateIndexArgs, ObjectStoreSchema } from "./upgrade/types";
 import { LFilterInput } from "./filter.types";
 import { useDB } from "./database";
 import { normalizeFieldsToSchema } from "./idb-schema/normalize";
