@@ -6,7 +6,7 @@ import { IReactive, ReactiveFactory } from '@listedbase/uni-reactive'
 declare module '@listedbase/uni-reactive' {
 
   interface ReactiveTypeMap<T> {
-    angular: Signal<T>
+    angular: Signal<T> 
   }
 
   interface RegisteredReactiveAdapters {
