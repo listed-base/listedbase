@@ -80,7 +80,7 @@ export function lSchema<
     z.globalRegistry.add(schema, { id: name })
 
     return {
-        
+        schema,
     }
 }
 
