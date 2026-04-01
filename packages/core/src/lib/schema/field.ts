@@ -10,6 +10,7 @@
 import * as z from 'zod/v4';
 import { addMeta } from "./meta";
 import { TSchemaRef } from './schema';
+import { randomUUID } from 'crypto';
 
 type IndexType = z.ZodString | z.ZodNumber | z.ZodDate | z.ZodBigInt;
 
