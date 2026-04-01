@@ -14,4 +14,4 @@ export const sPosts = lSchema({
 
 const post = list(sPosts)
 
-export type Post = Lb
+export type Post = L
