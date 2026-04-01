@@ -80,7 +80,7 @@ class LField {
     );
   }
   oneFrom = <S extends z.ZodObject, Z extends z.ZodObject>(ref: TSchemaRef<S, Z>) => {
-    return addMeta(ref.schema.optional(), { oneFrom: true })
+    return addMeta(ref.schema(), { oneFrom: true })
   }
   manyFrom = <S extends z.ZodObject, Z extends z.ZodObject>(ref: TSchemaRef<S, Z>) => {
     return addMeta(z.array(ref.schema.optional()), { manyFrom: true })
