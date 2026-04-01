@@ -9,7 +9,7 @@
  */
 import * as z from 'zod/v4';
 import { addMeta } from "./meta";
-import { TSchemaRef } from './schema-class';
+import { TSchemaRef } from './schema.ts';
 
 type IndexType = z.ZodString | z.ZodNumber | z.ZodDate | z.ZodBigInt;
 
