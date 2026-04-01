@@ -35,11 +35,6 @@ type OmitMarkedAutoFields<T> = {
 };
 
 
-export interface ConnectOptions {
-    provider: 'firestore' | 'RestApi' | 'graphql' | 'mango-atlase',
-
-}
-
 
 
 
