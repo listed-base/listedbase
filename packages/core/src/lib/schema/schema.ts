@@ -76,7 +76,7 @@ export function lSchema<
         catchall: never(),
     };
 
-    const schema = (z.object() as any).meta({ name });
+    const schema = (z.object(def) as any).meta({ name });
     z.globalRegistry.add(schema, { id: name })
 
     return new SchemaRef
