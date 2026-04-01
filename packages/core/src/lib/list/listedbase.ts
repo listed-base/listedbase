@@ -21,7 +21,6 @@ export function list<S extends z.ZodObject>(schema: S) {
   return { items: [] as Item[] }
 }
 
-import { z, ZodObject, ZodType } from "zod/v4";
 import { CreateIndexArgs, ObjectStoreSchema } from "./upgrade/types";
 import { LFilterInput } from "./filter.types";
 import { useDB } from "./database";
