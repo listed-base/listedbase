@@ -14,4 +14,4 @@ export const sPosts = lSchema({
 
 const post = list(sPosts)
 
-pos
+post
