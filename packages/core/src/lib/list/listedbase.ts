@@ -34,11 +34,6 @@ function applySelect<T extends object, S extends SelectConfig<T>>(
 
 
 
-// ✅ result type => Pick<User, "name" | "email">
-const result = findUser({
-  select: { name: true, email: true },
-});
-
 export function list<S extends TSchemaRef>(
   schema: S,
 ) {
