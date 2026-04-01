@@ -2,7 +2,7 @@ import { z, ZodObject, ZodRawShape } from 'zod/v4';
 import { CreateInput, ListMutationsImpl, UpdateInput } from './mutation';
 import { TReadonlyState } from '@listedbase/uni-reactive';
 import { LFilterInput } from '../filters/types';
-import { TSchemaRef } from '../schema/schema';
+import { TSchemaRefSchemaRef } from '../schema/schema';
 export interface ListRef<TOutput, TInput> {
     items: TReadonlyState<TOutput[]>;
     findUnique: (where: Partial<TOutput>) => TOutput | undefined;
