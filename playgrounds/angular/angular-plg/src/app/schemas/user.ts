@@ -8,7 +8,7 @@ export const sUser = lSchema({
     id: lField.id.autouuid(),
     createdAt: lField.now(),
     updatedAt: lField.updatedAt(),
-    name: lField.stribgindex(),
+    name: lField.string().index(),
     email: lField.unique(z.email()),
     posts: () => lField.manyFrom(sPosts)
   }
