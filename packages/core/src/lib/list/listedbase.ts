@@ -13,7 +13,7 @@ export interface ListEvent<T> {
 // type RemoveAuotMarks<T> = {
 //   [P in keyof T]: Exclude<T[P], { __auto: true }>
 // }
-export function list<S extends z.ZodObject>(schema: S) {
+export function listb<S extends z.ZodObject>(schema: S) {
 
   type Item = z.output<S>
   type ItemInput = z.input<S>
