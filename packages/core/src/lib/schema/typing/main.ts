@@ -1,7 +1,7 @@
 import z, { ZodObject } from "zod/v4";
 import { TMeta } from "./meta";
 import { TSchemaRef } from "../schema";
-import { PopulationToInput } from ".";
+import { PopulationToInput } from "./";
 
 
 
