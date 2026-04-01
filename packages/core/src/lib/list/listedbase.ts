@@ -21,7 +21,6 @@ export function list<S extends z.ZodObject>(schema: S) {
   return { items: [] as Item[] }
 }
 
-import { useDB } from "./database";
 import { normalizeFieldsToSchema } from "./idb-schema/normalize";
 import { gatheringSchema } from "./idb-schema/gatheringSchema";
 import { LReactive } from "./reactive/abstract";
