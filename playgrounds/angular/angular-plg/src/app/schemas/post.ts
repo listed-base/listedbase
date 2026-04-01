@@ -12,4 +12,4 @@ export const sPosts = lSchema({
 })
 
 
-const 
+const post = sPosts.create({
