@@ -1,5 +1,6 @@
 import { TSchemaRef } from '../schema/schema';
 import { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/typing/main';
+import { BaseList } from './base';
 
 
 
@@ -37,7 +38,7 @@ function applySelect<T extends object, S extends SelectConfig<T>>(
 export function list<S extends TSchemaRef>(
   schema: S,
 ) {
-  const store = new BASE
+  const store = new BaseList
   type Item = LItem<S>
   const json = schema.schema.toJSONSchema()
   const props = json.properties as any
