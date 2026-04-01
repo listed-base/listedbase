@@ -8,7 +8,7 @@
     "module": "ESNext",
     "target": "ESNext",
   },
-  "include": ["src/**/*.ts", ""@listedbase/uni-reactive"]"],
+  "include": ["src/**/*.ts", "@listedbase/uni-reactive"],
   "exclude": [
     "vite.config.ts",
     "vite.config.mts",
