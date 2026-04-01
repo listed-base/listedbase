@@ -21,7 +21,6 @@ export function list<S extends z.ZodObject>(schema: S) {
   return { items: [] as Item[] }
 }
 
-
 export type ListEventType = 'create' | 'update' | 'remove';
 
 export interface ListEvent<T> {
