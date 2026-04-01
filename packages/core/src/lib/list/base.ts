@@ -1,5 +1,4 @@
 import { createReactive } from "@listedbase/uni-reactive";
-// import { z, ZodObject, ZodRawShape } from "zod/v4";
 
 export class BaseList<TOutput> {
     protected state = createReactive<TOutput[]>();
