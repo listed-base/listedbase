@@ -90,8 +90,6 @@ type SelectConfig<T> = {
     select: { name: true, email: true },
   });
   
-  result.name;     // ✅ string
-  result.email;    // ✅ string
 export function list<S extends TSchemaRef>(
     schema: S,
 ) {
