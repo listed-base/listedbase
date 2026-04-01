@@ -13,5 +13,5 @@ export const sPosts = lSchema({
 
 
 const post = list(sPosts)
-PO
+post
 export type Post = LItem<typeof sPosts>
