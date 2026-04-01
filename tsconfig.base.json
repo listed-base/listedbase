@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "ignoreDeprecations": "5.0",
     "declarationMap": false,
-    "declaration": false,
+    "declaration": false,11
     "importHelpers": true,
     "isolatedModules": true,
     "lib": ["es2022", "dom"],
