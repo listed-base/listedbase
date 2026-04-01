@@ -111,7 +111,7 @@ export function list<S extends TSchemaRef>(
                 for (const field of oneFromFields) {
                     const key = Object.keys(field)[0]
                     const value = (input as Record<string, any>)[key]
-                    if (value.hasOwnProperty('create')) {
+                    if (Object.prototype.hasOwnProperty.call(value, 'create')) {
                         (input as any)[key] = value.create
                     }
 
