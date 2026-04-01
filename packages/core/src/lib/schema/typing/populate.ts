@@ -22,7 +22,7 @@ type HasOneFrom<T> =
     Extract<T, { oneFrom: true }> extends never ? false : true;
 
 
- type TransformField<T> =
+zxpo type TransformField<T> =
     HasManyFrom<T> extends true
     ? GetIdType<RelationObject<T>>[] | PickUniqueProps<T>
     : HasOneFrom<T> extends true
