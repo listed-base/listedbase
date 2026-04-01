@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    IN
+    ING
     "declarationMap": false,
     "declaration": false,
     "importHelpers": true,
