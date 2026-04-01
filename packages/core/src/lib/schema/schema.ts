@@ -79,10 +79,9 @@ export function lSchema<
     const schema = (z.object(def)).meta({ name }) as any
     z.globalRegistry.add(schema, { id: name })
 
-    return {
-        schema,
-        zodSchema: schema,
-    }
+    return new SchemaRef
+        <ZodObject<ResolveFields<TFields>, core.$strict>, ZodObject<ResolveFields<PickFirstUnionFields<TFields>>, core.$strict>
+        >(schema, schema)
 }
 
 class SchemaRef<S extends ZodObject, Z extends ZodObject> implements TSchemaRef<S, Z> {
