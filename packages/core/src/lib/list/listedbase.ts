@@ -1,5 +1,5 @@
 import { TSchemaRef } from '../schema/schema';
-import { LCreateInput, LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/typing/main';
+import { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/typing/main';
 
 
 
