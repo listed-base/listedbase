@@ -39,6 +39,7 @@ export interface ConnectOptions {
     provider: 'firestore' | 'RestApi' | 'graphql' | 'mango-atlase',
 
 }
+
 export type LReactiveFilterInput<T> =
     LReactive extends { from(value: LFilterInput<T>): infer R } ? R : never;
 // export type ReactiveFilterInput<T> = ReturnType<LReactive["from"]>
