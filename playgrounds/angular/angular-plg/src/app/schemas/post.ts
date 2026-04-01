@@ -7,7 +7,7 @@ export const sPosts = lSchema({
     name: "posts",
     fields: {
         id: lField.id.autouuid(),
-        obj: lField.strictObject({ one: z.string() }),
+        obj: lField.strictObject({ one: lF.string() }),
         user: () => lField.oneFrom(sUser)
     }
 })
