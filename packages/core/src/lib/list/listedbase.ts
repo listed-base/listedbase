@@ -10,11 +10,6 @@ import { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type SelectConfig<T> = {
-  [K in keyof T]?: true;
-};
-
-type ApplySelect<T, S extends SelectConfig<T>> = Pick<T, keyof S & keyof T>;
 
 //   type QueryConfig<T> = {
 //     select: S extends SelectConfig<T> ? S : SelectConfig<T>;
