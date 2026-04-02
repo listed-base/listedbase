@@ -50,17 +50,7 @@ export function list<S extends TSchemaRef>(
 
 
     async create(input: LCreateInput<S>) {
-      if (oneFromFields.length) {
-        for (const field of oneFromFields) {
-          const key = Object.keys(field)[0]
-          const value = (input as Record<string, unknown>)[key]
-          if (typeof value === 'object' && value !== null && 'create' in value) {
-            (input as any)[key] = (value as any).create
-          }
-
-        }
-
-      }
+      
 
       const newItem = input as Item
       store.modify(prev => [...prev, newItem])
