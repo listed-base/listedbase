@@ -18,7 +18,6 @@
     {
       "plugin": "@nx/js/typescript",
       "options": {
-        "analyzeSourceFiles": ,
         "typecheck": {
           "targetName": "typecheck"
         },
