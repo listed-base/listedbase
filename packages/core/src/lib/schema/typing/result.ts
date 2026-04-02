@@ -3,7 +3,7 @@ export interface ItmeShepa<T> {
 } 
 
 
-type SelectConfig<T> = {
+type PConfig<T> = {
   [K in keyof T]?: true;
 };
 
