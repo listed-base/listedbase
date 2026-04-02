@@ -73,7 +73,7 @@ export function list<S extends TSchemaRef>(
       return { ...input } as Item
     },
 
-    findMany<S extends SelectConfig<Item>>(config?: { select: S }) {
+    findMany<S extends ShepeOptions<Item>>(config?: { select: S }) {
       if (config) {
         store.modify(prev => prev.map(item => applySelect(item, config)))
       }
