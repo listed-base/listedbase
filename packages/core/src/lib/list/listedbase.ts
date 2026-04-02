@@ -49,7 +49,7 @@ export function list<S extends TSchemaRef>(
 
 
     async create(input: LCreateInput<S>) {
-      
+
 
       const newItem = input as Item
       store.modify(prev => [...prev, newItem])
