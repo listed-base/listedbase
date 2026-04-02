@@ -1,6 +1,6 @@
 
 
-type Config<T> = {
+type TConfig<T> = {
     [K in keyof T]?: true;
 };
 
