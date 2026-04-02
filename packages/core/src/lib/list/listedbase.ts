@@ -38,7 +38,7 @@ function applySelect<T extends object, S extends SelectConfig<T>>(
 export function list<S extends TSchemaRef>(
   schema: S,
 ) {
-  type ItemRetuenType = LItem<S>
+  type Item = LItem<S>
   type Item<TConfig extends SelectConfig<LItem<S>>> = LItem<S> | ApplySelect<LItem<S>, TConfig>
   const store = createReactive<LItem<S>[]>()
   store.init([])
