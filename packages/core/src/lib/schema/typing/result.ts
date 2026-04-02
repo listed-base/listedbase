@@ -19,7 +19,7 @@ export type ApplyShapeOptions<T, TOptions extends ShepeOptions<T>> = TOptions ex
     ? LPickFields<T, TPick>
     : never
     : TOptions extends { omit: infer TOmit }
-        ? TOmit extends TConfig<T>
-        ? LOmitFields<T, TOmit>
-        : never
-        : T;
+    ? TOmit extends TConfig<T>
+    ? LOmitFields<T, TOmit>
+    : never
+    : T;
