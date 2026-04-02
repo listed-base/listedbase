@@ -38,10 +38,10 @@ function applySelect<T extends object, S extends SelectConfig<T>>(
 export function list<S extends TSchemaRef>(
   schema: S,
 ) {
+  type Item = LItem<S>
   type Item<TConfig extends SelectConfig<LItem<S>>> = LItem<S> | ApplySelect<LItem<S>, TConfig>
   const store = createReactive<LItem<S>[]>()
   store.init([])
-  type Item = LItem<S>
   const json = schema.schema.toJSONSchema()
   const props = json.properties as Record<string, any>
   const oneFromFields = Object.entries(props).filter(([, value]) => (value as any).oneFrom).map(([key, value]) => ({ [key]: value }))
