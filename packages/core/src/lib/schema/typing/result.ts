@@ -1,4 +1,4 @@
-export interface  
+export interface Itme 
 
 
 type SelectConfig<T> = {
