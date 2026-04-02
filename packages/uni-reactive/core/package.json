@@ -19,7 +19,8 @@
     "!**/*.tsbuildinfo"
   ],
   "nx": {
-    "name": "uni-reactive"
+    "name": "uni-reactive",
+    
   },
   "dependencies": {
     "tslib": "^2.3.0"
