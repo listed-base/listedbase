@@ -1,6 +1,6 @@
 
 
-type PickConfig<T> = {
+type Config<T> = {
     [K in keyof T]?: true;
 };
 
