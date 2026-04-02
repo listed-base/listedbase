@@ -4,7 +4,7 @@ type TConfig<T> = {
     [K in keyof T]?: true;
 };
 
-export interface ShepeOptions<T> {
+export interface ShapeOptions<T> {
     pick?: TConfig<T>;
     omit?: TConfig<T>;
 }
@@ -14,7 +14,7 @@ type LOmitFields<T, S extends TConfig<T>> = Omit<T, keyof S & keyof T>;
 
 
 
-export type ApplyShapeOptions<T, TOptions extends ShepeOptions<T>> = TOptions extends { pick: infer TPick }
+export type ApplyShapeOptions<T, TOptions extends ShapeOptions<T>> = TOptions extends { pick: infer TPick }
     ? TPick extends TConfig<T>
     ? LPickFields<T, TPick>
     : never
