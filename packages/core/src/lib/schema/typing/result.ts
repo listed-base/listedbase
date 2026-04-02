@@ -9,7 +9,7 @@ type PickFiellds<T, S extends TConfig<T>> = Pick<T, keyof S & keyof T>;
 
 
 
-export interface Shea<T> {
+export interface ShepeOptions<T> {
     pick: TConfig<T>;
     omit: TConfig<T>;
 
