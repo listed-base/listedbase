@@ -39,7 +39,7 @@ export function list<S extends TSchemaRef>(
   schema: S,
 ) {
   type Item = LItem<S>
-  type Item<TConfig extends SelectConfig<LItem<S>>> = LItem<S> | ApplySelect<LItem<S>, TConfig>
+  type Item<RetuenTypeTConfig extends SelectConfig<LItem<S>>> = LItem<S> | ApplySelect<LItem<S>, TConfig>
   const store = createReactive<LItem<S>[]>()
   store.init([])
   const json = schema.schema.toJSONSchema()
