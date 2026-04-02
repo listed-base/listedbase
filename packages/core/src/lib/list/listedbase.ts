@@ -1,7 +1,7 @@
 import { createReactive } from '@listedbase/uni-reactive';
 import { TSchemaRef } from '../schema/schema';
 import { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/typing/itme';
-import { ShepeOptions } from '../schema/typing/result';
+import { ApplyShapeOptions, ShepeOptions } from '../schema/typing/result';
 
 
 
