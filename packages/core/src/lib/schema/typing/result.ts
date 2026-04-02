@@ -14,4 +14,4 @@ export interface ShepeOptions<T> {
     omit: TConfig<T>;
 
 }
-export type ApplyShape<T, TConfig extends ShepeOptions<T>> = PickFiellds<T, TConfig['pick']>
+export type ApplyShapeOptions<T, TConfig extends ShepeOptions<T>> = PickFiellds<T, TConfig['pick']>
