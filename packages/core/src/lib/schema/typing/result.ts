@@ -8,7 +8,7 @@ type PickFiellds<T, S extends PickConfig<T>> = Pick<T, keyof S & keyof T>;
 
 
 export interface FieldsConfig<T> {
-    
+    pick: PickFiellds<T, any>;
 }
 export interface ItmeShepa<T> {
     pick: PickFiellds<T, any>;
