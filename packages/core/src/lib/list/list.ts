@@ -1,4 +1,3 @@
-import { z, ZodObject, ZodRawShape } from 'zod/v4';
 import { CreateInput, ListMutationsImpl, UpdateInput } from './mutation';
 import { TReadonlyState } from '@listedbase/uni-reactive';
 import { LFilterInput } from '../filters/types';
