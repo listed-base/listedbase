@@ -1,3 +1,6 @@
+
+
+
 type SelectConfig<T> = {
   [K in keyof T]?: true;
 };
