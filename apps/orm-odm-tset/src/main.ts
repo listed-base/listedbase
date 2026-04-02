@@ -20,8 +20,8 @@ export const Author = defineEntity({
 })
 
 // Use InferEntity to extract the entity type
-// export type IBook = InferEntity<typeof Book>;
-// export type IAuthor = InferEntity<typeof Author>;
+export type IBook = InferEntity<typeof Book>;
+export type IAuthor = InferEntity<typeof Author>;
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
