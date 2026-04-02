@@ -1,5 +1,5 @@
 export interface ItmeShepa<T> {
-    pick: 
+    pick: <S extends SelectConfig<T>>(select: S) => ApplySelect<T, S>;
 } 
 
 
