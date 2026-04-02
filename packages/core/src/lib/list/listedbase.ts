@@ -42,7 +42,7 @@ export function list<S extends TSchemaRef>(
   type Item = LItem<S>
   const store = createReactive<Item[]>()
   store.init([])
-  const json = schema.schema.toJSONSchema()
+  const jsonScem = schema.schema.toJSONSchema()
 
   return Object.assign({ items: store.value }, {
 
