@@ -4,7 +4,7 @@ import { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/
 
 
 
-   
+
 
 
 
@@ -62,7 +62,7 @@ export function list<S extends TSchemaRef>(
         }
 
       }
-     
+
       const newItem = input as Item
       store.modify(prev => [...prev, newItem])
       return newItem
