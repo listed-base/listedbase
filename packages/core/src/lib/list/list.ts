@@ -1,4 +1,4 @@
-import { CreateInput, ListMutationsImpl, UpdateInput } from './mutation';
+import { CreateInput, UpdateInput } from './mutation';
 import { TReadonlyState } from '@listedbase/uni-reactive';
 import { LFilterInput } from '../filters/types';
 export interface ListRef<TOutput, TInput> {
