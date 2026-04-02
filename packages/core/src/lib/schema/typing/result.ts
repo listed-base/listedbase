@@ -6,3 +6,8 @@ type PickConfig<T> = {
 
 type PickFiellds<T, S extends SelectConfig<T>> = Pick<T, keyof S & keyof T>;
 
+
+
+export interface ItmeShepa<T> {
+    pick: <S extends SelectConfig<T>>(select: S) => ApplySelect<T, S>;
+} 
