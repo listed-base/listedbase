@@ -7,7 +7,7 @@ type PickConfig<T> = {
 type PickFiellds<T, S extends PickConfig<T>> = Pick<T, keyof S & keyof T>;
 
 
-export 
+export inter
 export interface ItmeShepa<T> {
     pick: PickFiellds<T, any>;
 } 
