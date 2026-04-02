@@ -75,8 +75,7 @@ export function list<S extends TSchemaRef>(
     },
 
     findMany<S extends ShepeOptions<Item>>(config?: { select: S }) {
-      if (config) {
-      }
+     
       return store.value
     },
     findUnique(input: LWhereUniqueInput<S>) {
