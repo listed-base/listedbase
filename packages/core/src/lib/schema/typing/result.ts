@@ -7,6 +7,7 @@ type PickConfig<T> = {
 type PickFiellds<T, S extends PickConfig<T>> = Pick<T, keyof S & keyof T>;
 
 
+
 export interface FieldsConfig<T> {
     pick: PickConfig<T>;
     // omit: PickConfig<T>;
