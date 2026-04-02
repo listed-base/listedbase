@@ -31,5 +31,5 @@
     "src/**/*.tsx",
     "src/**/*.vue"
   ],
-  "references": [{"path": "../../core"}]
+  "references": []
 }
