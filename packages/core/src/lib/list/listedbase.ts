@@ -49,6 +49,7 @@ export function list<S extends TSchemaRef>(
   console.log(manyFromFields);
 
   return Object.assign({ items: store.value }, {
+    
 
 
     async create(input: LCreateInput<S>) {
