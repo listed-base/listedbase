@@ -44,10 +44,6 @@ export function list<S extends TSchemaRef>(
   const store = createReactive<ItemRetuenType<SelectConfig<LItem<S>>>[]>()
   store.init([])
   const json = schema.schema.toJSONSchema()
-  const props = json.properties as Record<string, any>
-  const oneFromFields = Object.entries(props).filter(([, value]) => (value as any).oneFrom).map(([key, value]) => ({ [key]: value }))
-  const manyFromFields = Object.entries(props).filter(([, value]) => (value as any).manyFrom).map(([key, value]) => ({ [key]: value }))
-  console.log(manyFromFields);
 
   return Object.assign({ items: store.value }, {
 
