@@ -40,7 +40,7 @@ export function list<S extends TSchemaRef>(
   schema: S,
 ) {
   type Item = LItem<S>
-  type ItemRetuenType<TConfig extends SelectConfig<LItem<S>>> =  ApplySelect<LItem<S>, TConfig>
+  type ItemRetuenType<TConfig extends SelectConfig<LItem<S>>> = ApplySelect<LItem<S>, TConfig>
   const store = createReactive<ItemRetuenType<SelectConfig<LItem<S>>>[]>()
   store.init([])
   const json = schema.schema.toJSONSchema()
@@ -50,7 +50,7 @@ export function list<S extends TSchemaRef>(
   console.log(manyFromFields);
 
   return Object.assign({ items: store.value }, {
-    
+
 
 
     async create(input: LCreateInput<S>) {
@@ -74,8 +74,8 @@ export function list<S extends TSchemaRef>(
       return { ...input } as Item
     },
 
-    findMany<TShapeOptions extends ShepeOptions<Item>>(config?:  TShapeOptions ) {
-     
+    findMany<TShapeOptions extends ShepeOptions<Item>>(config?: TShapeOptions) {
+
       return store.value
     },
     findUnique(input: LWhereUniqueInput<S>) {
