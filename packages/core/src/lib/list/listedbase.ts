@@ -1,7 +1,6 @@
 import { createReactive } from '@listedbase/uni-reactive';
 import { TSchemaRef } from '../schema/schema';
 import { LCreateInput, LItem, LUpdateInput, LWhereUniqueInput } from '../schema/typing/itme';
-import { ShepeOptions } from '../schema/typing/result';
 
 
 
@@ -23,7 +22,7 @@ type ApplySelect<T, S extends SelectConfig<T>> = Pick<T, keyof S & keyof T>;
 
 // ─── Runtime Utility ─────────────────────────────────────────────────────────
 
-function applySelect<T extends object, S extends ShepeOptions<T>>(
+function applySelect<T extends object, S extends SelectConfig<T>>(
   data: T,
   config: { select: S }
 ): ApplySelect<T, S> {
