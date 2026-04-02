@@ -1,5 +1,5 @@
 export interface ItmeShepa<T> {
-    
+    pic
 } 
 
 
