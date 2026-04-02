@@ -1,4 +1,6 @@
-export interface ItmeShepa<T> 
+export interface ItmeShepa<T> {
+    
+} 
 
 
 type SelectConfig<T> = {
