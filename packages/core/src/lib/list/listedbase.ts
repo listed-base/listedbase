@@ -22,7 +22,7 @@ type ApplySelect<T, S extends SelectConfig<T>> = Pick<T, keyof S & keyof T>;
 
 // ─── Runtime Utility ─────────────────────────────────────────────────────────
 
-function applySelect<T extends object, S extends SelectConfig<T>>(
+function applySelect<T extends object, S extends ShepeOptions<T>>(
   data: T,
   config: { select: S }
 ): ApplySelect<T, S> {
