@@ -9,6 +9,7 @@ type LPickFields<T, S extends TConfig<T>> = Pick<T, keyof S & keyof T>;
 
 
 
+
 export interface ShepeOptions<T> {
     pick: TConfig<T>;
     omit: TConfig<T>;
