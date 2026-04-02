@@ -1,6 +1,3 @@
-export interface ItmeShepa<T> {
-    pick: <S extends SelectConfig<T>>(select: S) => ApplySelect<T, S>;
-} 
 
 
 type PickConfig<T> = {
