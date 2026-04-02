@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-      "rootDir": "src",
+      "rootDir": ".",
       "outDir": "../../dist/out-tsc",
     "declaration": true,
     "composite": true,
@@ -9,7 +9,7 @@
     "module": "ESNext",
     "target": "ESNext",
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", ],
   "exclude": [
     "vite.config.ts",
     "vite.config.mts",
@@ -23,6 +23,5 @@
     "src/**/*.spec.js",
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx"
-  ],
-  "references": [{"path": "../uni-reactive/core"}]
+  ]
 }
