@@ -9,7 +9,7 @@
     "module": "ESNext",
     "target": "ESNext",
   },
-  "include": ["src/**/*.ts", ],
+  "include": ["src/**/*.ts"],
   "exclude": [
     "vite.config.ts",
     "vite.config.mts",
