@@ -1,4 +1,4 @@
-ixport interface 
+export interface 
 
 
 type SelectConfig<T> = {
