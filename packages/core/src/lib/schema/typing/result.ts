@@ -11,6 +11,6 @@ type PickFiellds<T, S extends PickConfig<T>> = Pick<T, keyof S & keyof T>;
 
 export interface FieldsConfig<T> {
     pick: TConfig<T>;
-     omit: TConfig<T>;
+    omit: TConfig<T>;
 }
-export type ItmeShepa<T, TConfig extends FieldsConfig<T>>  = PickFiellds<T, TConfig['pick']>
+export type ItmeShepa<T, TConfig extends FieldsConfig<T>> = PickFiellds<T, TConfig['pick']>
