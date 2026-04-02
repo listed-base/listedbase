@@ -73,7 +73,7 @@ export function list<S extends TSchemaRef>(
 
     findMany<S extends SelectConfig<Item>>(config?: { select: S }) {
       if (config) {
-        return store.value.map(item => applySelect(item, config))
+         store.value.map(item => applySelect(item, config))
       }
       return store.value
     },
