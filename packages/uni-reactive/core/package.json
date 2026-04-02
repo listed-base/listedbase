@@ -20,7 +20,7 @@
   ],
   "nx": {
     "name": "uni-reactive",
-    "sourceRoot": "./src"
+    "sourceRoot": "pa"
   },
   "dependencies": {
     "tslib": "^2.3.0"
