@@ -16,3 +16,5 @@ export interface ShepeOptions<T> {
 
 }
 export type ApplyShapeOptions<T, TOptions extends ShepeOptions<T>> = TOptions extends { pick: infer TPick }
+    ? TPick extends TConfig<T>
+    ? LPickFields<T, TPick>
