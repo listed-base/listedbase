@@ -19,7 +19,7 @@
     "target": "es2022",
     "customConditions": ["@listedbase/source"],
     "paths": {
-      "@listedbase/uni-reactive": ["packages/uni-reactive/core/src/index.ts"],
+      // "@listedbase/uni-reactive": ["packages/uni-reactive/core/src/index.ts"],
       "@listedbase/angular-reactive": [
         "packages/uni-reactive/adapters/angular-reactive/src/index.ts"
       ],
