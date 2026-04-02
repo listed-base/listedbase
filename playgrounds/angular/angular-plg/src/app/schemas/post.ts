@@ -1,6 +1,6 @@
 import { lField, lSchema, list } from '@listedbase/core';
 import { sUser } from './user';
-import { LItem } from 'packages/core/src/lib/schema/typing/main';
+import { LItem } from 'packages/core/src/lib/schema/typing/it';
 
 export const sPosts = lSchema({
     name: "posts",
