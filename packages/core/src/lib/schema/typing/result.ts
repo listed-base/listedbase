@@ -15,4 +15,4 @@ export interface ShepeOptions<T> {
     omit: TConfig<T>;
 
 }
-export type ApplyShapeOptions<T, TConfig extends ShepeOptions<T>> = 
+export type ApplyShapeOptions<T, T extends ShepeOptions<T>> = 
