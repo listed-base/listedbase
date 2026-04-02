@@ -9,5 +9,5 @@ type PickFiellds<T, S extends PickConfig<T>> = Pick<T, keyof S & keyof T>;
 
 
 export interface ItmeShepa<T> {
-    pick: ;
+    pick: P;
 } 
