@@ -13,7 +13,7 @@ export const sPosts = lSchema({
 
 export const post = list(sPosts)
 
-const user = post.findMany({pick: { user: true }})
+const user = post.findMany({omit: { user: true }})
 user[0]
 
 export type Post = LItem<typeof sPosts>
