@@ -2,13 +2,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "composite": true,
-    "rootDir": ".",
+    "rootDir": "src",
     "outDir": "../../../../dist/out-tsc",
     "declaration": true,
     "declarationMap": true,
     "types": []
   },
-  "include": ["src/**/*.ts", "@listedbase/uni-reactive"],
+  "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "references": []
 }
