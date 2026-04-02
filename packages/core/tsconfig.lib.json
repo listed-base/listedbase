@@ -4,7 +4,7 @@
       "rootDir": ".",
       "outDir": "../../dist/out-tsc",
     "declaration": true,
-    co
+    "composite": true,
     "lib": ["ESNext", "DOM"],
     "module": "ESNext",
     "target": "ESNext",
