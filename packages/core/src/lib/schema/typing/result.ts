@@ -11,5 +11,5 @@ export interface FieldsConfig<T> {
     pick: PickConfig<T>;
 }
 export interface ItmeShepa<T, TConfig extends FieldsConfig<T>> {
-    pick: PickFiellds<T, any>;
+    pick: PickFiellds<T, TConfig['pick']>;
 } 
