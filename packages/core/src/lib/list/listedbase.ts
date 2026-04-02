@@ -76,7 +76,7 @@ export function list<S extends TSchemaRef>(
 
     findMany<TShapeOptions extends ShepeOptions<Item>>(shape?: TShapeOptions) {
 
-      return [] as ItemRetuenType<TShapeOptions extends ShepeOptions<Item> ? TShapeOptions : never>
+      return [] as ApplyShapeOptions
     },
     findUnique(input: LWhereUniqueInput<S>) {
       return { ...input } as Item
