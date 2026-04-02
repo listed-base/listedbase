@@ -38,12 +38,12 @@ function applySelect<T extends object, S extends SelectConfig<T>>(
 export function list<S extends TSchemaRef>(
   schema: S,
 ) {
-  const store = createReactive<LItem<S>[]>()
+  const store = createReactive<LItem<S>[]>([])
   type Item = LItem<S>
   const json = schema.schema.toJSONSchema()
-  const props = json.properties as any
-  const oneFromFields = Object.entries(props).filter(([key, value]: any) => value.oneFrom).map(([key, value]) => ({ [key]: value }))
-  const manyFromFields = Object.entries(props).filter(([key, value]: any) => value.manyFrom).map(([key, value]) => ({ [key]: value }))
+  const props = json.properties as Record<string, any>
+  const oneFromFields = Object.entries(props).filter(([, value]) => (value as any).oneFrom).map(([key, value]) => ({ [key]: value }))
+  const manyFromFields = Object.entries(props).filter(([, value]) => (value as any).manyFrom).map(([key, value]) => ({ [key]: value }))
   console.log(manyFromFields);
 
   return Object.assign({ items: store.value }, {
@@ -53,27 +53,30 @@ export function list<S extends TSchemaRef>(
       if (oneFromFields.length) {
         for (const field of oneFromFields) {
           const key = Object.keys(field)[0]
-          const value = (input as Record<string, any>)[key]
-          if (Object.prototype.hasOwnProperty.call(value, 'create')) {
-            (input as any)[key] = value.create
+          const value = (input as Record<string, unknown>)[key]
+          if (typeof value === 'object' && value !== null && 'create' in value) {
+            (input as any)[key] = (value as any).create
           }
 
         }
 
       }
      
-
-
-
+      const newItem = input as Item
+      store.modify(prev => [...prev, newItem])
+      return newItem
     },
     update(input: LUpdateInput<S>) {
       return { ...input } as Item
     },
 
-    findMany<S extends SelectConfig<Item>>(config?: S) {
-      return {} as ApplySelect<Item, S>
+    findMany<S extends SelectConfig<Item>>(config?: { select: S }) {
+      if (config) {
+        return store.value.map(item => applySelect(item, config))
+      }
+      return store.value
     },
-    findUniqe(input: LWhereUniqueInput<S>) {
+    findUnique(input: LWhereUniqueInput<S>) {
       return { ...input } as Item
     },
 
