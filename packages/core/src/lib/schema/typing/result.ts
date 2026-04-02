@@ -5,7 +5,7 @@ type TConfig<T> = {
 };
 
 type LPickFields<T, S extends TConfig<T>> = Pick<T, keyof S & keyof T>;
-type
+type 
 
 
 
