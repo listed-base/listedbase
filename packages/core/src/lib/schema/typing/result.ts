@@ -4,7 +4,7 @@ type TConfig<T> = {
     [K in keyof T]?: true;
 };
 
-type PickFiellds<T, S extends TConfig<T>> = Pick<T, keyof S & keyof T>;
+type LPickFiellds<T, S extends TConfig<T>> = Pick<T, keyof S & keyof T>;
 
 
 
