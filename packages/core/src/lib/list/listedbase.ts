@@ -74,7 +74,7 @@ export function list<S extends TSchemaRef>(
       return { ...input } as Item
     },
 
-    findMany<TSapeOptions extends ShepeOptions<Item>>(config?: { select: S }) {
+    findMany<TShapeOptions extends ShepeOptions<Item>>(config?: { select: TShapeOptions }) {
      
       return store.value
     },
