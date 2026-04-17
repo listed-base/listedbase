@@ -86,7 +86,6 @@ type ExtractFieldsByMeta<T, M extends keyof TMeta> = DeepClean<{
 // 🔗 RELATIONS
 // ----------------------------------
 
-type IsArray<T> = T extends Array<any> ? true : false;
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 // استخرج الـ meta جزء من الـ union
