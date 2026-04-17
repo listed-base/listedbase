@@ -25,12 +25,18 @@ export type TMeta = {
 // ----------------------------------
 
 type ExcludeUnionMark<T> = Exclude<T, TMeta>;
+type IsPlainObject<T> =
+  T extends object
+    ? T extends Builtin
+      ? false
+      : true
+    : false;
 
 type ExcludeUnionMarks<T> =
-  T extends Array<infer U>
-    ? ExcludeUnionMarks<U>[]
-    : T extends object
-      ? { [K in keyof T]: ExcludeUnionMarks<ExcludeUnionMark<T[K]>> }
+  IsPlainObject<T> extends true
+    ? { [K in keyof T]: ExcludeUnionMarks<ExcludeUnionMark<T[K]>> }
+    : T extends Array<infer U>
+      ? ExcludeUnionMarks<U>[]
       : ExcludeUnionMark<T>;
 
 // ----------------------------------
