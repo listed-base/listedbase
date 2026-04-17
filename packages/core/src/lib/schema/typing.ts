@@ -170,7 +170,7 @@ Result = {
   indexFields: {};
 
   populateQraph : {
-    posts: DecomposeSchema<Post>
+    posts: DecomposeSchema<Post[]>
   }
 
   autogenFields: {
