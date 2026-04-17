@@ -139,9 +139,11 @@ type MetaKeys = keyof MetaNameMap;
 export type DecomposeSchema<T> = {
   base: ExtractBase<T>;
 } & {
-  [M in MetaKeys as MetaNameMap[M]]: ExtractFields<T, M>;
+  idFields: ExtractFields<T, "idField">;
+  uniqueFields: ExtractFields<T, "unique">;
+  indexFields: ExtractFields<T, "index">;
 } & {
-  populateQraph: ExtractRelations<T, 'oneFrom' | 'manyFrom'>;
+  populateQraph: ExtractRelations<T>;
   autogenFields: AutoGenGroup<T>;
 };
 
