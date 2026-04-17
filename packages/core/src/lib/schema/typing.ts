@@ -135,6 +135,13 @@ type MetaNameMap = {
   index: "indexFields";
 };
 
+type MetaNameMap = {
+  idField: "idFields";
+  unique: "uniqueFields";
+  index: "indexFields";
+};
+
+type MetaKeys = keyof MetaNameMap;
 export type DecomposeSchema<T> = {
   // base fields (🔥 NEW)
   base: ExtractBase<T>;
