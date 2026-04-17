@@ -23,6 +23,22 @@ export type TMeta = {
 // ----------------------------------
 // 🧹 CLEAN TYPES
 // ----------------------------------
+type Primitive =
+  | string
+  | number
+  | boolean
+  | bigint
+  | symbol
+  | null
+  | undefined;
+
+type Builtin =
+  | Primitive
+  | Date
+  | Function
+  | RegExp
+  | Map<any, any>
+  | Set<any>;
 
 type ExcludeUnionMark<T> = Exclude<T, TMeta>;
 
