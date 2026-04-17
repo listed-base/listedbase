@@ -142,3 +142,22 @@ export type DecomposeSchema<T> = {
 
   autogenFields: AutoGenGroup<T>;
 };
+
+
+type User = {
+  id: number | { idField: true; autogen: true };
+  name: string;
+  tags: string[];
+  obj: {
+    a: number;
+    b: string;
+  };
+
+  createdAt: Date | { now: true };
+  updatedAt: Date | { updatedAt: true };
+
+  email: string | { unique: true };
+
+  profile: Profile | { oneFrom: true };
+  posts: Post[] | { manyFrom: true };
+};
