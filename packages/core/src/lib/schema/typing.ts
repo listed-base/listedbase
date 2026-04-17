@@ -128,12 +128,6 @@ type ExtractBase<T> = DeepClean<{
 // 🧠 FINAL DECOMPOSE
 // ----------------------------------
 
-type MetaNameMap = {
-  idField: 'idFields';
-  unique: 'uniqueFields';
-  index: 'indexFields';
-};
-
 
 export type DecomposeSchema<T> = {
   base: ExtractBase<T>;
