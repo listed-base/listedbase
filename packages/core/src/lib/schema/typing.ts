@@ -154,7 +154,7 @@ interface Profile {
 type User = {
   id: number | { idField: true; autogen: true };
   name: string;
-  tags
+  tags: string[];
   obj: {
     a: number;
     b: string;
