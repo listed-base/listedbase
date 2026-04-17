@@ -1,3 +1,3 @@
 import { ZodObject } from "zod";
 
-export type InferBase<S extends ZodObject> = DecomposeSchema<>
+export type InferBase<S extends ZodObject> = DecomposeSchema<z>
