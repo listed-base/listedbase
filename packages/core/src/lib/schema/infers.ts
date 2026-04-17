@@ -14,7 +14,7 @@ export type InferIdFieldsInput<S extends ZodObject> = DecomposeSchema<z.input<S>
 export type InferUniqueFieldsInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['uniqueFields'];
 export type InferIndexFieldsInput<S extends ZodObject> = DecomposeSchema<z.output<S>>['indexFields'];
 export type InferPopulateQraph<S extends ZodObject> = DecomposeSchema<z.output<S>>['populateQraph'];
-export type InferOnCreate<S extends ZodObject> = DecomposeSchema<z.output<S>>['autogenFields']["onCreate"];
+export type InferOnCreateInput<S extends ZodObject> = DecomposeSchema<z.output<S>>['autogenFields']["onCreate"];
 export type InferOnUpdate<S extends ZodObject> = DecomposeSchema<z.output<S>>['autogenFields']["onUpdate"];
 
 
