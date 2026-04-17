@@ -1,6 +1,10 @@
 // ============================================================
-// 🧩 META
+// 🏗️ TYPE-LEVEL ORM SCHEMA ENGINE (FINAL CLEAN VERSION)
 // ============================================================
+
+// ----------------------------------
+// 🧩 META
+// ----------------------------------
 
 export type TMeta = {
   idField?: true;
@@ -16,120 +20,121 @@ export type TMeta = {
   updatedAt?: true;
 };
 
-// ============================================================
-// 🧱 HELPERS
-// ============================================================
+// ----------------------------------
+// 🧱 BASE TYPES (IMPORTANT FIX)
+// ----------------------------------
 
-type Primitive =
-  | string
-  | number
-  | boolean
-  | bigint
-  | symbol
-  | null
-  | undefined;
+type Primitive = string | number | boolean | bigint | symbol | null | undefined;
 
 type Builtin = Primitive | Date | Function | RegExp | Map<any, any> | Set<any>;
 
-// ❗ important: prevent Date explosion
-type DeepClean<T> =
-  T extends Builtin
-    ? T
-    : T extends Array<infer U>
-      ? DeepClean<U>[]
-      : T extends object
-        ? { [K in keyof T]: DeepClean<T[K]> }
-        : T;
+// ----------------------------------
+// 🧹 CLEAN TYPES
+// ----------------------------------
 
-// ============================================================
-// 🔍 META EXTRACTION (FIXED CORE)
-// ============================================================
+type ExcludeUnionMark<T> = Exclude<T, TMeta>;
 
-// extract ONLY object part of union
-type MetaPart<T> = Extract<T, object>;
+// ❗ FIX: prevent Date/object explosion
+type DeepClean<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+    ? DeepClean<U>[]
+    : T extends object
+      ? { [K in keyof T]: DeepClean<T[K]> }
+      : T;
 
-// detect meta safely
-type HasMeta<T, M extends keyof TMeta> =
-  MetaPart<T> extends { [K in M]: true }
+// ----------------------------------
+// 🔍 META DETECTION (FIXED)
+// ----------------------------------
+
+type MetaOf<T> = Extract<T, TMeta>;
+
+// ❗ FIX: never bug
+type HasMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
+  ? false
+  : MetaOf<T> extends { [K in M]: any }
     ? true
     : false;
 
-// multiple meta support
-type HasSomeMeta<T, M extends keyof TMeta> =
-  true extends {
-    [K in M]: HasMeta<T, K>
-  }[M]
+// multiple metas support
+type HasSomeMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
+  ? false
+  : true extends {
+        [K in M]: HasMeta<T, K>;
+      }[M]
     ? true
     : false;
 
-// remove meta part → keep base value
-type BaseValue<T> = Exclude<T, TMeta>;
-
-// ============================================================
+// ----------------------------------
 // 📦 FIELD EXTRACTION
-// ============================================================
+// ----------------------------------
 
-type ExtractFields<T, M extends keyof TMeta> =
-  DeepClean<{
-    [K in keyof T as HasMeta<T[K], M> extends true ? K : never]:
-      BaseValue<T[K]>;
-  }>;
+type ExtractFields<T, M extends keyof TMeta> = DeepClean<{
+  [K in keyof T as HasMeta<T[K], M> extends true ? K : never]: ExcludeUnionMark<
+    T[K]
+  >;
+}>;
 
 // fields with multiple meta types
-type ExtractFieldsByMeta<T, M extends keyof TMeta> =
-  DeepClean<{
-    [K in keyof T as HasSomeMeta<T[K], M> extends true ? K : never]:
-      BaseValue<T[K]>;
-  }>;
+type ExtractFieldsByMeta<T, M extends keyof TMeta> = DeepClean<{
+  [K in keyof T as HasSomeMeta<T[K], M> extends true
+    ? K
+    : never]: ExcludeUnionMark<T[K]>;
+}>;
 
-// ============================================================
-// 🔗 RELATIONS (FIXED)
-// ============================================================
+// ----------------------------------
+// 🔗 RELATIONS
+// ----------------------------------
 
-type IsRelation<T> =
-  MetaPart<T> extends { oneFrom: true } | { manyFrom: true }
-    ? true
-    : false;
+type IsArray<T> = T extends Array<any> ? true : false;
 
-type RelationSchema<T> = Exclude<T, TMeta>;
-
+type UnwrapArray<T> = T extends Array<infer U> ? U : T;
+type HasRelation<T> = T extends { oneFrom: true } | { manyFrom: true }
+  ? true
+  : false;
 type ResolveRelation<T> =
-  T extends Array<infer U>
-    ? DecomposeSchema<U>[]
+  IsArray<T> extends true
+    ? DecomposeSchema<UnwrapArray<T>>[]
     : DecomposeSchema<T>;
 
 type ExtractRelations<T> = {
-  [K in keyof T as IsRelation<T[K]> extends true ? K : never]:
-    ResolveRelation<RelationSchema<T[K]>>;
+  [K in keyof T as HasRelation<T[K]> extends true ? K : never]: T[K] extends {
+    manyFrom: true;
+  }
+    ? DecomposeSchema<T[K] extends { manyFrom: true } ? T[K] : never>[]
+    : DecomposeSchema<T[K] extends { oneFrom: true } ? T[K] : never>;
 };
 
-// ============================================================
+// ----------------------------------
 // ⚙️ AUTOGEN
-// ============================================================
+// ----------------------------------
 
 type AutoGenGroup<T> = {
-  onCreate: ExtractFieldsByMeta<T, "autogen" | "now">;
-  onUpdate: ExtractFieldsByMeta<T, "updatedAt">;
+  onCreate: ExtractFieldsByMeta<T, 'autogen' | 'now'>;
+  onUpdate: ExtractFieldsByMeta<T, 'updatedAt'>;
 };
 
-// ============================================================
-// 🧠 BASE (NO META FIELDS)
-// ============================================================
+// ----------------------------------
+// 🧠 BASE (FIELDS WITHOUT META)
+// ----------------------------------
 
 type ExtractBase<T> = DeepClean<{
-  [K in keyof T as HasSomeMeta<T[K], keyof TMeta> extends false ? K : never]:
-    T[K];
+  [K in keyof T as HasSomeMeta<T[K], keyof TMeta> extends false
+    ? K
+    : never]: T[K];
 }>;
 
-// ============================================================
-// 🧠 FINAL
-// ============================================================
+// ----------------------------------
+// 🧠 FINAL DECOMPOSE
+// ----------------------------------
 
 type MetaNameMap = {
-  idField: "idFields";
-  unique: "uniqueFields";
-  index: "indexFields";
+  idField: 'idFields';
+  unique: 'uniqueFields';
+  index: 'indexFields';
 };
+
+type MetaKeys = keyof MetaNameMap;
 
 export type DecomposeSchema<T> = {
   base: ExtractBase<T>;
@@ -139,7 +144,6 @@ export type DecomposeSchema<T> = {
   indexFields: ExtractFields<T, "index">;
 
   populateQraph: ExtractRelations<T>;
-
   autogenFields: AutoGenGroup<T>;
 };
 
@@ -170,5 +174,5 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type Result = DecomposeSchema<User>;
+type Result = DecomposeSchema<User>['populateQraph'];
 type populateQraph = DecomposeSchema<User>['populateQraph'];
