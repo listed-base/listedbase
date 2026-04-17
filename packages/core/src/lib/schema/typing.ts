@@ -89,20 +89,21 @@ type ExtractFieldsByMeta<T, M extends keyof TMeta> = DeepClean<{
 type IsArray<T> = T extends Array<any> ? true : false;
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
-type HasRelation<T> = T extends { oneFrom: true } | { manyFrom: true }
-  ? true
-  : false;
-type ResolveRelation<T> =
-  IsArray<T> extends true
-    ? DecomposeSchema<UnwrapArray<T>>[]
-    : DecomposeSchema<T>;
+// استخرج الـ meta جزء من الـ union
+type RelationMetaOf<T> =
+  Extract<T, { oneFrom: true } | { manyFrom: true }>;
+
+// تحقق هل فيه relation meta
+type HasRelation<T> = [RelationMetaOf<T>] extends [never] ? false : true;
+
+// استخرج القيمة الفعلية (بدون الـ meta)
+type ExtractRelationValue<T> = Exclude<T, TMeta>;
 
 type ExtractRelations<T> = {
-  [K in keyof T as HasRelation<T[K]> extends true ? K : never]: T[K] extends {
-    manyFrom: true;
-  }
-    ? DecomposeSchema<T[K] extends { manyFrom: true } ? T[K] : never>[]
-    : DecomposeSchema<T[K] extends { oneFrom: true } ? T[K] : never>;
+  [K in keyof T as HasRelation<T[K]> extends true ? K : never]:
+    RelationMetaOf<T[K]> extends { manyFrom: true }
+      ? DecomposeSchema<UnwrapArray<ExtractRelationValue<T[K]>>>[]
+      : DecomposeSchema<ExtractRelationValue<T[K]>>;
 };
 
 // ----------------------------------
