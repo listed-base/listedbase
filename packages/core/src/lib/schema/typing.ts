@@ -167,7 +167,7 @@ type User = {
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
   skils: string[];
-  coo: {d: string}
+  : {d: string}
 };
 
 // ----------------------------------
