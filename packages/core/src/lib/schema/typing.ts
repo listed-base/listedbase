@@ -147,3 +147,27 @@ export type DecomposeSchema<T> = {
   populateQraph: ExtractRelations<T, "oneFrom" | "manyFrom">;
   autogenFields: AutoGenGroup<T>;
 };
+
+type Post = {
+  id: number | { idField: true };
+  title: string;
+};
+
+interface Profile {
+  id: string | { idField: true };
+  bio: string;
+}
+
+type User = {
+  id: number | { idField: true; autogen: true };
+
+  createdAt: Date | { now: true };
+  updatedAt: Date | { updatedAt: true };
+
+  email: string | { unique: true };
+
+  profile: Profile | { oneFrom: true };
+  posts: Post[] | { manyFrom: true };
+};
+
+type Result = DecomposeSchema<User>;
