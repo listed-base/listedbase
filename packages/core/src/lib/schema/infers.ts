@@ -1,1 +1,1 @@
-export  IniferB
+export  InferB
