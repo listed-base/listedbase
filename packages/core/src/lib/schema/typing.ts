@@ -102,7 +102,7 @@ type ExtractRelations<T> = {
   [K in keyof T as HasRelation<T[K]> extends true ? K : never]: RelationMetaOf<
     T[K]
   > extends { manyFrom: true }
-    ?   {} ]
+    ?   {} 
     : DecomposeSchema<ExtractRelationValue<T[K]>>;
 };
 
