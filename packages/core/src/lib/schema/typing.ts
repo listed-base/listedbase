@@ -134,7 +134,6 @@ type MetaNameMap = {
   index: 'indexFields';
 };
 
-type MetaKeys = keyof MetaNameMap;
 
 export type DecomposeSchema<T> = {
   base: ExtractBase<T>;
