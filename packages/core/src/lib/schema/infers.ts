@@ -1,1 +1,1 @@
-export  IniferBASE
+export  Inifer
