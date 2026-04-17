@@ -89,10 +89,9 @@ type ExtractFieldsByMeta<T, M extends keyof TMeta> = DeepClean<{
 type IsArray<T> = T extends Array<any> ? true : false;
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
-type HasRelation<T> =
-  T extends { oneFrom: true } | { manyFrom: true }
-    ? true
-    : false;
+type HasRelation<T> = T extends { oneFrom: true } | { manyFrom: true }
+  ? true
+  : false;
 type ResolveRelation<T> =
   IsArray<T> extends true
     ? DecomposeSchema<UnwrapArray<T>>[]
@@ -171,5 +170,5 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type Result = DecomposeSchema<User>["populateQraph"];
-type populateQraph = DecomposeSchema<User>["populateQraph"];
+type Result = DecomposeSchema<User>['populateQraph'];
+type populateQraph = DecomposeSchema<User>['populateQraph'];
