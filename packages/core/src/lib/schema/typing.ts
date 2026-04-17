@@ -168,4 +168,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type Result = DecomposeSchema<User>["populateQraph"];
+type Result = DecomposeSchema<User>[""];
