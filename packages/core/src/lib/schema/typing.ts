@@ -133,7 +133,7 @@ type Post = {
 };
 
 interface Profile {
-    
+    ins
 }
 
 type User = {
