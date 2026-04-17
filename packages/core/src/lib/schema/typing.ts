@@ -102,7 +102,7 @@ type ExtractRelations<T> = {
   [K in keyof T as HasRelation<T[K]> extends true ? K : never]: RelationMetaOf<
     T[K]
   > extends { manyFrom: true }
-    ?    DecomposeSchema<UnwrapArray<ExtractRelationValue<T[K]>>>[]
+    ? DecomposeSchema<UnwrapArray<ExtractRelationValue<T[K]>>>[]
     : DecomposeSchema<ExtractRelationValue<T[K]>>;
 };
 
@@ -176,4 +176,4 @@ type User = {
 };
 
 type Result = DecomposeSchema<User>;
-type populateQraph = DecomposeSchema<User>['populateQraph']["posts"]["type"];
+type populateQraph = DecomposeSchema<User>['populateQraph']['posts']['type'];
