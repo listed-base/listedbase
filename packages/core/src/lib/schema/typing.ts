@@ -98,10 +98,11 @@ type ResolveRelation<T> =
     : DecomposeSchema<T>;
 
 type ExtractRelations<T> = {
-  [K in keyof T as HasRelation<T[K]> extends true ? K : never]:
-    T[K] extends { manyFrom: true }
-      ? DecomposeSchema<T[K] extends { manyFrom: true } ? T[K] : never>[]
-      : DecomposeSchema<T[K] extends { oneFrom: true } ? T[K] : never>;
+  [K in keyof T as HasRelation<T[K]> extends true ? K : never]: T[K] extends {
+    manyFrom: true;
+  }
+    ? DecomposeSchema<T[K] extends { manyFrom: true } ? T[K] : never>[]
+    : DecomposeSchema<T[K] extends { oneFrom: true } ? T[K] : never>;
 };
 
 // ----------------------------------
