@@ -135,7 +135,6 @@ type Post = {
 interface Profile {
     id: string | { idField: true };
     bio: string;
-    user: OneFrom<User>;
 }
 
 type User = {
