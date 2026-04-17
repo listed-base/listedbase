@@ -129,11 +129,7 @@ type ExtractBase<T> = DeepClean<{
 // 🧠 FINAL DECOMPOSE
 // ----------------------------------
 
-type MetaNameMap = {
-  idField: "idFields";
-  unique: "uniqueFields";
-  index: "indexFields";
-};
+
 
 type MetaNameMap = {
   idField: "idFields";
