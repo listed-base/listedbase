@@ -138,16 +138,3 @@ type MetaNameMap = {
 };
 
 type MetaKeys = keyof MetaNameMap;
-export type DecomposeSchema<T> = {
-  // base fields (🔥 NEW)
-  base: ExtractBase<T>;
-
-  // static meta
-  [M in keyof MetaNameMap]: ExtractFields<T, M>;
-
-  // relations graph
-  populateQraph: ExtractRelations<T, "oneFrom" | "manyFrom">;
-
-  // lifecycle
-  autogenFields: AutoGenGroup<T>;
-};
