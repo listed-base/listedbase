@@ -90,8 +90,7 @@ type IsArray<T> = T extends Array<any> ? true : false;
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 // استخرج الـ meta جزء من الـ union
-type RelationMetaOf<T> =
-  Extract<T, { oneFrom: true } | { manyFrom: true }>;
+type RelationMetaOf<T> = Extract<T, { oneFrom: true } | { manyFrom: true }>;
 
 // تحقق هل فيه relation meta
 type HasRelation<T> = [RelationMetaOf<T>] extends [never] ? false : true;
@@ -100,10 +99,11 @@ type HasRelation<T> = [RelationMetaOf<T>] extends [never] ? false : true;
 type ExtractRelationValue<T> = Exclude<T, TMeta>;
 
 type ExtractRelations<T> = {
-  [K in keyof T as HasRelation<T[K]> extends true ? K : never]:
-    RelationMetaOf<T[K]> extends { manyFrom: true }
-      ? DecomposeSchema<UnwrapArray<ExtractRelationValue<T[K]>>>[]
-      : DecomposeSchema<ExtractRelationValue<T[K]>>;
+  [K in keyof T as HasRelation<T[K]> extends true ? K : never]: RelationMetaOf<
+    T[K]
+  > extends { manyFrom: true }
+    ? DecomposeSchema<UnwrapArray<ExtractRelationValue<T[K]>>>[]
+    : DecomposeSchema<ExtractRelationValue<T[K]>>;
 };
 
 // ----------------------------------
@@ -140,9 +140,9 @@ type MetaKeys = keyof MetaNameMap;
 export type DecomposeSchema<T> = {
   base: ExtractBase<T>;
 
-  idFields: ExtractFields<T, "idField">;
-  uniqueFields: ExtractFields<T, "unique">;
-  indexFields: ExtractFields<T, "index">;
+  idFields: ExtractFields<T, 'idField'>;
+  uniqueFields: ExtractFields<T, 'unique'>;
+  indexFields: ExtractFields<T, 'index'>;
 
   populateQraph: ExtractRelations<T>;
   autogenFields: AutoGenGroup<T>;
@@ -175,5 +175,5 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type Result = DecomposeSchema<User>
+type Result = DecomposeSchema<User>;
 type populateQraph = DecomposeSchema<User>['populateQraph'];
