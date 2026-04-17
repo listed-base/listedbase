@@ -171,7 +171,7 @@ type User = {
 // 🔍 RESULT
 // ----------------------------------
 
-type Result = DecomposeSchema<User>["p"];
+type Result = DecomposeSchema<User>["populateQraph"];
 
 /*
 Result = {
