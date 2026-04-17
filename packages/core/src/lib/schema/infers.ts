@@ -18,7 +18,7 @@ export type InferOnCreateInput<S extends ZodObject> = DecomposeSchema<z.input<S>
 export type InferOnUpdateInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['autogenFields']["onUpdate"];
 
 // Populate Qraph To sub CreateInput
-// { populate: UniqueField, create: CreateInput, crate }
+// { populate: UniqueField, create: CreateInput }
 export type PopulateQraphToCreateInput<S extends ZodObject> = 
 
 
