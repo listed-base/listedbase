@@ -153,7 +153,7 @@ type User = {
 // 🔍 RESULT
 // ----------------------------------
 
-type Result = DecomposeSchema<User>["oneFrom"];
+type Result = DecomposeSchema<User>
 
 
 
