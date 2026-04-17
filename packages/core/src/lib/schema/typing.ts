@@ -146,7 +146,7 @@ type User = {
   email: string | { unique: true };
 
   profile: Profile  | { oneFrom: Profile };
-  posts: Po
+  posts: Post[] | { manyFrom: Post };
 };
 
 // ----------------------------------
