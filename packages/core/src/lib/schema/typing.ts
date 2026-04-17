@@ -169,7 +169,7 @@ Result = {
 
   indexFields: {};
 
-  populateQra
+  populateQraph
 
   autogenFields: {
     onCreate: {
