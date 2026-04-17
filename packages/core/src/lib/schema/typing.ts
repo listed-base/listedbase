@@ -138,7 +138,7 @@ type MetaKeys = keyof MetaNameMap;
 
 export type DecomposeSchema<T> = {
   base: ExtractBase<T>;
-} & {
+
   idFields: ExtractFields<T, "idField">;
   uniqueFields: ExtractFields<T, "unique">;
   indexFields: ExtractFields<T, "index">;
