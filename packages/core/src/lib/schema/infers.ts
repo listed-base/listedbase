@@ -1,1 +1,1 @@
-export  InferBase<S >
+export  InferBase<S EX>
