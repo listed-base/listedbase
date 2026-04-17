@@ -171,7 +171,7 @@ type User = {
 // 🔍 RESULT
 // ----------------------------------
 
-type Result = DecomposeSchema<User>["autogenFields"];
+type Result = DecomposeSchema<User>[""];
 
 /*
 Result = {
