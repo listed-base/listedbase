@@ -169,7 +169,7 @@ Result = {
 
   indexFields: {};
 
-  
+  populate
 
   autogenFields: {
     onCreate: {
