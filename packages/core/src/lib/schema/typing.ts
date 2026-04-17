@@ -142,7 +142,7 @@ export type DecomposeSchema<T> = {
   idFields: ExtractFields<T, "idField">;
   uniqueFields: ExtractFields<T, "unique">;
   indexFields: ExtractFields<T, "index">;
-} & {
+
   populateQraph: ExtractRelations<T>;
   autogenFields: AutoGenGroup<T>;
 };
