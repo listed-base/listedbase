@@ -24,7 +24,6 @@ export type PopulateQraphToCreateInput<S extends ZodObject> = {
         populate: K,
         create: ItemCreateInput<DecomposeSchema<z.output<S>>['populateQraph'][K]>
     }
-
 }
 
 
