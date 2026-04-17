@@ -154,7 +154,7 @@ interface Profile {
   id: string | { idField: true };
   bio: string;
   tags: string[];
-  coo: 
+  coo: {}
 }
 
 type User = {
