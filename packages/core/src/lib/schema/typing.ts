@@ -169,13 +169,7 @@ Result = {
 
   indexFields: {};
 
-  oneFrom: {
-    profile: DecomposeSchema<Post>;
-  };
-
-  manyFrom: {
-    posts: DecomposeSchema<Post>[];
-  };
+  
 
   autogenFields: {
     onCreate: {
