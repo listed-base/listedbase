@@ -10,4 +10,4 @@ export type InferOnCreate<S extends ZodObject> = DecomposeSchema<z.output<S>>['a
 export type InferOnUpdate<S extends ZodObject> = DecomposeSchema<z.output<S>>['autogenFields']["onUpdate"];
 
 export type CreateInput<S extends ZodObject> = z.input<S>;
-export
+export type CreateOutput<S extends ZodObject> = z.output<S>;
