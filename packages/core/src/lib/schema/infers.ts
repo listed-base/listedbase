@@ -9,4 +9,5 @@ export type InferPopulateQraph<S extends ZodObject> = DecomposeSchema<z.output<S
 export type InferOnCreate<S extends ZodObject> = DecomposeSchema<z.output<S>>['autogenFields']["onCreate"];
 export type InferOnUpdate<S extends ZodObject> = DecomposeSchema<z.output<S>>['autogenFields']["onUpdate"];
 
-export type CreateInput
+export type CreateInput<S extends ZodObject> = z.input<S>;
+export
