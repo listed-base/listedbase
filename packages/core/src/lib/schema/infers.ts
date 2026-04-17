@@ -20,4 +20,7 @@ export type InferOnUpdateInput<S extends ZodObject> = DecomposeSchema<z.input<S>
 
 export type ItemCreateInput<S extends ZodObject> = InferBase<S> 
 & InferUniqueFieldsInput<S>
-& InferIndexFieldsInput
+& InferIndexFieldsInput<S>
+& InferOnCreateInput<S>
+
+export
