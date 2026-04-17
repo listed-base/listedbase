@@ -25,6 +25,7 @@ export type TMeta = {
 // ----------------------------------
 
 type ExcludeUnionMark<T> = Exclude<T, TMeta>;
+
 type IsPlainObject<T> =
   T extends object
     ? T extends Builtin
