@@ -170,7 +170,7 @@ Result = {
   indexFields: {};
 
   populateQraph : {
-    post
+    posts: 
   }
 
   autogenFields: {
