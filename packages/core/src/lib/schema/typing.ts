@@ -161,7 +161,9 @@ interface Profile {
 type User = {
   id: number | { idField: true; autogen: true };
 name: string;
-obj
+obj: {
+    a
+}
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
 
