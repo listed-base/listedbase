@@ -153,6 +153,7 @@ type Post = {
 interface Profile {
   id: string | { idField: true };
   bio: string;
+  tags
 }
 
 type User = {
