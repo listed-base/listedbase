@@ -176,4 +176,4 @@ type User = {
 };
 
 type Result = DecomposeSchema<User>;
-type populateQraph = DecomposeSchema<User>['populateQraph'][""];
+type populateQraph = DecomposeSchema<User>['populateQraph']["posts"];
