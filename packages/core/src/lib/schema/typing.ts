@@ -1,9 +1,9 @@
 // ============================================================
-// 🏗️  TYPE-LEVEL ORM SCHEMA ENGINE
+// 🏗️ TYPE-LEVEL ORM SCHEMA ENGINE (FINAL DESIGN)
 // ============================================================
 
 // ----------------------------------
-// 🧩 META DEFINITION
+// 🧩 META
 // ----------------------------------
 
 export type TMeta = {
@@ -11,24 +11,17 @@ export type TMeta = {
   unique?: true;
   index?: true;
 
-  oneFrom?: any;   // schema ref
-  manyFrom?: any;  // schema ref
+  oneFrom?: true;
+  manyFrom?: true;
 
   autogen?: true;
 
-  now?: true;        // onCreate
-  updatedAt?: true;  // onUpdate
+  now?: true;
+  updatedAt?: true;
 };
 
 // ----------------------------------
-// 🔗 RELATION HELPERS
-// ----------------------------------
-
-export type OneFrom<S> = { oneFrom: S };
-export type ManyFrom<S> = { manyFrom: S };
-
-// ----------------------------------
-// 🧹 CLEAN TYPES (remove meta from unions)
+// 🧹 CLEAN TYPES
 // ----------------------------------
 
 type ExcludeUnionMark<T> = Exclude<T, TMeta>;
@@ -49,7 +42,6 @@ type MetaOf<T> = Extract<T, TMeta>;
 type HasMeta<T, M extends keyof TMeta> =
   MetaOf<T> extends { [K in M]: any } ? true : false;
 
-// multiple metas (union)
 type HasSomeMeta<T, M extends keyof TMeta> =
   true extends {
     [K in M]: HasMeta<T, K>
@@ -72,28 +64,36 @@ type ExtractFieldsByMeta<T, M extends keyof TMeta> =
   }>;
 
 // ----------------------------------
-// 🔗 RELATION RESOLUTION
+// 🔗 RELATION CORE (🔥 الجديد)
 // ----------------------------------
 
-type RelationSchema<T, K extends "oneFrom" | "manyFrom"> =
-  Extract<T, { [P in K]: any }> extends infer R
-    ? R extends { [P in K]: infer S }
-      ? S
-      : never
-    : never;
+// نستخرج النوع الحقيقي (نحذف meta فقط)
+type FieldType<T> = ExcludeUnionMark<T>;
 
-type ResolveRelation<T, K extends "oneFrom" | "manyFrom"> =
-  DecomposeSchema<RelationSchema<T, K>>;
+// نحدد هل هو array
+type IsArray<T> = T extends Array<any> ? true : false;
 
-type ExtractRelations<T, K extends "oneFrom" | "manyFrom"> = {
-  [P in keyof T as HasMeta<T[P], K> extends true ? P : never]:
-    K extends "manyFrom"
-      ? ResolveRelation<T[P], K>[]
-      : ResolveRelation<T[P], K>;
+// ناخذ inner type
+type UnwrapArray<T> = T extends Array<infer U> ? U : T;
+
+// نبني Decompose مناسب
+type ResolvePopulate<T> =
+  IsArray<FieldType<T>> extends true
+    ? DecomposeSchema<UnwrapArray<FieldType<T>>>[]
+    : DecomposeSchema<FieldType<T>>;
+
+// ----------------------------------
+// 🔥 POPULATE GRAPH
+// ----------------------------------
+
+type ExtractPopulateGraph<T> = {
+  [K in keyof T as HasSomeMeta<T[K], "oneFrom" | "manyFrom"> extends true
+    ? K
+    : never]: ResolvePopulate<T[K]>;
 };
 
 // ----------------------------------
-// ⚙️ AUTOGEN (LIFECYCLE)
+// ⚙️ AUTOGEN
 // ----------------------------------
 
 type AutoGenGroup<T> = {
@@ -102,7 +102,7 @@ type AutoGenGroup<T> = {
 };
 
 // ----------------------------------
-// 🧠 MAIN DECOMPOSE
+// 🧠 MAIN
 // ----------------------------------
 
 type MetaNameMap = {
@@ -112,20 +112,15 @@ type MetaNameMap = {
 };
 
 export type DecomposeSchema<T> = {
-  // static meta
   [M in keyof MetaNameMap]: ExtractFields<T, M>;
 } & {
-  // relations (typed graph 🔥)
-  oneFrom: ExtractRelations<T, "oneFrom">;
-  manyFrom: ExtractRelations<T, "manyFrom">;
-
-  // lifecycle
+  populateQraph: ExtractPopulateGraph<T>;
   autogenFields: AutoGenGroup<T>;
 };
 
-// ----------------------------------
+// ============================================================
 // 🧪 EXAMPLE
-// ----------------------------------
+// ============================================================
 
 type Post = {
   id: number | { idField: true };
@@ -133,8 +128,8 @@ type Post = {
 };
 
 interface Profile {
-    id: string | { idField: true };
-    bio: string;
+  id: string | { idField: true };
+  bio: string;
 }
 
 type User = {
@@ -145,7 +140,7 @@ type User = {
 
   email: string | { unique: true };
 
-  profile: Profile  | { oneFrom: true };
+  profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
 };
 
@@ -153,9 +148,7 @@ type User = {
 // 🔍 RESULT
 // ----------------------------------
 
-type Result = DecomposeSchema<User>
-
-
+type Result = DecomposeSchema<User>;
 
 /*
 Result = {
@@ -169,10 +162,10 @@ Result = {
 
   indexFields: {};
 
-  populateQraph : {
-    posts: DecomposeSchema<Post[]>
-    profile: DecomposeSchema<Profile[]>
-  }
+  populateQraph: {
+    profile: DecomposeSchema<Profile>;
+    posts: DecomposeSchema<Post>[];
+  };
 
   autogenFields: {
     onCreate: {
