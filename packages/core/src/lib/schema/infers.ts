@@ -20,7 +20,7 @@ export type InferOnUpdateInput<S extends ZodObject> = DecomposeSchema<z.input<S>
 // Populate Qraph To sub CreateInput
 // { populate: UniqueField, create: CreateInput }
 export type PopulateQraphToCreateInput<S extends ZodObject> = {
-    
+    [K in keyof DecomposeSchema<z.output<S>>['populateQraph']]: {
 }
 
 
