@@ -1,3 +1,3 @@
 import { ZodObject } from "zod";
 
-export  InferBase<S extends ZodObject> = S['_def']['
+export  InferBase<S extends ZodObject> = 
