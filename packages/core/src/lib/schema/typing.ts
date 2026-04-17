@@ -162,7 +162,8 @@ type User = {
   id: number | { idField: true; autogen: true };
 name: string;
 obj: {
-    a
+    a: number;
+    b: string;
 }
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
