@@ -171,7 +171,7 @@ Result = {
 
   populateQraph : {
     posts: DecomposeSchema<Post[]>
-    posts: DecomposeSchema<Post[]>
+    profile: DecomposeSchema<Post[]>
   }
 
   autogenFields: {
