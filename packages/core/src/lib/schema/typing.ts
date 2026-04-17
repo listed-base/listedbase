@@ -166,6 +166,8 @@ type User = {
 
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
+  tags: string[];
+  coo: {d: string}
 };
 
 // ----------------------------------
