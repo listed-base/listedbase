@@ -12,3 +12,4 @@ export type InferOnUpdate<S extends ZodObject> = DecomposeSchema<z.output<S>>['a
 export type InferBaseInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['base'];
 export type InferIdFieldsInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['idFields'];
 
+
