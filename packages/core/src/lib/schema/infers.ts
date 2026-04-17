@@ -27,7 +27,7 @@ export type PopulateQraphToCreateInput<S extends ZodObject> = {
 }
 
 
-export type ItemCreateInput<S extends ZodObject > = InferBase<S> 
+export type ItemCreateInput<S extends ZodObject | DecomposeSchema> = InferBase<S> 
 & InferUniqueFieldsInput<S>
 & InferIndexFieldsInput<S>
 & InferOnCreateInput<S>
