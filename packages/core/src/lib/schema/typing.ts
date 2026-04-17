@@ -132,7 +132,7 @@ type Post = {
   title: string;
 };
 
-
+interface P
 
 type User = {
   id: number | { idField: true; autogen: true };
