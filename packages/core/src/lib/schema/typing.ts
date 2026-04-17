@@ -24,14 +24,7 @@ export type TMeta = {
 // 🧱 BASE TYPES (IMPORTANT FIX)
 // ----------------------------------
 
-type Primitive =
-  | string
-  | number
-  | boolean
-  | bigint
-  | symbol
-  | null
-  | undefined;
+type Primitive = string | number | boolean | bigint | symbol | null | undefined;
 
 type Builtin = Primitive | Date | Function | RegExp | Map<any, any> | Set<any>;
 
@@ -42,14 +35,13 @@ type Builtin = Primitive | Date | Function | RegExp | Map<any, any> | Set<any>;
 type ExcludeUnionMark<T> = Exclude<T, TMeta>;
 
 // ❗ FIX: prevent Date/object explosion
-type DeepClean<T> =
-  T extends Builtin
-    ? T
-    : T extends Array<infer U>
-      ? DeepClean<U>[]
-      : T extends object
-        ? { [K in keyof T]: DeepClean<T[K]> }
-        : T;
+type DeepClean<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+    ? DeepClean<U>[]
+    : T extends object
+      ? { [K in keyof T]: DeepClean<T[K]> }
+      : T;
 
 // ----------------------------------
 // 🔍 META DETECTION (FIXED)
@@ -58,37 +50,37 @@ type DeepClean<T> =
 type MetaOf<T> = Extract<T, TMeta>;
 
 // ❗ FIX: never bug
-type HasMeta<T, M extends keyof TMeta> =
-  [MetaOf<T>] extends [never]
-    ? false
-    : MetaOf<T> extends { [K in M]: any }
-      ? true
-      : false;
+type HasMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
+  ? false
+  : MetaOf<T> extends { [K in M]: any }
+    ? true
+    : false;
 
 // multiple metas support
-type HasSomeMeta<T, M extends keyof TMeta> =
-  [MetaOf<T>] extends [never]
-    ? false
-    : true extends {
-        [K in M]: HasMeta<T, K>
+type HasSomeMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
+  ? false
+  : true extends {
+        [K in M]: HasMeta<T, K>;
       }[M]
-      ? true
-      : false;
+    ? true
+    : false;
 
 // ----------------------------------
 // 📦 FIELD EXTRACTION
 // ----------------------------------
 
-type ExtractFields<T, M extends keyof TMeta> =
-  DeepClean<{
-    [K in keyof T as HasMeta<T[K], M> extends true ? K : never]: ExcludeUnionMark<T[K]>;
-  }>;
+type ExtractFields<T, M extends keyof TMeta> = DeepClean<{
+  [K in keyof T as HasMeta<T[K], M> extends true ? K : never]: ExcludeUnionMark<
+    T[K]
+  >;
+}>;
 
 // fields with multiple meta types
-type ExtractFieldsByMeta<T, M extends keyof TMeta> =
-  DeepClean<{
-    [K in keyof T as HasSomeMeta<T[K], M> extends true ? K : never]: ExcludeUnionMark<T[K]>;
-  }>;
+type ExtractFieldsByMeta<T, M extends keyof TMeta> = DeepClean<{
+  [K in keyof T as HasSomeMeta<T[K], M> extends true
+    ? K
+    : never]: ExcludeUnionMark<T[K]>;
+}>;
 
 // ----------------------------------
 // 🔗 RELATIONS
@@ -104,8 +96,9 @@ type ResolveRelation<T> =
     : DecomposeSchema<T>;
 
 type ExtractRelations<T, M extends keyof TMeta> = {
-  [K in keyof T as HasMeta<T[K], M> extends true ? K : never]:
-    ResolveRelation<ExcludeUnionMark<T[K]>>;
+  [K in keyof T as HasMeta<T[K], M> extends true ? K : never]: ResolveRelation<
+    ExcludeUnionMark<T[K]>
+  >;
 };
 
 // ----------------------------------
@@ -113,8 +106,8 @@ type ExtractRelations<T, M extends keyof TMeta> = {
 // ----------------------------------
 
 type AutoGenGroup<T> = {
-  onCreate: ExtractFieldsByMeta<T, "autogen" | "now">;
-  onUpdate: ExtractFieldsByMeta<T, "updatedAt">;
+  onCreate: ExtractFieldsByMeta<T, 'autogen' | 'now'>;
+  onUpdate: ExtractFieldsByMeta<T, 'updatedAt'>;
 };
 
 // ----------------------------------
@@ -122,19 +115,19 @@ type AutoGenGroup<T> = {
 // ----------------------------------
 
 type ExtractBase<T> = DeepClean<{
-  [K in keyof T as HasSomeMeta<T[K], keyof TMeta> extends false ? K : never]: T[K];
+  [K in keyof T as HasSomeMeta<T[K], keyof TMeta> extends false
+    ? K
+    : never]: T[K];
 }>;
 
 // ----------------------------------
 // 🧠 FINAL DECOMPOSE
 // ----------------------------------
 
-
-
 type MetaNameMap = {
-  idField: "idFields";
-  unique: "uniqueFields";
-  index: "indexFields";
+  idField: 'idFields';
+  unique: 'uniqueFields';
+  index: 'indexFields';
 };
 
 type MetaKeys = keyof MetaNameMap;
@@ -144,7 +137,7 @@ export type DecomposeSchema<T> = {
 } & {
   [M in MetaKeys as MetaNameMap[M]]: ExtractFields<T, M>;
 } & {
-  populateQraph: ExtractRelations<T, "oneFrom" | "manyFrom">;
+  populateQraph: ExtractRelations<T, 'oneFrom' | 'manyFrom'>;
   autogenFields: AutoGenGroup<T>;
 };
 
@@ -160,11 +153,11 @@ interface Profile {
 
 type User = {
   id: number | { idField: true; autogen: true };
-name: string;
-obj: {
+  name: string;
+  obj: {
     a: number;
     b: string;
-}
+  };
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
 
