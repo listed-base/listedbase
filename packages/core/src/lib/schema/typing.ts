@@ -97,10 +97,11 @@ type ResolveRelation<T> =
     ? DecomposeSchema<UnwrapArray<T>>[]
     : DecomposeSchema<T>;
 
-type ExtractRelations<T, M extends keyof TMeta> = {
-  [K in keyof T as HasMeta<T[K], M> extends true ? K : never]: ResolveRelation<
-    ExcludeUnionMark<T[K]>
-  >;
+type ExtractRelations<T> = {
+  [K in keyof T as HasRelation<T[K]> extends true ? K : never]:
+    T[K] extends { manyFrom: true }
+      ? DecomposeSchema<T[K] extends { manyFrom: true } ? T[K] : never>[]
+      : DecomposeSchema<T[K] extends { oneFrom: true } ? T[K] : never>;
 };
 
 // ----------------------------------
