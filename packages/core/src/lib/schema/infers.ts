@@ -143,3 +143,69 @@ type User = {
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
 };
+
+// ----------------------------------
+// ✏️ CreateInput<Post>
+// ----------------------------------
+// {
+//   id:    number          ← manual idField (مطلوب)
+//   title: string
+// }
+type PostCreate = CreateInput<Post>;
+
+// ----------------------------------
+// ✏️ CreateInput<User>
+// ----------------------------------
+// {
+//   name:      string
+//   tags:      string[]
+//   obj:       { a: number; b: string }
+//   email:     string                    ← unique (مطلوب)
+//   posts?:    { attach?: { id: number }[]; create?: CreateInput<Post>[] }
+//   profile?:  { attach?: { id: string };  create?: CreateInput<Profile> }
+//   — id مستبعد (autogen)
+//   — createdAt / updatedAt مستبعدان (server-generated)
+// }
+type UserCreate = CreateInput<User>;
+
+// ----------------------------------
+// 🔄 UpdateInput<User>
+// ----------------------------------
+// {
+//   id:        number                    ← idField (مطلوب للتعريف)
+//   name?:     string
+//   tags?:     string[]
+//   obj?:      { a: number; b: string }
+//   email?:    string
+//   posts?:    { attach?: ...; detach?: ...; create?: ... }
+//   profile?:  { attach?: ...; detach?: ...; create?: ... }
+// }
+type UserUpdate = UpdateInput<User>;
+
+// ----------------------------------
+// 🔍 Usage examples (runtime shape)
+// ----------------------------------
+
+const newUser: UserCreate = {
+  name:  'Fathi',
+  tags:  ['dev', 'ts'],
+  obj:   { a: 1, b: 'x' },
+  email: 'fathi@example.com',
+  posts: {
+    attach: [{ id: 1 }, { id: 2 }],         // ربط بمنشورات موجودة
+    create: [{ id: 10, title: 'Hello' }],   // إنشاء منشور جديد
+  },
+  profile: {
+    create: { id: 'p1', bio: 'engineer' },  // إنشاء profile جديد
+  },
+};
+
+const updateUser: UserUpdate = {
+  id:    42,                                 // مطلوب للتعريف
+  name:  'Fathi Updated',
+  posts: {
+    attach: [{ id: 3 }],                    // إضافة منشور موجود
+    detach: [{ id: 1 }],                    // فصل منشور
+    create: [{ id: 11, title: 'New' }],     // إنشاء ومباشر
+  },
+};
