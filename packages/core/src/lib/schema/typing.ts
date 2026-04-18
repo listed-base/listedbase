@@ -136,7 +136,7 @@ export type MappingSchema<T> = {
   uniqueFields: ExtractFields<T, 'unique'>;
   indexFields: ExtractFields<T, 'index'>;
 
-  populateQraph: ExtractPs<T>;
+  populateQraph: ExtractRelations<T>;
   autogenFields: AutoGenGroup<T>;
 };
 
