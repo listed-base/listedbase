@@ -116,3 +116,35 @@ interface UpdateInputI<T> {
 }
 
 export type UpdateInput<T> = UpdateInputI<T>['value'];
+
+
+
+type Post = {
+  id: number | { idField: true };
+  title: string;
+};
+
+interface Profile {
+  id: string | { idField: true };
+  bio: string;
+}
+
+type User = {
+  id: number | { idField: true; autogen: true };
+  name: string;
+  tags: string[];
+  obj: {
+    a: number;
+    b: string;
+  };
+  createdAt: Date | { now: true };
+  updatedAt: Date | { updatedAt: true };
+
+  email: string | { unique: true };
+
+  profile: Profile | { oneFrom: true };
+  posts: Post[] | { manyFrom: true };
+};
+
+type Result = DecomposeSchema<User>;
+type populateQraph = DecomposeSchema<User>['populateQraph']['posts'][number];
