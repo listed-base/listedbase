@@ -111,7 +111,7 @@ interface UpdateInputI<T> {
           // كل شيء آخر اختياري
           ExtractManualIdFields<T> & S['base'] & S['uniqueFields']
         > &
-        PopulationGraphToUpdateInput<S['']> // populations + detach
+        PopulationGraphToUpdateInput<S['pop']> // populations + detach
     : never;
 }
 
