@@ -54,19 +54,16 @@ type IdRef<S extends DecomposeSchema<any>> =
 
 type IsPopulationArray<T> = T extends any[] ? true : false;
 type UnwrapPopulation<T>  = T extends (infer U)[] ? U : T;
-// CreateInput يحتاج T الأصلي — لكن عندنا S فقط
-// الحل: نضيف UnwrapDecompose
-type UnwrapDecompose<S> = S extends DecomposeSchema<infer T> ? T : never;
 
 type PopulationGraphToCreateInput<G> = {
   [K in keyof G]?: IsPopulationArray<G[K]> extends true
     ? {
-        attach?: IdRef<UnwrapPopulation<G[K]>>[];
-        create?: CreateInput<UnwrapDecompose<UnwrapPopulation<G[K]>>>[];
+        attach?: IdRef<DecomposeSchema<UnwrapPopulation<G[K]>>>[];
+        create?: CreateInput<UnwrapPopulation<G[K]>>[];
       }
     : {
-        attach?: IdRef<G[K]>;
-        create?: CreateInput<UnwrapDecompose<G[K]>>;
+        attach?: IdRef<DecomposeSchema<G[K]>>;
+        create?: CreateInput<G[K]>;
       }
 };
 
