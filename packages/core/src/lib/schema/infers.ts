@@ -3,7 +3,6 @@ import { MappingSchema } from "./mapping";
 type InferEntity<T> =
   // base fields
   & MappingSchema<T>['base']
-  & MappingSchema<T>['idFields']
   & MappingSchema<T>['uniqueFields']
   // relations
   & {
