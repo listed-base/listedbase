@@ -1,9 +1,7 @@
 import { MappingSchema } from './mapping';
 type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferEntity<S> : never;
-type Simplify<T> = {
-  [K in keyof T]: T[K];
-} & {};
+
 
 type MergeAutoGen<T> = MappingSchema<T>['autogenFields']['onCreate'] &
   MappingSchema<T>['autogenFields']['onUpdate'];
