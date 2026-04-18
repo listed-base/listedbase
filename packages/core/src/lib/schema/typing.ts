@@ -101,8 +101,8 @@ type ExtractRelations<T> = {
   [K in keyof T as HasRelation<T[K]> extends true ? K : never]: RelationMetaOf<
     T[K]
   > extends { manyFrom: true }
-    ? MapSchema<UnwrapArray<ExtractRelationValue<T[K]>>>[]
-    : MapSchema<ExtractRelationValue<T[K]>>;
+    ? MappSchema<UnwrapArray<ExtractRelationValue<T[K]>>>[]
+    : MappSchema<ExtractRelationValue<T[K]>>;
 };
 
 // ----------------------------------
@@ -125,11 +125,11 @@ type ExtractBase<T> = DeepClean<{
 }>;
 
 // ----------------------------------
-// 🧠 FINAL Map
+// 🧠 FINAL Mapp
 // ----------------------------------
 
 
-export type MapSchema<T> = {
+export type MappSchema<T> = {
   base: ExtractBase<T>;
 
   idFields: ExtractFields<T, 'idField'>;
