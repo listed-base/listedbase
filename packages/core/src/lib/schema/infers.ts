@@ -42,7 +42,7 @@ type User = {
   id: number | { idField: true; autogen: true }; // autogen → مستبعد من create
   name: string;
   tags: string[];
-  obj: { a: number | []; b: string };
+  obj: { a: number | {}; b: string };
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
   email: string | { unique: true };
