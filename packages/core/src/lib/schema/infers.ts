@@ -148,5 +148,6 @@ type User = {
 
 type typing = DecomposeSchema<User>;
 
-type create = Create
+type create = CreateInput<User>;
+type update = UpdateInput<User>;
 
