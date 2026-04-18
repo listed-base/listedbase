@@ -104,7 +104,7 @@ type ExtractPopulates<T> = {
     ? MappingSchema<UnwrapArray<ExtractPopulateValue<T[K]>>>[]
     : MappingSchema<ExtractPopulateValue<T[K]>>;
 };
-[].
+[].to
 // ----------------------------------
 // ⚙️ AUTOGEN
 // ----------------------------------
