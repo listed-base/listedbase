@@ -1,35 +1,119 @@
-import z, { ZodObject } from "zod";
-import { DecomposeSchema } from "./typing";
+// ============================================================
+// 🔮 INFER — Input Types (CreateInput, UpdateInput)
+// Built on top of DecomposeSchema
+// ============================================================
 
-export type InferBase<S extends ZodObject> = DecomposeSchema<z.output<S>>['base'];
-export type InferIdFields<S extends ZodObject> = DecomposeSchema<z.output<S>>['idFields'];
-export type InferUniqueFields<S extends ZodObject> = DecomposeSchema<z.output<S>>['uniqueFields'];
-export type InferIndexFields<S extends ZodObject> = DecomposeSchema<z.output<S>>['indexFields'];
-export type InferPopulateQraph<S extends ZodObject> = DecomposeSchema<z.output<S>>['populateQraph'];
-export type InferOnCreate<S extends ZodObject> = DecomposeSchema<z.output<S>>['autogenFields']["onCreate"];
-export type InferOnUpdate<S extends ZodObject> = DecomposeSchema<z.output<S>>['autogenFields']["onUpdate"];
+import type { DecomposeSchema, TMeta } from './schema';
 
-export type InferBaseInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['base'];
-export type InferIdFieldsInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['idFields'];
-export type InferUniqueFieldsInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['uniqueFields'];
-export type InferIndexFieldsInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['indexFields'];
-export type InferPopulateQraphInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['populateQraph'];
-export type InferOnCreateInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['autogenFields']["onCreate"];
-export type InferOnUpdateInput<S extends ZodObject> = DecomposeSchema<z.input<S>>['autogenFields']["onUpdate"];
+// ----------------------------------
+// 🧹 UTILS
+// ----------------------------------
 
-// Populate Qraph To sub CreateInput
-// { populate: UniqueField, create: CreateInput }
-export type PopulateQraphToCreateInput<S extends ZodObject> = {
-    [K in keyof DecomposeSchema<z.output<S>>['populateQraph']]: {
-        populate: K,
-        create: ItemCreateInput<DecomposeSchema<z.output<S>>['populateQraph'][K]>
-    }
+type ExcludeUnionMark<T> = Exclude<T, TMeta>;
+
+type Primitive = string | number | boolean | bigint | symbol | null | undefined;
+type Builtin   = Primitive | Date | Function | RegExp | Map<any, any> | Set<any>;
+
+type DeepClean<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+    ? DeepClean<U>[]
+    : T extends object
+      ? { [K in keyof T]: DeepClean<T[K]> }
+      : T;
+
+type MetaOf<T>       = Extract<T, TMeta>;
+type HasMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
+  ? false
+  : MetaOf<T> extends { [K in M]: any }
+    ? true
+    : false;
+
+// ----------------------------------
+// 🔑 MANUAL ID FIELDS (idField بدون autogen)
+// ----------------------------------
+
+type ExtractManualIdFields<T> = DeepClean<{
+  [K in keyof T as HasMeta<T[K], 'idField'> extends true
+    ? HasMeta<T[K], 'autogen'> extends true
+      ? never   // autogen → server-generated → استبعد
+      : K        // manual id → مطلوب
+    : never]: ExcludeUnionMark<T[K]>;
+}>;
+
+// ----------------------------------
+// 📎 ID REF — للـ attach (idFields + uniqueFields)
+// ----------------------------------
+
+type IdRef<S extends DecomposeSchema<any>> =
+  S['idFields'] & Partial<S['uniqueFields']>;
+
+// ----------------------------------
+// 🌐 POPULATION GRAPH → CREATE INPUT
+// ----------------------------------
+
+type IsPopulationArray<T> = T extends any[] ? true : false;
+type UnwrapPopulation<T>  = T extends (infer U)[] ? U : T;
+
+type PopulationGraphToCreateInput<G> = {
+  [K in keyof G]?: IsPopulationArray<G[K]> extends true
+    ? {
+        attach?: IdRef<DecomposeSchema<UnwrapPopulation<G[K]>>>[];
+        create?: CreateInput<UnwrapPopulation<G[K]>>[];
+      }
+    : {
+        attach?: IdRef<DecomposeSchema<G[K]>>;
+        create?: CreateInput<G[K]>;
+      }
+};
+
+// ----------------------------------
+// 🌐 POPULATION GRAPH → UPDATE INPUT
+// ----------------------------------
+
+type PopulationGraphToUpdateInput<G> = {
+  [K in keyof G]?: IsPopulationArray<G[K]> extends true
+    ? {
+        attach?: IdRef<DecomposeSchema<UnwrapPopulation<G[K]>>>[];
+        detach?: IdRef<DecomposeSchema<UnwrapPopulation<G[K]>>>[];
+        create?: CreateInput<UnwrapPopulation<G[K]>>[];
+      }
+    : {
+        attach?: IdRef<DecomposeSchema<G[K]>>;
+        detach?: IdRef<DecomposeSchema<G[K]>>;
+        create?: CreateInput<G[K]>;
+      }
+};
+
+// ----------------------------------
+// ✏️ CREATE INPUT
+// ----------------------------------
+
+interface CreateInputI<T> {
+  value: DecomposeSchema<T> extends infer S extends DecomposeSchema<any>
+    ? ExtractManualIdFields<T>                     // id يدوي (مطلوب)
+      & S['base']                                   // الحقول العادية
+      & S['uniqueFields']                           // unique fields
+      & PopulationGraphToCreateInput<S['populationGraph']> // populations
+    : never;
 }
 
+export type CreateInput<T> = CreateInputI<T>['value'];
 
-export type ItemCreateInput<S extends ZodObject> = InferBase<S> 
-& InferUniqueFieldsInput<S>
-& InferIndexFieldsInput<S>
-& InferOnCreateInput<S>
+// ----------------------------------
+// 🔄 UPDATE INPUT
+// ----------------------------------
 
-export
+interface UpdateInputI<T> {
+  value: DecomposeSchema<T> extends infer S extends DecomposeSchema<any>
+    ? S['idFields']                                  // id مطلوب للتعريف
+      & Partial<                                     // كل شيء آخر اختياري
+          ExtractManualIdFields<T>
+          & S['base']
+          & S['uniqueFields']
+        >
+      & PopulationGraphToUpdateInput<S['populationGraph']> // populations + detach
+    : never;
+}
+
+export type UpdateInput<T> = UpdateInputI<T>['value'];
