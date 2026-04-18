@@ -12,7 +12,7 @@ import type { DecomposeSchema, TMeta } from './typing';
 type ExcludeUnionMark<T> = Exclude<T, TMeta>;
 
 type Primitive = string | number | boolean | bigint | symbol | null | undefined;
-type Builtin   = Primitive | Date | Function | RegExp | Map<any, any> | Set<any>;
+type Builtin = Primitive | Date | Function | RegExp | Map<any, any> | Set<any>;
 
 type DeepClean<T> = T extends Builtin
   ? T
@@ -22,7 +22,7 @@ type DeepClean<T> = T extends Builtin
       ? { [K in keyof T]: DeepClean<T[K]> }
       : T;
 
-type MetaOf<T>       = Extract<T, TMeta>;
+type MetaOf<T> = Extract<T, TMeta>;
 type HasMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
   ? false
   : MetaOf<T> extends { [K in M]: any }
@@ -36,8 +36,8 @@ type HasMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
 type ExtractManualIdFields<T> = DeepClean<{
   [K in keyof T as HasMeta<T[K], 'idField'> extends true
     ? HasMeta<T[K], 'autogen'> extends true
-      ? never   // autogen → server-generated → استبعد
-      : K        // manual id → مطلوب
+      ? never // autogen → server-generated → استبعد
+      : K // manual id → مطلوب
     : never]: ExcludeUnionMark<T[K]>;
 }>;
 
@@ -45,15 +45,15 @@ type ExtractManualIdFields<T> = DeepClean<{
 // 📎 ID REF — للـ attach (idFields + uniqueFields)
 // ----------------------------------
 
-type IdRef<S extends DecomposeSchema<any>> =
-  S['idFields'] & Partial<S['uniqueFields']>;
+type IdRef<S extends DecomposeSchema<any>> = S['idFields'] &
+  Partial<S['uniqueFields']>;
 
 // ----------------------------------
 // 🌐 POPULATION GRAPH → CREATE INPUT
 // ----------------------------------
 
 type IsPopulationArray<T> = T extends any[] ? true : false;
-type UnwrapPopulation<T>  = T extends (infer U)[] ? U : T;
+type UnwrapPopulation<T> = T extends (infer U)[] ? U : T;
 
 type PopulationGraphToCreateInput<G> = {
   [K in keyof G]?: IsPopulationArray<G[K]> extends true
@@ -64,7 +64,7 @@ type PopulationGraphToCreateInput<G> = {
     : {
         attach?: IdRef<DecomposeSchema<G[K]>>;
         create?: CreateInput<G[K]>;
-      }
+      };
 };
 
 // ----------------------------------
@@ -82,7 +82,7 @@ type PopulationGraphToUpdateInput<G> = {
         attach?: IdRef<DecomposeSchema<G[K]>>;
         detach?: IdRef<DecomposeSchema<G[K]>>;
         create?: CreateInput<G[K]>;
-      }
+      };
 };
 
 // ----------------------------------
@@ -91,10 +91,10 @@ type PopulationGraphToUpdateInput<G> = {
 
 interface CreateInputI<T> {
   value: DecomposeSchema<T> extends infer S extends DecomposeSchema<any>
-    ? ExtractManualIdFields<T>                     // id يدوي (مطلوب)
-      & S['base']                                   // الحقول العادية
-      & S['uniqueFields']                           // unique fields
-      & PopulationGraphToCreateInput<S['populationGraph']> // populations
+    ? ExtractManualIdFields<T> & // id يدوي (مطلوب)
+        S['base'] & // الحقول العادية
+        S['uniqueFields'] & // unique fields
+        PopulationGraphToCreateInput<S['populationGraph']> // populations
     : never;
 }
 
@@ -106,13 +106,12 @@ export type CreateInput<T> = CreateInputI<T>['value'];
 
 interface UpdateInputI<T> {
   value: DecomposeSchema<T> extends infer S extends DecomposeSchema<any>
-    ? S['idFields']                                  // id مطلوب للتعريف
-      & Partial<                                     // كل شيء آخر اختياري
-          ExtractManualIdFields<T>
-          & S['base']
-          & S['uniqueFields']
-        >
-      & PopulationGraphToUpdateInput<S['populationGraph']> // populations + detach
+    ? S['idFields'] & // id مطلوب للتعريف
+        Partial<
+          // كل شيء آخر اختياري
+          ExtractManualIdFields<T> & S['base'] & S['uniqueFields']
+        > &
+        PopulationGraphToUpdateInput<S['populationGraph']> // populations + detach
     : never;
 }
 
