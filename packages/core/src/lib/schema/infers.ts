@@ -94,7 +94,7 @@ interface CreateInputI<T> {
     ? ExtractManualIdFields<T> & // id يدوي (مطلوب)
         S['base'] & // الحقول العادية
         S['uniqueFields'] & // unique fields
-        PopulationGraphToCreateInput<S['populateGraph']> // populations
+        PopulationGraphToCreateInput<S['']> // populations
     : never;
 }
 
