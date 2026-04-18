@@ -3,6 +3,7 @@ type ResolveRelation<T> =
   T extends MappingSchema<infer S>
     ? InferEntity<S>
     : never;
+    
 export type InferEntity<T> =
   & MappingSchema<T>['base']
   & MappingSchema<T>['idFields']
