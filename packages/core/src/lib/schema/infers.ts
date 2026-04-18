@@ -1,6 +1,4 @@
 import { MappingSchema } from './mapping';
-type ResolvePopulate<T> =
-  T extends MappingSchema<infer S> ? InferEntity<S> : never;
 
 
 type MergeAutoGen<T> = MappingSchema<T>['autogenFields']['onCreate'] &
