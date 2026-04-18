@@ -1,7 +1,7 @@
 import { MappingSchema } from './mapping';
 type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferEntity<S> : never;
-type C<T> = {
+type Simplify<T> = {
   [K in keyof T]: T[K];
 } & {};
 export type InferEntity<T> =
