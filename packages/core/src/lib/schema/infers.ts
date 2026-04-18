@@ -39,4 +39,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type InferUser = InferEntity<User>;
+type InferUser = InferEntity<User>[""];
