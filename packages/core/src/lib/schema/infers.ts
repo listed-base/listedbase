@@ -8,8 +8,8 @@ export type InferEntity<T> =
     MappingSchema<T>['idFields'] &
     MappingSchema<T>['uniqueFields'] &
     MappingSchema<T>['indexFields'] &
-    MappingSchema<T>['autogenFields']["onCreate"] &
-    MappingSchema<T>['autogenFields']["onUpdate"] &
+    MappingSchema<T>['autogenFields']['onCreate'] &
+    MappingSchema<T>['autogenFields']['onUpdate'] &
     // 🔗 relations
     {
       [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
@@ -44,4 +44,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type InferUserProfile = InferEntity<User>
+type InferUserProfile = InferEntity<User>;
