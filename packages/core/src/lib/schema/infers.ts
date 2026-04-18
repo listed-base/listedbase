@@ -4,7 +4,8 @@ type InferEntity<T> =
   // base fields
   & MappingSchema<T>['base']
   & MappingSchema<T>['uniqueFields']
-  
+  & MappingSchema<T>['indexFields']
+  & MappingSchema<T>['autogenFields']
   // relations
   & {
     [K in keyof MappingSchema<T>['populateQraph']]:
