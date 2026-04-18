@@ -4,9 +4,7 @@ type ResolvePopulate<T> =
 type Simplify<T> = {
   [K in keyof T]: T[K];
 } & {};
-export type InferEntity<T> = type Simplify<T> = {
-  [K in keyof T]: T[K];
-} & {};
+export type InferEntity<T> = 
   // 🔥 كل الحقول scalar
   MappingSchema<T>['base'] &
     MappingSchema<T>['idFields'] &
