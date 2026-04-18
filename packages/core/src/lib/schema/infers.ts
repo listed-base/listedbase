@@ -5,9 +5,8 @@ type Simplify<T> = {
   [K in keyof T]: T[K];
 } & {};
 
-type MergeAutoGen<T> =
-  & MappingSchema<T>['autogenFields']['onCreate']
-  & MappingSchema<T>['autogenFields']['onUpdate'];
+type MergeAutoGen<T> = MappingSchema<T>['autogenFields']['onCreate'] &
+  MappingSchema<T>['autogenFields']['onUpdate'];
 export type InferEntity<T> = Simplify<
   // 🔥 كل الحقول scalar
   MappingSchema<T>['base'] &
@@ -23,7 +22,8 @@ export type InferEntity<T> = Simplify<
       >
         ? ResolvePopulate<U>[]
         : ResolvePopulate<MappingSchema<T>['populateQraph'][K]>;
-    }>;
+    }
+>;
 // ============================================================
 // 🧪 EXAMPLES
 // ============================================================
