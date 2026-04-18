@@ -2,17 +2,17 @@ import { MappingSchema } from './mapping';
 
 type InferEntity<T> =
   // base fields
-  MappingSchema<T>['base']  &
-        MappingSchema<T>['uniqueFields'] &
-        MappingSchema<T>['indexFields'] &
-        // relations
-        {
-          [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
-            infer U
-          >
-            ? InferEntity<U>[]
-            : InferEntity<MappingSchema<T>['populateQraph'][K]>;
-        };
+  MappingSchema<T>['base'] &
+    MappingSchema<T>['uniqueFields'] &
+    MappingSchema<T>['indexFields'] &
+    // relations
+    {
+      [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
+        infer U
+      >
+        ? InferEntity<U>[]
+        : InferEntity<MappingSchema<T>['populateQraph'][K]>;
+    };
 // ============================================================
 // 🧪 EXAMPLES
 // ============================================================
