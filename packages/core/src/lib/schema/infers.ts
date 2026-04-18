@@ -28,7 +28,7 @@ export type InferEntity<T> = Simplify<
         ? ResolveRelation<U>[]
         : ResolveRelation<MappingSchema<T>['populateQraph'][K]>;
     }
->; 
+>;
 // ============================================================
 // 🧪 EXAMPLES
 // ============================================================
