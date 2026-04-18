@@ -83,26 +83,26 @@ type ExtractFieldsByMeta<T, M extends keyof TMeta> = DeepClean<{
 }>;
 
 // ----------------------------------
-// 🔗 RELATIONS
+// 🔗 PS
 // ----------------------------------
 
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 // استخرج الـ meta جزء من الـ union
-type RelationMetaOf<T> = Extract<T, { oneFrom: true } | { manyFrom: true }>;
+type PMetaOf<T> = Extract<T, { oneFrom: true } | { manyFrom: true }>;
 
-// تحقق هل فيه relation meta
-type HasRelation<T> = [RelationMetaOf<T>] extends [never] ? false : true;
+// تحقق هل فيه P meta
+type HasP<T> = [PMetaOf<T>] extends [never] ? false : true;
 
 // استخرج القيمة الفعلية (بدون الـ meta)
-type ExtractRelationValue<T> = Exclude<T, TMeta>;
+type ExtractPValue<T> = Exclude<T, TMeta>;
 
-type ExtractRelations<T> = {
-  [K in keyof T as HasRelation<T[K]> extends true ? K : never]: RelationMetaOf<
+type ExtractPs<T> = {
+  [K in keyof T as HasP<T[K]> extends true ? K : never]: PMetaOf<
     T[K]
   > extends { manyFrom: true }
-    ? MappingSchema<UnwrapArray<ExtractRelationValue<T[K]>>>[]
-    : MappingSchema<ExtractRelationValue<T[K]>>;
+    ? MappingSchema<UnwrapArray<ExtractPValue<T[K]>>>[]
+    : MappingSchema<ExtractPValue<T[K]>>;
 };
 
 // ----------------------------------
@@ -136,7 +136,7 @@ export type MappingSchema<T> = {
   uniqueFields: ExtractFields<T, 'unique'>;
   indexFields: ExtractFields<T, 'index'>;
 
-  populateQraph: ExtractRelations<T>;
+  populateQraph: ExtractPs<T>;
   autogenFields: AutoGenGroup<T>;
 };
 
