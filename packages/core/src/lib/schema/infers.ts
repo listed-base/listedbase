@@ -3,10 +3,20 @@ type ResolveRelation<T> =
   T extends MappingSchema<infer S>
     ? InferEntity<S>
     : never;
-    
+
+type ResolveRelation<T> =
+  T extends MappingSchema<infer S>
+    ? InferEntity<S>
+    : never;
+
 export type InferEntity<T> =
+  // 🔥 كل الحقول scalar
   & MappingSchema<T>['base']
   & MappingSchema<T>['idFields']
+  & MappingSchema<T>['uniqueFields']
+  & MappingSchema<T>['indexFields']
+
+  // 🔗 relations
   & {
     [K in keyof MappingSchema<T>['populateQraph']]:
       MappingSchema<T>['populateQraph'][K] extends Array<infer U>
