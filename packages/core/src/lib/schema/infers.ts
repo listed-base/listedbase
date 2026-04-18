@@ -205,7 +205,7 @@ const updateUser: UserUpdate = {
   name:  'Fathi Updated',
   posts: {
     attach: [{ id: 3 }],                    // إضافة منشور موجود
-    detach: [{ id: 1 }],                    // فصل منشور
+    detach: [{  }],                    // فصل منشور
     create: [{ id: 11, title: 'New' }],     // إنشاء ومباشر
   },
 };
