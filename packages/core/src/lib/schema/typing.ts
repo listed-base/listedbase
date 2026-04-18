@@ -83,26 +83,26 @@ type ExtractFieldsByMeta<T, M extends keyof TMeta> = DeepClean<{
 }>;
 
 // ----------------------------------
-// 🔗 PopS
+// 🔗 PopulateS
 // ----------------------------------
 
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 // استخرج الـ meta جزء من الـ union
-type PopMetaOf<T> = Extract<T, { oneFrom: true } | { manyFrom: true }>;
+type PopulateMetaOf<T> = Extract<T, { oneFrom: true } | { manyFrom: true }>;
 
-// تحقق هل فيه Pop meta
-type HasPop<T> = [PopMetaOf<T>] extends [never] ? false : true;
+// تحقق هل فيه Populate meta
+type HasPopulate<T> = [PopulateMetaOf<T>] extends [never] ? false : true;
 
 // استخرج القيمة الفعلية (بدون الـ meta)
-type ExtractPopValue<T> = Exclude<T, TMeta>;
+type ExtractPopulateValue<T> = Exclude<T, TMeta>;
 
-type ExtractPops<T> = {
-  [K in keyof T as HasPop<T[K]> extends true ? K : never]: PopMetaOf<
+type ExtractPopulates<T> = {
+  [K in keyof T as HasPopulate<T[K]> extends true ? K : never]: PopulateMetaOf<
     T[K]
   > extends { manyFrom: true }
-    ? MappingSchema<UnwrapArray<ExtractPopValue<T[K]>>>[]
-    : MappingSchema<ExtractPopValue<T[K]>>;
+    ? MappingSchema<UnwrapArray<ExtractPopulateValue<T[K]>>>[]
+    : MappingSchema<ExtractPopulateValue<T[K]>>;
 };
 
 // ----------------------------------
@@ -136,7 +136,7 @@ export type MappingSchema<T> = {
   uniqueFields: ExtractFields<T, 'unique'>;
   indexFields: ExtractFields<T, 'index'>;
 
-  populateQraph: ExtractPops<T>;
+  populateQraph: ExtractPopulates<T>;
   autogenFields: AutoGenGroup<T>;
 };
 
