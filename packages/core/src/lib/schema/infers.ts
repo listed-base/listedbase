@@ -3,7 +3,7 @@
 // Built on top of DecomposeSchema
 // ============================================================
 
-import type { DecomposeSchema, TMeta } from './schema';
+import type { DecomposeSchema, TMeta } from './typing';
 
 // ----------------------------------
 // 🧹 UTILS
