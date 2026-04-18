@@ -38,4 +38,4 @@ type User = {
 };
 
 
-type InferUser = InferEntity<User>
+type InferUser = InferEntity<User>[""]
