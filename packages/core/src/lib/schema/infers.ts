@@ -7,7 +7,7 @@ type InferEntity<T> =
     MappingSchema<T>['indexFields'] &
     // relations
     {
-      [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
+      [K in keyof MappingSchema<T>['populateQraph']]:MappingSchema<T>['populateQraph'][K] extends Array<
         infer U
       >
         ? InferEntity<U>
