@@ -36,5 +36,20 @@ type User = {
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
 };
+type InferUserProfile = {
+    base: {
+        bio: string;
+    };
+    idFields: {
+        id: string;
+    };
+    uniqueFields: {};
+    indexFields: {};
+    populateQraph: {};
+    autogenFields: {
+        onCreate: {};
+        onUpdate: {};
+    };
+} & {}
 
 type InferUserProfile = InferEntity<User>['profile'];
