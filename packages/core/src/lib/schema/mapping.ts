@@ -129,6 +129,7 @@ type ExtractBase<T> = DeepClean<{
 
 
 export type MappingSchema<T> = {
+  __schema
   base: ExtractBase<T>;
 
   idFields: ExtractFields<T, 'idField'>;
