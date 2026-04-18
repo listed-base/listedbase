@@ -37,4 +37,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type InferUserPro = InferEntity<User>['profile'];
+type InferUserProfile = InferEntity<User>['profile'];
