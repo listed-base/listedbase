@@ -146,5 +146,5 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type Result = DecomposeSchema<User>;
+type tiping = DecomposeSchema<User>;
 
