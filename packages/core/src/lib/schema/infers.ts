@@ -153,5 +153,4 @@ type update = UpdateInput<User>;
 
 const xxxxx = {} as create;
 
-xxxxx?.attach
 
