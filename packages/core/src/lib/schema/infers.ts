@@ -1,28 +1,31 @@
-import { MappingSchema } from "./mapping";
+import { MappingSchema } from './mapping';
 
 type InferEntity<T> =
   // base fields
-  &  MappingSchema<T>['base'] extends {} ? never : MappingSchema<T>['base']
-  & MappingSchema<T>['uniqueFields']
-  & MappingSchema<T>['indexFields']
-  // relations
-  & {
-    [K in keyof MappingSchema<T>['populateQraph']]:
-      MappingSchema<T>['populateQraph'][K] extends Array<infer U>
-        ? InferEntity<U>[]
-        : InferEntity<MappingSchema<T>['populateQraph'][K]>
-  };
+  MappingSchema<T>['base'] extends {}
+    ? never
+    : MappingSchema<T>['base'] &
+        MappingSchema<T>['uniqueFields'] &
+        MappingSchema<T>['indexFields'] &
+        // relations
+        {
+          [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
+            infer U
+          >
+            ? InferEntity<U>[]
+            : InferEntity<MappingSchema<T>['populateQraph'][K]>;
+        };
 // ============================================================
 // 🧪 EXAMPLES
 // ============================================================
 
 type Post = {
-  id: number | { idField: true };        // manual id → مطلوب في create
+  id: number | { idField: true }; // manual id → مطلوب في create
   title: string;
 };
 
 interface Profile {
-  id: string | { idField: true };        // manual id → مطلوب في create
+  id: string | { idField: true }; // manual id → مطلوب في create
   bio: string;
 }
 
@@ -38,5 +41,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-
-type InferUser = InferEntity<User>["profile"]
+type InferUser = InferEntity<User>['profile'];
