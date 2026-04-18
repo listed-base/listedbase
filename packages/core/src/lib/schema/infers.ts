@@ -1,6 +1,5 @@
 import { MappingSchema } from './mapping';
 
-
 type MergeAutoGen<T> = MappingSchema<T>['autogenFields']['onCreate'] &
   MappingSchema<T>['autogenFields']['onUpdate'];
 type ResolvePopulate<T> =
