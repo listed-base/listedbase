@@ -1,5 +1,5 @@
 import { MappingSchema } from './mapping';
-type ResolveRelation<T> =
+type ResolveP<T> =
   T extends MappingSchema<infer S> ? InferEntity<S> : never;
 
 export type InferEntity<T> =
@@ -10,13 +10,13 @@ export type InferEntity<T> =
     MappingSchema<T>['indexFields'] &
     MappingSchema<T>['autogenFields']["onCreate"] &
     MappingSchema<T>['autogenFields']["onUpdate"] &
-    // 🔗 relations
+    // 🔗 Ps
     {
       [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
         infer U
       >
-        ? ResolveRelation<U>[]
-        : ResolveRelation<MappingSchema<T>['populateQraph'][K]>;
+        ? ResolveP<U>[]
+        : ResolveP<MappingSchema<T>['populateQraph'][K]>;
     };
 // ============================================================
 // 🧪 EXAMPLES
