@@ -15,13 +15,13 @@ export type InferEntity<T> = Simplify<
     MappingSchema<T>['uniqueFields'] &
     // 🔥 autogen (FIX)
     MergeAutoGen<T> &
-    // relations
+    // Populates
     {
       [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
         infer U
       >
-        ? ResolveRelation<U>[]
-        : ResolveRelation<MappingSchema<T>['populateQraph'][K]>;
+        ? ResolvePopulate<U>[]
+        : ResolvePopulate<MappingSchema<T>['populateQraph'][K]>;
     }
 >;
 // ============================================================
