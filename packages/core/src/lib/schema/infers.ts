@@ -3,7 +3,7 @@ import { MappingSchema } from "./mapping";
 type InferEntity<T> =
   // base fields
   & MappingSchema<T>['base']
-
+  
   // relations
   & {
     [K in keyof MappingSchema<T>['populateQraph']]:
