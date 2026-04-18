@@ -11,7 +11,7 @@ type InferEntity<T> =
         infer U
       >
         ? InferEntity<U>
-        : InferEntity<MappingSchema<T>['populateQraph'][K]>[];
+        : InferEntity<MappingSchema<T>['populateQraph'][K]>[""];
     };
 // ============================================================
 // 🧪 EXAMPLES
