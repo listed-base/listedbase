@@ -1,3 +1,5 @@
+import { MappingSchema } from "./mapping";
+
 type InferEntity<T> =
   // base fields
   & MappingSchema<T>['base']
