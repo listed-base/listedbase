@@ -38,4 +38,4 @@ type User = {
 };
 
 
-type  InferEntity
+type InferUser = InferEntity
