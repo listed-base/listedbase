@@ -8,31 +8,28 @@ type Simplify<T> = {
 type MergeAutoGen<T> = MappingSchema<T>['autogenFields']['onCreate'] &
   MappingSchema<T>['autogenFields']['onUpdate'];
 type ResolveRelation<T> =
-  T extends MappingSchema<infer S>
-    ? InferEntity<S>
-    : never;
+  T extends MappingSchema<infer S> ? InferEntity<S> : never;
 
 type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
 export type InferEntity<T> = Simplify<
   // base
-  & MappingSchema<T>['base']
-
-  // scalar meta
-  & MappingSchema<T>['idFields']
-  & MappingSchema<T>['uniqueFields']
-
-  // 🔥 autogen (FIX)
-  & MergeAutoGen<T>
-
-  // relations
-  & {
-    [K in keyof MappingSchema<T>['populateQraph']]:
-      MappingSchema<T>['populateQraph'][K] extends Array<infer U>
+  MappingSchema<T>['base'] &
+    // scalar meta
+    MappingSchema<T>['idFields'] &
+    MappingSchema<T>['uniqueFields'] &
+    // 🔥 autogen (FIX)
+    MergeAutoGen<T> &
+    // relations
+    {
+      [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
+        infer U
+      >
         ? ResolveRelation<U>[]
-        : ResolveRelation<MappingSchema<T>['populateQraph'][K]>
-  }
->;// ============================================================
+        : ResolveRelation<MappingSchema<T>['populateQraph'][K]>;
+    }
+>; 
+// ============================================================
 // 🧪 EXAMPLES
 // ============================================================
 
