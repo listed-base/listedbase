@@ -3,7 +3,7 @@
 // Built on top of DecomposeSchema
 // ============================================================
 
-import type { DecomposeSchema, TMeta } from './typing';
+import type { DecomposeSchema, TMeta } from './schema';
 
 // ----------------------------------
 // 🧹 UTILS
@@ -12,7 +12,7 @@ import type { DecomposeSchema, TMeta } from './typing';
 type ExcludeUnionMark<T> = Exclude<T, TMeta>;
 
 type Primitive = string | number | boolean | bigint | symbol | null | undefined;
-type Builtin = Primitive | Date  | RegExp | Map<any, any> | Set<any>;
+type Builtin   = Primitive | Date | Function | RegExp | Map<any, any> | Set<any>;
 
 type DeepClean<T> = T extends Builtin
   ? T
@@ -22,7 +22,7 @@ type DeepClean<T> = T extends Builtin
       ? { [K in keyof T]: DeepClean<T[K]> }
       : T;
 
-type MetaOf<T> = Extract<T, TMeta>;
+type MetaOf<T>       = Extract<T, TMeta>;
 type HasMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
   ? false
   : MetaOf<T> extends { [K in M]: any }
@@ -36,8 +36,8 @@ type HasMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
 type ExtractManualIdFields<T> = DeepClean<{
   [K in keyof T as HasMeta<T[K], 'idField'> extends true
     ? HasMeta<T[K], 'autogen'> extends true
-      ? never // autogen → server-generated → استبعد
-      : K // manual id → مطلوب
+      ? never   // autogen → server-generated → استبعد
+      : K        // manual id → مطلوب
     : never]: ExcludeUnionMark<T[K]>;
 }>;
 
@@ -45,15 +45,15 @@ type ExtractManualIdFields<T> = DeepClean<{
 // 📎 ID REF — للـ attach (idFields + uniqueFields)
 // ----------------------------------
 
-type IdRef<S extends DecomposeSchema<any>> = S['idFields'] &
-  Partial<S['uniqueFields']>;
+type IdRef<S extends DecomposeSchema<any>> =
+  S['idFields'] & Partial<S['uniqueFields']>;
 
 // ----------------------------------
 // 🌐 POPULATION GRAPH → CREATE INPUT
 // ----------------------------------
 
 type IsPopulationArray<T> = T extends any[] ? true : false;
-type UnwrapPopulation<T> = T extends (infer U)[] ? U : T;
+type UnwrapPopulation<T>  = T extends (infer U)[] ? U : T;
 
 type PopulationGraphToCreateInput<G> = {
   [K in keyof G]?: IsPopulationArray<G[K]> extends true
@@ -64,7 +64,7 @@ type PopulationGraphToCreateInput<G> = {
     : {
         attach?: IdRef<DecomposeSchema<G[K]>>;
         create?: CreateInput<G[K]>;
-      };
+      }
 };
 
 // ----------------------------------
@@ -82,7 +82,7 @@ type PopulationGraphToUpdateInput<G> = {
         attach?: IdRef<DecomposeSchema<G[K]>>;
         detach?: IdRef<DecomposeSchema<G[K]>>;
         create?: CreateInput<G[K]>;
-      };
+      }
 };
 
 // ----------------------------------
@@ -91,10 +91,10 @@ type PopulationGraphToUpdateInput<G> = {
 
 interface CreateInputI<T> {
   value: DecomposeSchema<T> extends infer S extends DecomposeSchema<any>
-    ? ExtractManualIdFields<T> & // id يدوي (مطلوب)
-        S['base'] & // الحقول العادية
-        S['uniqueFields'] & // unique fields
-        PopulationGraphToCreateInput<S['populateQraph']> // populations
+    ? ExtractManualIdFields<T>                     // id يدوي (مطلوب)
+      & S['base']                                   // الحقول العادية
+      & S['uniqueFields']                           // unique fields
+      & PopulationGraphToCreateInput<S['populationGraph']> // populations
     : never;
 }
 
@@ -106,53 +106,106 @@ export type CreateInput<T> = CreateInputI<T>['value'];
 
 interface UpdateInputI<T> {
   value: DecomposeSchema<T> extends infer S extends DecomposeSchema<any>
-    ? S['idFields'] & // id مطلوب للتعريف
-        Partial<
-          // كل شيء آخر اختياري
-          ExtractManualIdFields<T> & S['base'] & S['uniqueFields']
-        > &
-        PopulationGraphToUpdateInput<S['populateQraph']> // populations + detach
+    ? S['idFields']                                  // id مطلوب للتعريف
+      & Partial<                                     // كل شيء آخر اختياري
+          ExtractManualIdFields<T>
+          & S['base']
+          & S['uniqueFields']
+        >
+      & PopulationGraphToUpdateInput<S['populationGraph']> // populations + detach
     : never;
 }
 
 export type UpdateInput<T> = UpdateInputI<T>['value'];
 
-
+// ============================================================
+// 🧪 EXAMPLES
+// ============================================================
 
 type Post = {
-  id: number | { idField: true };
+  id: number | { idField: true };        // manual id → مطلوب في create
   title: string;
 };
 
 interface Profile {
-  id: string | { idField: true };
+  id: string | { idField: true };        // manual id → مطلوب في create
   bio: string;
 }
 
 type User = {
-  id: number | { idField: true; autogen: true };
+  id: number | { idField: true; autogen: true }; // autogen → مستبعد من create
   name: string;
   tags: string[];
-  obj: {
-    a: number;
-    b: string;
-  };
+  obj: { a: number; b: string };
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
-
   email: string | { unique: true };
-
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
 };
 
-type typing = DecomposeSchema<User>;
+// ----------------------------------
+// ✏️ CreateInput<Post>
+// ----------------------------------
+// {
+//   id:    number          ← manual idField (مطلوب)
+//   title: string
+// }
+type PostCreate = CreateInput<Post>;
 
-type create = CreateInput<User>["profile"]
-type update = UpdateInput<User>;
+// ----------------------------------
+// ✏️ CreateInput<User>
+// ----------------------------------
+// {
+//   name:      string
+//   tags:      string[]
+//   obj:       { a: number; b: string }
+//   email:     string                    ← unique (مطلوب)
+//   posts?:    { attach?: { id: number }[]; create?: CreateInput<Post>[] }
+//   profile?:  { attach?: { id: string };  create?: CreateInput<Profile> }
+//   — id مستبعد (autogen)
+//   — createdAt / updatedAt مستبعدان (server-generated)
+// }
+type UserCreate = CreateInput<User>;
 
-const xxxxx = {} as create;
+// ----------------------------------
+// 🔄 UpdateInput<User>
+// ----------------------------------
+// {
+//   id:        number                    ← idField (مطلوب للتعريف)
+//   name?:     string
+//   tags?:     string[]
+//   obj?:      { a: number; b: string }
+//   email?:    string
+//   posts?:    { attach?: ...; detach?: ...; create?: ... }
+//   profile?:  { attach?: ...; detach?: ...; create?: ... }
+// }
+type UserUpdate = UpdateInput<User>;
 
-xxxxx?.create
+// ----------------------------------
+// 🔍 Usage examples (runtime shape)
+// ----------------------------------
 
+const newUser: UserCreate = {
+  name:  'Fathi',
+  tags:  ['dev', 'ts'],
+  obj:   { a: 1, b: 'x' },
+  email: 'fathi@example.com',
+  posts: {
+    attach: [{ id: 1 }, { id: 2 }],         // ربط بمنشورات موجودة
+    create: [{ id: 10, title: 'Hello' }],   // إنشاء منشور جديد
+  },
+  profile: {
+    create: { id: 'p1', bio: 'engineer' },  // إنشاء profile جديد
+  },
+};
 
+const updateUser: UserUpdate = {
+  id:    42,                                 // مطلوب للتعريف
+  name:  'Fathi Updated',
+  posts: {
+    attach: [{ id: 3 }],                    // إضافة منشور موجود
+    detach: [{ id: 1 }],                    // فصل منشور
+    create: [{ id: 11, title: 'New' }],     // إنشاء ومباشر
+  },
+};
