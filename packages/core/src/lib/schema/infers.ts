@@ -112,7 +112,7 @@ interface UpdateInputI<T> {
           & S['base']
           & S['uniqueFields']
         >
-      & PopulationGraphToUpdateInput<S['populationGraph']> // populations + detach
+      & PopulationGraphToUpdateInput<S['']> // populations + detach
     : never;
 }
 
