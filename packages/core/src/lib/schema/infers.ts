@@ -36,7 +36,7 @@ interface Profile {
 
 type User = {
   id: number | { idField: true; autogen: true }; // autogen → مستبعد من create
-  name?: string;
+  name: string;
   tags: string[];
   obj: { a: number; b: string };
   createdAt: Date | { now: true };
