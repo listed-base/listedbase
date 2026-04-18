@@ -4,10 +4,7 @@ type ResolveRelation<T> =
     ? InferEntity<S>
     : never;
 
-type ResolveRelation<T> =
-  T extends MappingSchema<infer S>
-    ? InferEntity<S>
-    : never;
+
 
 export type InferEntity<T> =
   // 🔥 كل الحقول scalar
