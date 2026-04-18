@@ -1,5 +1,8 @@
 import { MappingSchema } from './mapping';
-
+type ResolveRelation<T> =
+  T extends MappingSchema<infer S>
+    ? InferEntity<S>
+    : never;
 type InferEntity<T> =
   // base fields
   MappingSchema<T>['base'] &
