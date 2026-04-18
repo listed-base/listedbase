@@ -8,7 +8,7 @@ export type InferEntity<T> =
     MappingSchema<T>['idFields'] &
     MappingSchema<T>['uniqueFields'] &
     MappingSchema<T>['indexFields'] &
-    MappingSchema<T>[''] &
+    MappingSchema<T>['autogenFields'] &
     // 🔗 relations
     {
       [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
