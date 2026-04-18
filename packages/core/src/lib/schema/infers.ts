@@ -19,7 +19,7 @@ export type InferEntity<T> = Simplify<
       >
         ? ResolvePopulate<U>[]
         : ResolvePopulate<MappingSchema<T>['populateQraph'][K]>;
-    };
+    }>;
 // ============================================================
 // 🧪 EXAMPLES
 // ============================================================
