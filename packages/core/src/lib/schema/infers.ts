@@ -12,7 +12,7 @@ import type { DecomposeSchema, TMeta } from './typing';
 type ExcludeUnionMark<T> = Exclude<T, TMeta>;
 
 type Primitive = string | number | boolean | bigint | symbol | null | undefined;
-type Builtin   = Primitive | Date | Function | RegExp | Map<any, any> | Set<any>;
+type Builtin   = Primitive | Date  | RegExp | Map<any, any> | Set<any>;
 
 type DeepClean<T> = T extends Builtin
   ? T
