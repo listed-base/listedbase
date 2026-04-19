@@ -76,10 +76,6 @@ type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
-// ----------------------------------
-// 🧠 ACCESSORS
-// ----------------------------------
-
 
 // ============================================================
 // 🔗 RELATION FILTERS
