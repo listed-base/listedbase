@@ -100,8 +100,6 @@ type FindPopulate<T> = {
     MappingSchema<T>['populateQraph'][K] extends Array<infer U>
       ? RelationFilter<ExtractSchema<U>>
       : { id?: unknown } | InferFindUnique<ExtractSchema<
-      //  
-      
       MappingSchema<T>['populateQraph'][K]
         >>;
 };
