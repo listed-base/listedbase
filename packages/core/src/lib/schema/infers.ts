@@ -128,4 +128,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type InferUserProfile = CreateInput<User>["profile"]
+type InferUserProfile = iNFER<User>["profile"]
