@@ -95,7 +95,7 @@ type User = {
 
   name: string;
   tags: string[];
-
+  obj
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
 
