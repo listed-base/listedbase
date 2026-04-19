@@ -52,7 +52,7 @@ type PopulateToInput<T> = {
         create?: CreateInput<ResolvePopulate<U>>[];
 
         // ✅ FIX
-        attachOrCreate?: AttachOrCreateInput<U>[];
+        attachOrCreate?: AttachOrCreateInput<ResolvePopulateU>[];
       }
     : {
         attach?: AttachInput<MappingSchema<T>['populateQraph'][K]>;
