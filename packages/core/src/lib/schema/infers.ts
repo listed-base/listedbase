@@ -76,9 +76,6 @@ export type InferCreate<T> = Simplify<
 type AutoGenUpdateOf<T> =
   MappingSchema<T>['autogenFields']['onUpdate'];
 
-type ExtractSchema<T> =
-  T extends MappingSchema<infer S> ? S : never;
-
 // ============================================================
 // 🔗 POPULATE → UPDATE
 // ============================================================
