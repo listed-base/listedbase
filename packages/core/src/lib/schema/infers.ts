@@ -72,6 +72,7 @@ type PopulateToInput<T> = {
 export type InferCreate<T> = Simplify<
   Omit<
     & MappingSchema<T>['base']
+    &
     & MappingSchema<T>['uniqueFields']
     & MappingSchema<T>['indexFields']
     & PopulateToInput<T>,
