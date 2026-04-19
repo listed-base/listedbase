@@ -90,4 +90,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type InferUserProfile = CreateInput<User>["profile"]["attach"]
+type InferUserProfile = CreateInput<User>["profile"]
