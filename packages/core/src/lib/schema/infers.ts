@@ -86,7 +86,7 @@ type Post = {
 };
 
 type Profile = {
-  id: string  | { idField: true };
+  id: string  | { idField: true,  };
   bio: string;
 };
 
