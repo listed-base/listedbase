@@ -83,17 +83,14 @@ type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 type IdOf<T> = MappingSchema<T>['idFields'];
 type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
 
-type ExtractSchema<T> =
-  T extends MappingSchema<infer S> ? S : never;
+type ExtractSchema<T> = T extends MappingSchema<infer S> ? S : never;
 
 // ============================================================
 // 🔗 RELATION FILTERS (UNIQUE ONLY)
 // ============================================================
 
 // one-to-one
-type OneRelationFilter<T> = Simplify<
-  InferFindUnique<T>
->;
+type OneRelationFilter<T> = Simplify<InferFindUnique<T>>;
 
 // one-to-many
 type ManyRelationFilter<T> = Simplify<{
@@ -107,14 +104,11 @@ type ManyRelationFilter<T> = Simplify<{
 // ----------------------------------
 
 type PopulateToUnique<T> = {
-  [K in keyof MappingSchema<T>['populateQraph']]?:
-    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
-      ? ManyRelationFilter<ExtractSchema<U>>
-      : OneRelationFilter<
-          ExtractSchema<
-            MappingSchema<T>['populateQraph'][K]
-          >
-        >;
+  [K in keyof MappingSchema<T>['populateQraph']]?: MappingSchema<T>['populateQraph'][K] extends Array<
+    infer U
+  >
+    ? ManyRelationFilter<ExtractSchema<U>>
+    : OneRelationFilter<ExtractSchema<MappingSchema<T>['populateQraph'][K]>>;
 };
 
 // ============================================================
@@ -123,11 +117,10 @@ type PopulateToUnique<T> = {
 
 export type InferFindUnique<T> = Simplify<
   // 🔥 scalar unique
-  & Partial<IdOf<T>>
-  & Partial<UniqueOf<T>>
-
-  // 🔗 relation filters
-  & PopulateToUnique<T>
+  Partial<IdOf<T>> &
+    Partial<UniqueOf<T>> &
+    // 🔗 relation filters
+    PopulateToUnique<T>
 >;
 type Post = {
   id: number | { idField: true };
@@ -155,9 +148,7 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
- 
-
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>;
 type UserFindUnique = InferFindUnique<User>;
-type UserFindIndex = InferFindIndex<User>["profile"];
+type UserFindIndex = InferFindIndex<User>['profile'];
