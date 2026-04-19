@@ -94,7 +94,6 @@ type RelationFilter<T> = Simplify<{
 // 🔗 SCALAR INPUTS
 // ============================================================
 
-type IdOf<T> = MappingSchema<T>['idFields'];
 type IndexOf<T> = MappingSchema<T>['indexFields'];
 
 // ============================================================
