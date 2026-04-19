@@ -92,7 +92,7 @@ type Profile = {
 
 type User = {
   id: number | { idField: true; autogen: true };
-  email: string;  
+  email: string ;  
   name: string;
  
 
