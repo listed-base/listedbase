@@ -149,7 +149,7 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-
+ 
 
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>;
