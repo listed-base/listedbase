@@ -131,7 +131,7 @@ type Post = {
 type Profile = {
   id: string | { idField: true; autogen: true };
   bio: string;
-  email: 
+  email: string | { unique: true };
 };
 
 type User = {
