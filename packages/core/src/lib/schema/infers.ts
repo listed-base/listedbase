@@ -91,7 +91,7 @@ type Profile = {
 };
 
 type User = {
-  id: number | { idField: true; autogen: true };
+  id: number | { idField: true; };
 
   name: string;
   tags: string[];
