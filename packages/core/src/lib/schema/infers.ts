@@ -90,4 +90,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type InferUserProfile = InferEntity<User>;
+type InferUserProfile = CreateInput<User>;
