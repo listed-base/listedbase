@@ -127,4 +127,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type InferUserProfile = InferCreate<User>["profile"]
+type InferUserProfile = InferCreate<User>["profile"][""]
