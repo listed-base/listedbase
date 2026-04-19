@@ -92,24 +92,20 @@ type Profile = {
 
 type User = {
   id: number | { idField: true; autogen: true };
-  email: string | { unique: true };  
-  name: string | { index: true };
- 
+
+  name: string;
+  tags: string[];
+  obj: {d: string, e: number }
+  arrOfObject: {d: string, e: number}[]
+  createdAt: Date | { now: true };
+  updatedAt: Date | { updatedAt: true };
+
+  email: string | { unique: true };
 
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
 };
 
-
-type User = {
-  id: number | { idField: true; autogen: true };
-  email: string | { unique: true };  
-  name: string | { index: true };
- 
-
-  profile: Profile | { oneFrom: true };
-  posts: Post[] | { manyFrom: true };
-};
 
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>
