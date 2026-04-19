@@ -1,4 +1,4 @@
-import { Simplify, UnwrapArray } from './utils';
+import { Simplify } from './utils';
 
 import { MappingSchema } from './mapping';
 
