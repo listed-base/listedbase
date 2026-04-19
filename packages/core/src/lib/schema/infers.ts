@@ -96,7 +96,7 @@ type User = {
   name: string;
   tags: string[];
   obj: {d: string, e: number | { idField: true }}
-  arrOf
+  arrOfObjec
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
 
