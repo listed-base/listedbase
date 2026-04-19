@@ -69,28 +69,45 @@ export type InferCreate<T> = Simplify<
   >
 >;
 
+// ============================================================
+// 🧰 HELPERS
+// ============================================================
+
+type Simplify<T> = { [K in keyof T]: T[K] } & {};
+
+type UnwrapArray<T> = T extends Array<infer U> ? U : T;
+
+// ----------------------------------
+// 🧠 ACCESSORS
+// ----------------------------------
+
+type IdOf<T> = MappingSchema<T>['idFields'];
+type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
+
+type ExtractSchema<T> =
+  T extends MappingSchema<infer S> ? S : never;
 
 // ============================================================
-// 🔗 RELATION FILTERS
+// 🔗 RELATION FILTERS (UNIQUE ONLY)
 // ============================================================
 
-// one-to-one (profile)
+// one-to-one
 type OneRelationFilter<T> = Simplify<
   InferFindUnique<T>
 >;
 
-// one-to-many (posts)
+// one-to-many
 type ManyRelationFilter<T> = Simplify<{
-  some?: InferFindIndex<T>;
-  none?: InferFindIndex<T>;
-  every?: InferFindIndex<T>;
+  some?: InferFindUnique<T>;
+  none?: InferFindUnique<T>;
+  every?: InferFindUnique<T>;
 }>;
 
 // ----------------------------------
-// 🔗 POPULATE → FILTER
+// 🔗 POPULATE → UNIQUE FILTER
 // ----------------------------------
 
-type PopulateToFilter<T, Mode extends 'unique' | 'index'> = {
+type PopulateToUnique<T> = {
   [K in keyof MappingSchema<T>['populateQraph']]?:
     MappingSchema<T>['populateQraph'][K] extends Array<infer U>
       ? ManyRelationFilter<ExtractSchema<U>>
@@ -102,7 +119,7 @@ type PopulateToFilter<T, Mode extends 'unique' | 'index'> = {
 };
 
 // ============================================================
-// 🧠 UNIQUE (exact lookup)
+// 🧠 FINAL UNIQUE INPUT
 // ============================================================
 
 export type InferFindUnique<T> = Simplify<
@@ -110,24 +127,9 @@ export type InferFindUnique<T> = Simplify<
   & Partial<IdOf<T>>
   & Partial<UniqueOf<T>>
 
-  // 🔗 relations
-  & PopulateToFilter<T, 'unique'>
+  // 🔗 relation filters
+  & PopulateToUnique<T>
 >;
-
-// ============================================================
-// 🧠 INDEX (search / multi)
-// ============================================================
-
-export type InferFindIndex<T> = Simplify<
-  // 🔥 unique + index
-  & InferFindUnique<T>
-  & Partial<IndexOf<T>>
->;
-type Post = {
-  id: number | { idField: true };
-  title: string;
-  serail: number | { unique: true };
-};
 
 type Profile = {
   id: string | { idField: true; autogen: true };
