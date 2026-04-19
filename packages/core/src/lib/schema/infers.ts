@@ -68,7 +68,67 @@ export type InferCreate<T> = Simplify<
     keyof AutoGenOf<T>
   >
 >;
+// ============================================================
+// 🧰 HELPERS
+// ============================================================
 
+type Simplify<T> = { [K in keyof T]: T[K] } & {};
+
+type UnwrapArray<T> = T extends Array<infer U> ? U : T;
+
+// ----------------------------------
+// 🧠 ACCESSORS
+// ----------------------------------
+
+type IdOf<T> = MappingSchema<T>['idFields'];
+type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
+
+type ExtractSchema<T> =
+  T extends MappingSchema<infer S> ? S : never;
+
+// ============================================================
+// 🔗 RELATION FILTERS (UNIQUE ONLY)
+// ============================================================
+
+// one-to-one
+type OneRelationFilter<T> = Simplify<
+  InferFindUnique<T>
+>;
+
+// one-to-many
+type ManyRelationFilter<T> = Simplify<{
+  some?: InferFindUnique<T>;
+  none?: InferFindUnique<T>;
+  every?: InferFindUnique<T>;
+}>;
+
+// ----------------------------------
+// 🔗 POPULATE → UNIQUE FILTER
+// ----------------------------------
+
+type PopulateToUnique<T> = {
+  [K in keyof MappingSchema<T>['populateQraph']]?:
+    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
+      ? ManyRelationFilter<ExtractSchema<U>>
+      : OneRelationFilter<
+          ExtractSchema<
+            MappingSchema<T>['populateQraph'][K]
+          >
+        >;
+};
+
+// ============================================================
+// 🧠 FINAL UNIQUE INPUT
+// ============================================================
+
+export type InferFindUnique<T> = Simplify<
+  // 🔥 scalar unique
+  & Partial<IdOf<T>>
+  & Partial<UniqueOf<T>>
+
+  // 🔗 relation filters
+  & PopulateToUnique<T>
+>;
 type Post = {
   id: number | { idField: true };
   title: string;
