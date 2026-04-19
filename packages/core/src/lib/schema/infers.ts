@@ -70,59 +70,6 @@ export type InferCreate<T> = Simplify<
 >;
 
 
-// ============================================================
-// 🔗 RELATION FILTERS
-// ============================================================
-
-// one-to-one (profile)
-type OneRelationFilter<T> = Simplify<
-  InferFindUnique<T>
->;
-
-// one-to-many (posts)
-type ManyRelationFilter<T> = Simplify<{
-  some?: InferFindIndex<T>;
-  none?: InferFindIndex<T>;
-  every?: InferFindIndex<T>;
-}>;
-
-// ----------------------------------
-// 🔗 POPULATE → FILTER
-// ----------------------------------
-
-type PopulateToFilter<T, Mode extends 'unique' | 'index'> = {
-  [K in keyof MappingSchema<T>['populateQraph']]?:
-    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
-      ? ManyRelationFilter<ExtractSchema<U>>
-      : OneRelationFilter<
-          ExtractSchema<
-            MappingSchema<T>['populateQraph'][K]
-          >
-        >;
-};
-
-// ============================================================
-// 🧠 UNIQUE (exact lookup)
-// ============================================================
-
-export type InferFindUnique<T> = Simplify<
-  // 🔥 scalar unique
-  & Partial<IdOf<T>>
-  & Partial<UniqueOf<T>>
-
-  // 🔗 relations
-  & PopulateToFilter<T, 'unique'>
->;
-
-// ============================================================
-// 🧠 INDEX (search / multi)
-// ============================================================
-
-export type InferFindIndex<T> = Simplify<
-  // 🔥 unique + index
-  & InferFindUnique<T>
-  & Partial<IndexOf<T>>
->;
 type Post = {
   id: number | { idField: true };
   title: string;
