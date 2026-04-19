@@ -76,7 +76,7 @@ export type InferCreate<T> = Simplify<
 type AutoGenUpdateOf<T> =
   MappingSchema<T>['autogenFields']['onUpdate'];
 
-  
+
 // ============================================================
 // 🔗 POPULATE → UPDATE
 // ============================================================
@@ -231,3 +231,5 @@ type User = {
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>;
 type UserFindUnique = InferFindUnique<User>;
+
+
