@@ -74,7 +74,6 @@ export type InferCreate<T> = Simplify<
 // ============================================================
 
 
-type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
 // ============================================================
 // 🔍 RELATION FILTER (ONE / MANY)
