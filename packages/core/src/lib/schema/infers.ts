@@ -24,6 +24,7 @@ export type InferEntity<T> = Simplify<
         : ResolvePopulate<MappingSchema<T>['populateQraph'][K]>;
     }
 >;
+
 type WhereUnique<T> = MappingSchema<T>['idFields'] &
   MappingSchema<T>['uniqueFields'];
 
