@@ -106,4 +106,4 @@ type User = {
 
 
 type UserEntity = InferEntity<User>;
-type 
+type UserCreate = InferCreate<User>;
