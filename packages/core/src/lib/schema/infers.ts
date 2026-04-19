@@ -54,77 +54,77 @@ type PopulateToInput<T> = {
 };
 
 // ============================================================
-// 🧠 CREATE
-// ============================================================
-
-export type InferCreate<T> = Simplify<
-  Omit<
-    MappingSchema<T>['base'] &
-      MappingSchema<T>['idFields'] &
-      MappingSchema<T>['uniqueFields'] &
-      MappingSchema<T>['indexFields'] &
-      PopulateToInput<T>,
-    keyof AutoGenOf<T>
-  >
->;
-
-
-// ============================================================
 // 🧰 HELPERS
 // ============================================================
 
+type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
+type UnwrapArray<T> = T extends Array<infer U> ? U : T;
+
+// ----------------------------------
+// 🧠 ACCESSORS
+// ----------------------------------
+
+type IdOf<T> = MappingSchema<T>['idFields'];
+type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
+type IndexOf<T> = MappingSchema<T>['indexFields'];
+
+type ExtractSchema<T> =
+  T extends MappingSchema<infer S> ? S : never;
 
 // ============================================================
-// 🔍 RELATION FILTER (ONE / MANY)
+// 🔗 RELATION FILTERS
 // ============================================================
 
-type RelationFilter<T> = Simplify<{
+// one-to-one (profile)
+type OneRelationFilter<T> = Simplify<
+  InferFindUnique<T>
+>;
+
+// one-to-many (posts)
+type ManyRelationFilter<T> = Simplify<{
   some?: InferFindIndex<T>;
   none?: InferFindIndex<T>;
   every?: InferFindIndex<T>;
 }>;
 
-// ============================================================
-// 🔗 SCALAR INPUTS
-// ============================================================
+// ----------------------------------
+// 🔗 POPULATE → FILTER
+// ----------------------------------
 
-type IndexOf<T> = MappingSchema<T>['indexFields'];
-
-// ============================================================
-// 🔍 POPULATE FILTER (USED IN FIND)
-// ============================================================
-
-type FindPopulate<T> = {
+type PopulateToFilter<T, Mode extends 'unique' | 'index'> = {
   [K in keyof MappingSchema<T>['populateQraph']]?:
     MappingSchema<T>['populateQraph'][K] extends Array<infer U>
-      ? RelationFilter<ExtractSchema<U>>
-      : { id?: unknown } | InferFindUnique<ExtractSchema<
-      MappingSchema<T>['populateQraph'][K]
-        >>;
+      ? ManyRelationFilter<ExtractSchema<U>>
+      : OneRelationFilter<
+          ExtractSchema<
+            MappingSchema<T>['populateQraph'][K]
+          >
+        >;
 };
 
 // ============================================================
-// 🔵 FIND UNIQUE
+// 🧠 UNIQUE (exact lookup)
 // ============================================================
 
 export type InferFindUnique<T> = Simplify<
+  // 🔥 scalar unique
   & Partial<IdOf<T>>
   & Partial<UniqueOf<T>>
-  & FindPopulate<T>
+
+  // 🔗 relations
+  & PopulateToFilter<T, 'unique'>
 >;
 
 // ============================================================
-// 🟣 FIND INDEX (SEARCH)
+// 🧠 INDEX (search / multi)
 // ============================================================
 
 export type InferFindIndex<T> = Simplify<
-  & Partial<IdOf<T>>
-  & Partial<UniqueOf<T>>
+  // 🔥 unique + index
+  & InferFindUnique<T>
   & Partial<IndexOf<T>>
-  & FindPopulate<T>
 >;
-
 type Post = {
   id: number | { idField: true };
   title: string;
