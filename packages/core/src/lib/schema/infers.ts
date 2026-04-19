@@ -39,6 +39,11 @@ export type InferEntity<T> = Simplify<
 // 🔗 POPULATE INPUT
 // ============================================================
 
+type PopulateInputNode<T> = Simplify<{
+  attach?: Partial<IdOf<T>> & Partial<UniqueOf<T>>;
+  create?: InferCreate<T>;
+  attachOrCreate?: Simplify<InferCreate<T> & Partial<IdOf<T>>>;
+}>;
 
 type PopulateToInput<T> = {
   [K in keyof MappingSchema<T>['populateQraph']]?: MappingSchema<T>['populateQraph'][K] extends Array<
