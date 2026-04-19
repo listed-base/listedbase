@@ -1,47 +1,38 @@
-import {
-  Simplify,
-  UnwrapArray,
-} from './utils';
+import { Simplify, UnwrapArray } from './utils';
 
-import {
-  MappingSchema,
-} from './mapping';
+import { MappingSchema } from './mapping';
 
 // ============================================================
 // 🧠 HELPERS
 // ============================================================
 
-type ExtractSchema<T> =
-  T extends MappingSchema<infer S> ? S : never;
+type ExtractSchema<T> = T extends MappingSchema<infer S> ? S : never;
 
 type IdOf<T> = MappingSchema<T>['idFields'];
 type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
 
-type AutoGenOf<T> =
-  & MappingSchema<T>['autogenFields']['onCreate']
-  & MappingSchema<T>['autogenFields']['onUpdate'];
+type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
+  MappingSchema<T>['autogenFields']['onUpdate'];
 
 // ============================================================
 // 🔗 ENTITY
 // ============================================================
 
 type ResolveRelation<T> =
-  T extends MappingSchema<infer S>
-    ? InferEntity<S>
-    : never;
+  T extends MappingSchema<infer S> ? InferEntity<S> : never;
 
 export type InferEntity<T> = Simplify<
-  & MappingSchema<T>['base']
-  & MappingSchema<T>['idFields']
-  & MappingSchema<T>['uniqueFields']
-  & MappingSchema<T>['autogenFields']['onCreate']
-  & MappingSchema<T>['autogenFields']['onUpdate']
-  & {
-    [K in keyof MappingSchema<T>['populateQraph']]:
-      MappingSchema<T>['populateQraph'][K] extends Array<infer U>
+  MappingSchema<T>['base'] &
+    MappingSchema<T>['idFields'] &
+    MappingSchema<T>['uniqueFields'] &
+    MappingSchema<T>['autogenFields']['onCreate'] &
+    MappingSchema<T>['autogenFields']['onUpdate'] & {
+      [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
+        infer U
+      >
         ? ResolveRelation<U>[]
-        : ResolveRelation<MappingSchema<T>['populateQraph'][K]>
-  }
+        : ResolveRelation<MappingSchema<T>['populateQraph'][K]>;
+    }
 >;
 
 // ============================================================
@@ -51,18 +42,15 @@ export type InferEntity<T> = Simplify<
 type PopulateInputNode<T> = Simplify<{
   attach?: Partial<IdOf<T>> & Partial<UniqueOf<T>>;
   create?: InferCreate<T>;
-  attachOrCreate?: Simplify<
-    InferCreate<T> & Partial<IdOf<T>>
-  >;
+  attachOrCreate?: Simplify<InferCreate<T> & Partial<IdOf<T>>>;
 }>;
 
 type PopulateToInput<T> = {
-  [K in keyof MappingSchema<T>['populateQraph']]?:
-    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
-      ? PopulateInputNode<ExtractSchema<U>>
-      : PopulateInputNode<
-          ExtractSchema<MappingSchema<T>['populateQraph'][K]>
-        >;
+  [K in keyof MappingSchema<T>['populateQraph']]?: MappingSchema<T>['populateQraph'][K] extends Array<
+    infer U
+  >
+    ? PopulateInputNode<ExtractSchema<U>>
+    : PopulateInputNode<ExtractSchema<MappingSchema<T>['populateQraph'][K]>>;
 };
 
 // ============================================================
@@ -71,11 +59,11 @@ type PopulateToInput<T> = {
 
 export type InferCreate<T> = Simplify<
   Omit<
-    & MappingSchema<T>['base']
-    & MappingSchema<T>['idFields']
-    & MappingSchema<T>['uniqueFields']
-    & MappingSchema<T>['indexFields']
-    & PopulateToInput<T>,
+    MappingSchema<T>['base'] &
+      MappingSchema<T>['idFields'] &
+      MappingSchema<T>['uniqueFields'] &
+      MappingSchema<T>['indexFields'] &
+      PopulateToInput<T>,
     keyof AutoGenOf<T>
   >
 >;
@@ -86,7 +74,7 @@ type Post = {
 };
 
 type Profile = {
-  id: string  | { idField: true, autogen: true};
+  id: string | { idField: true; autogen: true };
   bio: string;
 };
 
@@ -95,26 +83,27 @@ type User = {
   email: string | { unique: true };
   name: string | { index: true };
   tags: string[];
-  obj: {d: string, e: number }
-  arrOfObject: {d: string, e: number}[]
+  obj: { d: string; e: number };
+  arrOfObject: { d: string; e: number }[];
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
-
 
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
 };
 
 type UserUniqueInput = {
-  id: number
-  email: string 
-  name: string 
- 
+  id: number;
+  email: string;
+  name: string;
 
-  profile: {id: string};
-  posts: { some: { id: number }[], none: { id: number }[] , evrey: { id: number }[] };
+  profile: { id: string };
+  posts: {
+    some: { id: number }[];
+    none: { id: number }[];
+    evrey: { id: number }[];
+  };
 };
 
-
 type UserEntity = InferEntity<User>;
-type UserCreate = InferCreate<User>
+type UserCreate = InferCreate<User>;
