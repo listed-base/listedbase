@@ -85,7 +85,7 @@ type Post = {
 };
 
 type Profile = {
-  id: string ;
+  id: string {};
   bio: string;
   user: User | { oneFrom: true };
 };
