@@ -113,6 +113,7 @@ type Post = {
 interface Profile {
   id: string | { idField: true }; // manual id → مطلوب في create
   bio: string;
+  g: string
 }
 
 type User = {
