@@ -43,7 +43,6 @@ type AutoGenKeys<T> =
   & MappingSchema<T>['uniqueFields']
   & MappingSchema<T>['indexFields'];
 
-  type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
 export type CreateInput<T> = Simplify<
   Omit<
