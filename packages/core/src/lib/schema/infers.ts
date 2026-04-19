@@ -68,6 +68,70 @@ export type InferCreate<T> = Simplify<
   >
 >;
 
+
+// ============================================================
+// 🧰 HELPERS
+// ============================================================
+
+type Simplify<T> = { [K in keyof T]: T[K] } & {};
+
+type UnwrapArray<T> = T extends Array<infer U> ? U : T;
+
+type ExtractSchema<T> =
+  T extends MappingSchema<infer S> ? S : never;
+
+// ============================================================
+// 🔍 RELATION FILTER (ONE / MANY)
+// ============================================================
+
+type RelationFilter<T> = Simplify<{
+  some?: InferFindIndex<T>;
+  none?: InferFindIndex<T>;
+  every?: InferFindIndex<T>;
+}>;
+
+// ============================================================
+// 🔗 SCALAR INPUTS
+// ============================================================
+
+type IdOf<T> = MappingSchema<T>['idFields'];
+type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
+type IndexOf<T> = MappingSchema<T>['indexFields'];
+
+// ============================================================
+// 🔍 POPULATE FILTER (USED IN FIND)
+// ============================================================
+
+type FindPopulate<T> = {
+  [K in keyof MappingSchema<T>['populateQraph']]?:
+    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
+      ? RelationFilter<ExtractSchema<U>>
+      : { id?: unknown } | InferFindUnique<ExtractSchema<
+          MappingSchema<T>['populateQraph'][K]
+        >>;
+};
+
+// ============================================================
+// 🔵 FIND UNIQUE
+// ============================================================
+
+export type InferFindUnique<T> = Simplify<
+  & Partial<IdOf<T>>
+  & Partial<UniqueOf<T>>
+  & FindPopulate<T>
+>;
+
+// ============================================================
+// 🟣 FIND INDEX (SEARCH)
+// ============================================================
+
+export type InferFindIndex<T> = Simplify<
+  & Partial<IdOf<T>>
+  & Partial<UniqueOf<T>>
+  & Partial<IndexOf<T>>
+  & FindPopulate<T>
+>;
+
 type Post = {
   id: number | { idField: true };
   title: string;
