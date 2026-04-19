@@ -126,7 +126,7 @@ export type InferFindIndex<T> = Simplify<
 type Post = {
   id: number | { idField: true };
   title: string;
-  serail: 
+  serail: number | { unique: true };
 };
 
 type Profile = {
