@@ -10,6 +10,7 @@ type ExtractSchema<T> = T extends MappingSchema<infer S> ? S : never;
 
 type IdOf<T> = MappingSchema<T>['idFields'];
 type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
+type IndexOf<T> = MappingSchema<T>['indexFields'];
 
 type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
   MappingSchema<T>['autogenFields']['onUpdate'];
