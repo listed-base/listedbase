@@ -105,6 +105,16 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
+type User = {
+  id: number | { idField: true; autogen: true };
+  email: string | { unique: true };  
+  name: string | { index: true };
+ 
+
+  profile: Profile | { oneFrom: true };
+  posts: Post[] | { manyFrom: true };
+};
+
 
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>
