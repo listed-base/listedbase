@@ -82,7 +82,6 @@ type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
 type IdOf<T> = MappingSchema<T>['idFields'];
 type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
-type IndexOf<T> = MappingSchema<T>['indexFields'];
 
 type ExtractSchema<T> =
   T extends MappingSchema<infer S> ? S : never;
