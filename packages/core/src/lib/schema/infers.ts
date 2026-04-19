@@ -232,4 +232,6 @@ type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>;
 type UserFindUnique = InferFindUnique<User>;
 
-type 
+type UserUpdate = InferUpdate<User>;
+
+
