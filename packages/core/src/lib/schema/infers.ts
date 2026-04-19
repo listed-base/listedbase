@@ -29,7 +29,6 @@ export type InferEntity<T> = Simplify<
 // 🧩 HELPERS
 // ============================================================
 
-
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
 // ----------------------------------
@@ -39,16 +38,14 @@ type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 type IdOf<T> = MappingSchema<T>['idFields'];
 type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
 
-type AutoGenOf<T> =
-  & MappingSchema<T>['autogenFields']['onCreate']
-  & MappingSchema<T>['autogenFields']['onUpdate'];
+type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
+  MappingSchema<T>['autogenFields']['onUpdate'];
 
 // ----------------------------------
 // 🧠 EXTRACT SCHEMA FROM MAPPING
 // ----------------------------------
 
-type ExtractSchema<T> =
-  T extends MappingSchema<infer S> ? S : never;
+type ExtractSchema<T> = T extends MappingSchema<infer S> ? S : never;
 
 // ============================================================
 // 🔗 POPULATE → INPUT
@@ -59,9 +56,7 @@ type PopulateToInput<T> = {
     // resolve target schema
     MappingSchema<T>['populateQraph'][K] extends Array<infer U>
       ? PopulateInputNode<ExtractSchema<U>>
-      : PopulateInputNode<
-          ExtractSchema<MappingSchema<T>['populateQraph'][K]>
-        >
+      : PopulateInputNode<ExtractSchema<MappingSchema<T>['populateQraph'][K]>>
   >;
 };
 
@@ -71,18 +66,13 @@ type PopulateToInput<T> = {
 
 type PopulateInputNode<T> = Simplify<{
   // attach via id + unique
-  attach?: Simplify<
-    Partial<IdOf<T>> & Partial<UniqueOf<T>>
-  >;
+  attach?: Simplify<Partial<IdOf<T>> & Partial<UniqueOf<T>>>;
 
   // nested create
   create?: InferCreate<T>;
 
   // attach or create
-  attachOrCreate?: Simplify<
-    InferCreate<T> &
-    Partial<IdOf<T>>
-  >;
+  attachOrCreate?: Simplify<InferCreate<T> & Partial<IdOf<T>>>;
 }>;
 
 // ============================================================
@@ -92,11 +82,10 @@ type PopulateInputNode<T> = Simplify<{
 export type InferCreate<T> = Simplify<
   Omit<
     // base + scalar metas + populate
-    & MappingSchema<T>['base']
-    & MappingSchema<T>['uniqueFields']
-    & MappingSchema<T>['indexFields']
-    & PopulateToInput<T>,
-
+    MappingSchema<T>['base'] &
+      MappingSchema<T>['uniqueFields'] &
+      MappingSchema<T>['indexFields'] &
+      PopulateToInput<T>,
     // ❌ remove autogen fields
     keyof AutoGenOf<T>
   >
@@ -113,7 +102,7 @@ type Post = {
 interface Profile {
   id: string | { idField: true }; // manual id → مطلوب في create
   bio: string;
-  g: string | {unque: true}
+  g: string | { unque: true };
 }
 
 type User = {
@@ -128,4 +117,4 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type InferUserProfile = InferCreate<User>["profile"]
+type InferUserProfile = InferCreate<User>['profile'];
