@@ -97,13 +97,13 @@ type User = {
   tags: string[];
   obj: {d: string, e: number }
   arrOfObject: {d: string, e: number}[]
-  // createdAt: Date | { now: true };
-  // updatedAt: Date | { updatedAt: true };
+  createdAt: Date | { now: true };
+  updatedAt: Date | { updatedAt: true };
 
-  // email: string | { unique: true };
+  email: string | { unique: true };
 
-  // profile: Profile | { oneFrom: true };
-  // posts: Post[] | { manyFrom: true };
+  profile: Profile | { oneFrom: true };
+  posts: Post[] | { manyFrom: true };
 };
 
 
