@@ -49,7 +49,7 @@ type PopulateToInput<T> = {
   >
     ? {
         attach?: AttachInput<U>[];
-        create?: CreateInput<ResolvePopulate<U>[];
+        create?: CreateInput<ResolvePopulate<U>>[];
 
         // ✅ FIX
         attachOrCreate?: AttachOrCreateInput<U>[];
