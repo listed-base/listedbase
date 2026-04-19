@@ -95,7 +95,6 @@ type RelationFilter<T> = Simplify<{
 // ============================================================
 
 type IdOf<T> = MappingSchema<T>['idFields'];
-type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
 type IndexOf<T> = MappingSchema<T>['indexFields'];
 
 // ============================================================
