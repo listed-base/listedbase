@@ -105,7 +105,7 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type Unique = {
+type UsersUnique = {
   id: number | { idField: true; autogen: true };
   email: string | { unique: true };  
   name: string | { index: true };
