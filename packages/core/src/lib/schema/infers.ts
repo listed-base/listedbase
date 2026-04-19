@@ -106,7 +106,7 @@ type User = {
 };
 
 type UserUniqueInput = {
-  id: number | { idField: true; autogen: true };
+  id: number
   email: string | { unique: true };  
   name: string | { index: true };
  
