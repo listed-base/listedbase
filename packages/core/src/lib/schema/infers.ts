@@ -112,7 +112,7 @@ type UserUniqueInput = {
  
 
   profile: {id: string};
-  posts: Post[] | { manyFrom: true };
+  posts: { };
 };
 
 
