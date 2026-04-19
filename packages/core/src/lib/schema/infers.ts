@@ -103,3 +103,6 @@ type User = {
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
 };
+
+
+type UserEntity = InferEntity<User>;
