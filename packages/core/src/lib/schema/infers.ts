@@ -25,46 +25,7 @@ export type InferEntity<T> = Simplify<
     }
 >;
 
-type WhereUnique<T> = MappingSchema<T>['idFields'] &
-  MappingSchema<T>['uniqueFields'];
 
-type AttachOrCreateInput<T> = {
-  where: WhereUnique<T>;
-  create: CreateInput<T>;
-};
-type AutoGenKeys<T> = keyof (MappingSchema<T>['autogenFields']['onCreate'] &
-  MappingSchema<T>['autogenFields']['onUpdate']);
-
-type BaseCreateInput<T> = MappingSchema<T>['base'] &
-  MappingSchema<T>['uniqueFields'] &
-  MappingSchema<T>['indexFields'];
-
-type AttachInput<T> = MappingSchema<T>['idFields'] &
-  MappingSchema<T>['uniqueFields'];
-export type CreateInput<T> = Simplify<
-  Omit<BaseCreateInput<T> & PopulateToInput<T>, AutoGenKeys<T>>
->;
-type PopulateToInput<T> = {
-  [K in keyof MappingSchema<T>['populateQraph']]?: MappingSchema<T>['populateQraph'][K] extends Array<
-    infer U
-  >
-    ? {
-        attach?: AttachInput<U>[];
-        create?: CreateInput<ResolvePopulate<U>>[];
-
-        // ✅ FIX
-        attachOrCreate?: AttachOrCreateInput<ResolvePopulate<U>>[];
-      }
-    : {
-        attach?: AttachInput<MappingSchema<T>['populateQraph'][K]>;
-        create?: CreateInput<MappingSchema<T>['populateQraph'][K]>;
-
-        // ✅ FIX
-        attachOrCreate?: AttachOrCreateInput<
-          MappingSchema<T>['populateQraph'][K]
-        >;
-      };
-};
 // ============================================================
 // 🧪 EXAMPLES
 // ============================================================
