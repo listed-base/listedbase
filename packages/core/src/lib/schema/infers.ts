@@ -77,9 +77,6 @@ type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
-type ExtractSchema<T> =
-  T extends MappingSchema<infer S> ? S : never;
-
 // ============================================================
 // 🔍 RELATION FILTER (ONE / MANY)
 // ============================================================
