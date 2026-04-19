@@ -108,7 +108,7 @@ type FindPopulate<T> = {
 // 🔵 FIND UNIQUE
 // ============================================================
 
-export type C<T> = Simplify<
+export type InferFindUnique<T> = Simplify<
   & Partial<IdOf<T>>
   & Partial<UniqueOf<T>>
   & FindPopulate<T>
@@ -163,3 +163,4 @@ type UserUniqueInput = {
 
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>;
+
