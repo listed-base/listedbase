@@ -1,7 +1,7 @@
 import {
   Simplify,
   UnwrapArray,
-} from './utils';
+} from './';
 
 import {
   MappingSchema,
