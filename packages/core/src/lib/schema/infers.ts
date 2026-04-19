@@ -100,7 +100,6 @@ type User = {
   createdAt: Date | { now: true };
   updatedAt: Date | { updatedAt: true };
 
-  email: string | { unique: true };
 
   profile: Profile | { oneFrom: true };
   posts: Post[] | { manyFrom: true };
