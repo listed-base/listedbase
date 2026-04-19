@@ -24,6 +24,27 @@ export type InferEntity<T> = Simplify<
         : ResolvePopulate<MappingSchema<T>['populateQraph'][K]>;
     }
 >;
+
+type PopulateToInput<T> = {
+  [K in keyof MappingSchema<T>['populateQraph']]?: 
+    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
+      ? {
+          attach?: AttachInput<U>[];
+          create?: CreateInput<U>[];
+
+          // ✅ FIX
+          attachOrCreate?: AttachOrCreateInput<U>[];
+        }
+      : {
+          attach?: AttachInput<MappingSchema<T>['populateQraph'][K]>;
+          create?: CreateInput<MappingSchema<T>['populateQraph'][K]>;
+
+          // ✅ FIX
+          attachOrCreate?: AttachOrCreateInput<
+            MappingSchema<T>['populateQraph'][K]
+          >;
+        };
+};
 // ============================================================
 // 🧪 EXAMPLES
 // ============================================================
