@@ -32,7 +32,11 @@ type WhereUnique<T> =
   where: WhereUnique<T>;
   create: CreateInput<T>;
 };
-
+type AutoGenKeys<T> =
+  keyof (
+    & MappingSchema<T>['autogenFields']['onCreate']
+    & MappingSchema<T>['autogenFields']['onUpdate']
+  );
 type PopulateToInput<T> = {
   [K in keyof MappingSchema<T>['populateQraph']]?: 
     MappingSchema<T>['populateQraph'][K] extends Array<infer U>
