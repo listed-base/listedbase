@@ -149,17 +149,7 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type UserUniqueInput = {
-  id: number;
-  email: string;
 
-  profile: { id: string };
-  posts: {
-    some: { id: number }[];
-    none: { id: number }[];
-    evrey: { id: number }[];
-  };
-};
 
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>;
