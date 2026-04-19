@@ -42,6 +42,15 @@ type AutoGenKeys<T> =
   & MappingSchema<T>['base']
   & MappingSchema<T>['uniqueFields']
   & MappingSchema<T>['indexFields'];
+
+  type Simplify<T> = { [K in keyof T]: T[K] } & {};
+
+export type CreateInput<T> = Simplify<
+  Omit<
+    BaseCreateInput<T> & PopulateToInput<T>,
+    AutoGenKeys<T>
+  >
+>;
 type PopulateToInput<T> = {
   [K in keyof MappingSchema<T>['populateQraph']]?: 
     MappingSchema<T>['populateQraph'][K] extends Array<infer U>
