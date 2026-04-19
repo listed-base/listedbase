@@ -72,7 +72,114 @@ export type InferCreate<T> = Simplify<
 // ============================================================
 // 🧠 Update
 // ============================================================
+// ============================================================
+// 🧰 HELPERS
+// ============================================================
 
+type Simplify<T> = { [K in keyof T]: T[K] } & {};
+
+type UnwrapArray<T> = T extends Array<infer U> ? U : T;
+
+// ----------------------------------
+// 🧠 ACCESSORS
+// ----------------------------------
+
+type IdOf<T> = MappingSchema<T>['idFields'];
+type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
+type IndexOf<T> = MappingSchema<T>['indexFields'];
+
+type AutoGenUpdateOf<T> =
+  MappingSchema<T>['autogenFields']['onUpdate'];
+
+type ExtractSchema<T> =
+  T extends MappingSchema<infer S> ? S : never;
+
+// ============================================================
+// 🔗 POPULATE → UPDATE
+// ============================================================
+
+// ----------------------------------
+// 🔧 NODE (one)
+// ----------------------------------
+
+type UpdateNodeOne<T> = Simplify<{
+  // attach existing
+  attach?: Partial<IdOf<T>> & Partial<UniqueOf<T>>;
+
+  // update nested
+  update?: InferUpdate<T>;
+
+  // upsert
+  upsert?: {
+    where?: Partial<IdOf<T>>;
+    update: InferUpdate<T>;
+    create: InferCreate<T>;
+  };
+
+  // remove relation
+  detach?: boolean;
+}>;
+
+// ----------------------------------
+// 🔧 NODE (many)
+// ----------------------------------
+
+type UpdateNodeMany<T> = Simplify<{
+  attach?: (Partial<IdOf<T>> & Partial<UniqueOf<T>>)[];
+
+  update?: {
+    where: InferFindUnique<T>;
+    data: InferUpdate<T>;
+  }[];
+
+  create?: InferCreate<T>[];
+
+  upsert?: {
+    where?: Partial<IdOf<T>>;
+    update: InferUpdate<T>;
+    create: InferCreate<T>;
+  }[];
+
+  delete?: InferFindUnique<T>[];
+
+  detach?: InferFindUnique<T>[];
+}>;
+
+// ----------------------------------
+// 🔗 POPULATE MAP
+// ----------------------------------
+
+type PopulateToUpdate<T> = {
+  [K in keyof MappingSchema<T>['populateQraph']]?:
+    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
+      ? UpdateNodeMany<ExtractSchema<U>>
+      : UpdateNodeOne<
+          ExtractSchema<
+            MappingSchema<T>['populateQraph'][K]
+          >
+        >;
+};
+
+// ============================================================
+// 🧠 FINAL UPDATE INPUT
+// ============================================================
+
+export type InferUpdate<T> = Simplify<
+  Partial<
+    Omit<
+      // scalar fields
+      & MappingSchema<T>['base']
+      & MappingSchema<T>['uniqueFields']
+      & MappingSchema<T>['indexFields']
+
+      // relations
+      & PopulateToUpdate<T>,
+
+      // ❌ remove updatedAt
+      keyof AutoGenUpdateOf<T>
+    >
+  >
+>;
 
 
 // ============================================================
