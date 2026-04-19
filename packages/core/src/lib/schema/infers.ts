@@ -102,7 +102,7 @@ type Post = {
 interface Profile {
   id: string | { idField: true }; // manual id → مطلوب في create
   bio: string;
-  g: string | { unque: true };
+  g: string | { unique: true };
 }
 
 type User = {
