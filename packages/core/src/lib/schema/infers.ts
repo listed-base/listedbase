@@ -72,7 +72,6 @@ export type InferCreate<T> = Simplify<
 // ============================================================
 // 🧠 Update
 // ============================================================
-Vexport type InferUpdate<T> = Simplify<
 
 
 
