@@ -69,7 +69,6 @@ export type InferCreate<T> = Simplify<
   >
 >;
 
-
 type Post = {
   id: number | { idField: true };
   title: string;
