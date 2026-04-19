@@ -135,4 +135,3 @@ type User = {
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>;
 type UserFindUnique = InferFindUnique<User>;
-type UserFindIndex = InferFindIndex<User>['profile'];
