@@ -108,7 +108,7 @@ type User = {
 type UserUniqueInput = {
   id: number
   email: string 
-  name: string | { index: true };
+  name: string 
  
 
   profile: {id: string};
