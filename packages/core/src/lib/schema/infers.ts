@@ -25,7 +25,83 @@ export type InferEntity<T> = Simplify<
     }
 >;
 
+// ============================================================
+// 🧩 HELPERS
+// ============================================================
 
+type Simplify<T> = { [K in keyof T]: T[K] } & {};
+
+type UnwrapArray<T> = T extends Array<infer U> ? U : T;
+
+// ----------------------------------
+// 🔍 ACCESSORS FROM MAPPING
+// ----------------------------------
+
+type IdOf<T> = MappingSchema<T>['idFields'];
+type UniqueOf<T> = MappingSchema<T>['uniqueFields'];
+
+type AutoGenOf<T> =
+  & MappingSchema<T>['autogenFields']['onCreate']
+  & MappingSchema<T>['autogenFields']['onUpdate'];
+
+// ----------------------------------
+// 🧠 EXTRACT SCHEMA FROM MAPPING
+// ----------------------------------
+
+type ExtractSchema<T> =
+  T extends MappingSchema<infer S> ? S : never;
+
+// ============================================================
+// 🔗 POPULATE → INPUT
+// ============================================================
+
+type PopulateToInput<T> = {
+  [K in keyof MappingSchema<T>['populateQraph']]?: Simplify<
+    // resolve target schema
+    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
+      ? PopulateInputNode<ExtractSchema<U>>
+      : PopulateInputNode<
+          ExtractSchema<MappingSchema<T>['populateQraph'][K]>
+        >
+  >;
+};
+
+// ----------------------------------
+// 🔧 NODE (attach / create / attachOrCreate)
+// ----------------------------------
+
+type PopulateInputNode<T> = Simplify<{
+  // attach via id + unique
+  attach?: Simplify<
+    Partial<IdOf<T>> & Partial<UniqueOf<T>>
+  >;
+
+  // nested create
+  create?: InferCreate<T>;
+
+  // attach or create
+  attachOrCreate?: Simplify<
+    InferCreate<T> &
+    Partial<IdOf<T>>
+  >;
+}>;
+
+// ============================================================
+// 🧠 FINAL InferCreate
+// ============================================================
+
+export type InferCreate<T> = Simplify<
+  Omit<
+    // base + scalar metas + populate
+    & MappingSchema<T>['base']
+    & MappingSchema<T>['uniqueFields']
+    & MappingSchema<T>['indexFields']
+    & PopulateToInput<T>,
+
+    // ❌ remove autogen fields
+    keyof AutoGenOf<T>
+  >
+>;
 // ============================================================
 // 🧪 EXAMPLES
 // ============================================================
