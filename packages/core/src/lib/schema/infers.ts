@@ -107,4 +107,4 @@ type User = {
 
 
 type UserEntity = InferEntity<User>;
-type UserCreate = InferCreate<User>["profile"]
+type UserCreate = InferCreate<User>["]
