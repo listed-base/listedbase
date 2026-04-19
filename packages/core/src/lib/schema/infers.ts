@@ -37,6 +37,11 @@ type AutoGenKeys<T> =
     & MappingSchema<T>['autogenFields']['onCreate']
     & MappingSchema<T>['autogenFields']['onUpdate']
   );
+
+  type BaseCreateInput<T> =
+  & MappingSchema<T>['base']
+  & MappingSchema<T>['uniqueFields']
+  & MappingSchema<T>['indexFields'];
 type PopulateToInput<T> = {
   [K in keyof MappingSchema<T>['populateQraph']]?: 
     MappingSchema<T>['populateQraph'][K] extends Array<infer U>
