@@ -95,7 +95,7 @@ type User = {
 type UserUniqueInput = {
   id: number;
   email: string;
-  name: string;
+  name: string; /
 
   profile: { id: string };
   posts: {
