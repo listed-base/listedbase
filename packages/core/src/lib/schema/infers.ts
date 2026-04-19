@@ -107,7 +107,7 @@ type User = {
 
 type UserUniqueInput = {
   id: number
-  email: string | { unique: true };  
+  email: string 
   name: string | { index: true };
  
 
