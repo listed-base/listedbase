@@ -29,7 +29,6 @@ export type InferEntity<T> = Simplify<
 // 🧩 HELPERS
 // ============================================================
 
-type Simplify<T> = { [K in keyof T]: T[K] } & {};
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
 
