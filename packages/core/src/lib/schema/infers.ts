@@ -43,7 +43,9 @@ type AutoGenKeys<T> =
   & MappingSchema<T>['uniqueFields']
   & MappingSchema<T>['indexFields'];
 
-
+type AttachInput<T> =
+  & MappingSchema<T>['idFields']
+  & MappingSchema<T>['uniqueFields'];
 export type CreateInput<T> = Simplify<
   Omit<
     BaseCreateInput<T> & PopulateToInput<T>,
