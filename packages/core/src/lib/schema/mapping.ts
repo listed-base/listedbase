@@ -1,10 +1,10 @@
-// ============================================================
-// 🏗️ TYPE-LEVEL ORM SCHEMA ENGINE (FINAL CLEAN VERSION)
-// ============================================================
+import {
+  DeepClean,
+} from './utils';
 
-// ----------------------------------
+// ============================================================
 // 🧩 META
-// ----------------------------------
+// ============================================================
 
 export type TMeta = {
   idField?: true;
@@ -21,89 +21,63 @@ export type TMeta = {
 };
 
 // ----------------------------------
-// 🧱 BASE TYPES (IMPORTANT FIX)
-// ----------------------------------
-
-type Primitive = string | number | boolean | bigint | symbol | null | undefined;
-
-type Builtin = Primitive | Date  | RegExp | Map<any, any> | Set<any>;
-
-// ----------------------------------
-// 🧹 CLEAN TYPES
-// ----------------------------------
-
-type ExcludeUnionMark<T> = Exclude<T, TMeta>;
-
-// ❗ FIX: prevent Date/object explosion
-type DeepClean<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-    ? DeepClean<U>[]
-    : T extends object
-      ? { [K in keyof T]: DeepClean<T[K]> }
-      : T;
-
-// ----------------------------------
-// 🔍 META DETECTION (FIXED)
+// 🔍 META DETECTION
 // ----------------------------------
 
 type MetaOf<T> = Extract<T, TMeta>;
 
-// ❗ FIX: never bug
-type HasMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
-  ? false
-  : MetaOf<T> extends { [K in M]: any }
-    ? true
-    : false;
+type HasMeta<T, M extends keyof TMeta> =
+  [MetaOf<T>] extends [never]
+    ? false
+    : MetaOf<T> extends { [K in M]: any }
+      ? true
+      : false;
 
-// multiple metas support
-type HasSomeMeta<T, M extends keyof TMeta> = [MetaOf<T>] extends [never]
-  ? false
-  : true extends {
+type HasSomeMeta<T, M extends keyof TMeta> =
+  [MetaOf<T>] extends [never]
+    ? false
+    : true extends {
         [K in M]: HasMeta<T, K>;
       }[M]
-    ? true
-    : false;
+      ? true
+      : false;
 
 // ----------------------------------
 // 📦 FIELD EXTRACTION
 // ----------------------------------
 
+type ExcludeUnionMark<T> = Exclude<T, TMeta>;
+
 type ExtractFields<T, M extends keyof TMeta> = DeepClean<{
-  [K in keyof T as HasMeta<T[K], M> extends true ? K : never]: ExcludeUnionMark<
-    T[K]
-  >;
+  [K in keyof T as HasMeta<T[K], M> extends true ? K : never]:
+    ExcludeUnionMark<T[K]>;
 }>;
 
-// fields with multiple meta types
 type ExtractFieldsByMeta<T, M extends keyof TMeta> = DeepClean<{
-  [K in keyof T as HasSomeMeta<T[K], M> extends true
-    ? K
-    : never]: ExcludeUnionMark<T[K]>;
+  [K in keyof T as HasSomeMeta<T[K], M> extends true ? K : never]:
+    ExcludeUnionMark<T[K]>;
 }>;
 
 // ----------------------------------
-// 🔗 PopulateS
+// 🔗 POPULATE
 // ----------------------------------
-
 
 type UnwrapArray<T> = T extends Array<infer U> ? U : T;
-// استخرج الـ meta جزء من الـ union
+
 type PopulateMetaOf<T> = Extract<T, { oneFrom: true } | { manyFrom: true }>;
 
-// تحقق هل فيه Populate meta
-type HasPopulate<T> = [PopulateMetaOf<T>] extends [never] ? false : true;
+type HasPopulate<T> =
+  [PopulateMetaOf<T>] extends [never] ? false : true;
 
-// استخرج القيمة الفعلية (بدون الـ meta)
 type ExtractPopulateValue<T> = Exclude<T, TMeta>;
 
 type ExtractPopulates<T> = {
-  [K in keyof T as HasPopulate<T[K]> extends true ? K : never]: PopulateMetaOf<
-    T[K]
-  > extends { manyFrom: true }
-    ? MappingSchema<UnwrapArray<ExtractPopulateValue<T[K]>>>[]
-    : MappingSchema<ExtractPopulateValue<T[K]>>;
+  [K in keyof T as HasPopulate<T[K]> extends true ? K : never]:
+    PopulateMetaOf<T[K]> extends { manyFrom: true }
+      ? MappingSchema<UnwrapArray<ExtractPopulateValue<T[K]>>>[]
+      : MappingSchema<ExtractPopulateValue<T[K]>>;
 };
+
 // ----------------------------------
 // ⚙️ AUTOGEN
 // ----------------------------------
@@ -114,7 +88,7 @@ type AutoGenGroup<T> = {
 };
 
 // ----------------------------------
-// 🧠 BASE (FIELDS WITHOUT META)
+// 🧠 BASE
 // ----------------------------------
 
 type ExtractBase<T> = DeepClean<{
@@ -124,12 +98,12 @@ type ExtractBase<T> = DeepClean<{
 }>;
 
 // ----------------------------------
-// 🧠 FINAL Mapping
+// 🧠 FINAL
 // ----------------------------------
-
 
 export type MappingSchema<T> = {
   __schema: T;
+
   base: ExtractBase<T>;
 
   idFields: ExtractFields<T, 'idField'>;
@@ -139,4 +113,3 @@ export type MappingSchema<T> = {
   populateQraph: ExtractPopulates<T>;
   autogenFields: AutoGenGroup<T>;
 };
-
