@@ -193,5 +193,5 @@ type User = {
 type UserEntity = InferItem<User>;
 type UserCreate = InferCreateInput<User>;
 type UserFindUnique = InferUniqueInput<User>;
-const
+const userFindUnique: UserFindUnique =
 type UserUpdate = InferUpdateInput<User>;
