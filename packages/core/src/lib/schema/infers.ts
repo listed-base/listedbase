@@ -1,4 +1,4 @@
-import { Simplify } from './utils';
+import { RequireAtLeastOne, Simplify } from './utils';
 
 import { MappingSchema } from './mapping';
 
