@@ -179,17 +179,6 @@ type ManyRelationFilter<T> = Simplify<{
   every?: InferFindUnique<T>;
 }>;
 
-// ----------------------------------
-// 🔗 POPULATE → UNIQUE FILTER
-// ----------------------------------
-
-type PopulateToUnique<T> = {
-  [K in keyof MappingSchema<T>['populateQraph']]?: MappingSchema<T>['populateQraph'][K] extends Array<
-    infer U
-  >
-    ? ManyRelationFilter<ExtractSchema<U>>
-    : OneRelationFilter<ExtractSchema<MappingSchema<T>['populateQraph'][K]>>;
-};
 
 // ============================================================
 // 🧠 FINAL UNIQUE INPUT
