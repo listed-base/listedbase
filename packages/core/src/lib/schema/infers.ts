@@ -48,8 +48,8 @@ export type InferUniqueInput<T> = Simplify<
 
 type PopulateInputNode<T> = Simplify<{
   attach?: Partial<IdOf<T>> & Partial<UniqueOf<T>>;
-  create?: InferCreate<T>;
-  attachOrCreate?: Simplify<InferCreate<T> & Partial<IdOf<T>>>;
+  create?: InferCreateInput<T>;
+  attachOrCreate?: Simplify<InferCreateInput<T> & Partial<IdOf<T>>>;
 }>;
 
 type PopulateToInput<T> = {
@@ -119,12 +119,12 @@ type UpdateNodeMany<T> = Simplify<{
     data: InferUpdate<T>;
   }[];
 
-  create?: InferCreate<T>[];
+  create?: InferCreateInput<T>[];
 
   upsert?: {
     where?: Partial<IdOf<T>>;
     update: InferUpdate<T>;
-    create: InferCreate<T>;
+    create: InferCreateInput<T>;
   }[];
 
   delete?: InferUniqueInput<T>[];
@@ -190,7 +190,7 @@ type User = {
 };
 
 type UserEntity = InferItem<User>;
-type UserCreate = InferCreate<User>;
+type UserCreate = InferCreateInput<User>;
 type UserFindUnique = InferUniqueInput<User>;
 
 type UserUpdate = InferUpdate<User>;
