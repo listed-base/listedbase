@@ -39,10 +39,7 @@ export type InferItem<T> = Simplify<
 // 🔗 unique INPUT
 // ============================================================
 
-
-export type InferUniqueInput<T> = Simplify<
-  ExactlyOne<IdOf<T> & UniqueOf<T>>
->;
+export type InferUniqueInput<T> = Simplify<ExactlyOne<IdOf<T> & UniqueOf<T>>>;
 // ============================================================
 // 🔗 POPULATE INPUT
 // ============================================================
