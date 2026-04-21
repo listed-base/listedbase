@@ -1,4 +1,4 @@
-import { ExactlyOne, RequireAtLeastOne, Simplify } from './utils';
+import { ExactlyOne, Simplify } from './utils';
 
 import { MappingSchema } from './mapping';
 
