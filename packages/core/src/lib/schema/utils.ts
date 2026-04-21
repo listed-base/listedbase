@@ -55,6 +55,6 @@ export type RemoveKeys<T, K> = Omit<T, keyof K>;
 export type Prettify<T> = Simplify<T>;
 
 
-type RequireAtLeastOne<T> = {
+export type RequireAtLeastOne<T> = {
   [K in keyof T]: Pick<T, K> & Partial<Omit<T, K>>;
 }[keyof T];
