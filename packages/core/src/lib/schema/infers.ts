@@ -100,7 +100,7 @@ type UpdateNodeOne<T> = Simplify<{
   upsert?: {
     where?: Partial<IdOf<T>>;
     update: InferUpdate<T>;
-    create: InferCreate<T>;
+    create: InferCreateInput<T>;
   };
 
   // remove Populate
