@@ -35,7 +35,10 @@ export type InferEntity<T> = Simplify<
         : ResolveRelation<MappingSchema<T>['populateQraph'][K]>;
     }
 >;
-
+export type InferUniqueInput<T> = Simplify<
+  // 🔥 scalar unique
+  Partial<IdOf<T>> & Partial<UniqueOf<T>>
+>;
 // ============================================================
 // 🔗 POPULATE INPUT
 // ============================================================
