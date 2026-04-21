@@ -187,9 +187,7 @@ type ManyRelationFilter<T> = Simplify<{
 export type InferFindUnique<T> = Simplify<
   // 🔥 scalar unique
   Partial<IdOf<T>> &
-    Partial<UniqueOf<T>> &
-    // 🔗 relation filters
-    PopulateToUnique<T>
+    Partial<UniqueOf<T>> 
 >;
 type Post = {
   id: number | { idField: true };
