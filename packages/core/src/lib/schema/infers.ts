@@ -148,7 +148,7 @@ type PopulateToUpdate<T> = {
 // 🧠 FINAL UPDATE INPUT
 // ============================================================
 
-export type InferUpdate<T> = Simplify<
+export type InferUpdateInput<T> = Simplify<
   Partial<
     Omit<
       // scalar fields
