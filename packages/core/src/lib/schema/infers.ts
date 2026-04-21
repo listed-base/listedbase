@@ -195,4 +195,4 @@ type UserCreate = InferCreateInput<User>;
 type UserFindUnique = InferUniqueInput<User>;
 type UserUpdate = InferUpdateInput<User>;
 
-const user: I
+const user: Use
