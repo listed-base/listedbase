@@ -108,7 +108,7 @@ type UpdateNodeMany<T> = Simplify<{
   attach?: (Partial<IdOf<T>> & Partial<UniqueOf<T>>)[];
 
   update?: {
-    where: InferUe<T>;
+    where: InferUne<T>;
     data: InferUpdate<T>;
   }[];
 
