@@ -47,9 +47,7 @@ export type InferUniqueInput<T> = Simplify<ExactlyOne<IdOf<T> & UniqueOf<T>>>;
 type PopulateInputNode<T> = Simplify<{
   attach?: RequireAtLeastOne<IdOf<T> & UniqueOf<T>>;
   create?: InferCreateInput<T>;
-  attachOrCreate?: Simplify<
-    InferCreateInput<T> & Partial<IdOf<T>>
-  >;
+  attachOrCreate?: Simplify<InferCreateInput<T> & Partial<IdOf<T>>>;
 }>;
 
 type PopulateToInput<T> = {
