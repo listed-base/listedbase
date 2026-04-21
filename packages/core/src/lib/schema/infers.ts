@@ -40,7 +40,6 @@ export type InferEntity<T> = Simplify<
 // ============================================================
 // 🔗 POPULATE INPUT
 // ============================================================
-// ===
 export type InferUniqueInput<T> = Simplify<
   // 🔥 scalar unique
   Partial<IdOf<T>> & Partial<UniqueOf<T>>
