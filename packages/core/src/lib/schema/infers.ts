@@ -94,12 +94,12 @@ type UpdateNodeOne<T> = Simplify<{
   attach?: Partial<IdOf<T>> & Partial<UniqueOf<T>>;
 
   // update nested
-  update?: InferUpdate<T>;
+  update?: InferUpdateInput<T>;
 
   // upsert
   upsert?: {
     where?: Partial<IdOf<T>>;
-    update: InferUpdate<T>;
+    update: InferUpdateInput<T>;
     create: InferCreateInput<T>;
   };
 
@@ -116,14 +116,14 @@ type UpdateNodeMany<T> = Simplify<{
 
   update?: {
     where: InferUniqueInput<T>;
-    data: InferUpdate<T>;
+    data: InferUpdateInput<T>;
   }[];
 
   create?: InferCreateInput<T>[];
 
   upsert?: {
     where?: Partial<IdOf<T>>;
-    update: InferUpdate<T>;
+    update: InferUpdateInput<T>;
     create: InferCreateInput<T>;
   }[];
 
@@ -148,7 +148,7 @@ type PopulateToUpdate<T> = {
 // 🧠 FINAL UPDATE INPUT
 // ============================================================
 
-export type InferUpdateInput<T> = Simplify<
+export type InferUpdateInputInput<T> = Simplify<
   Partial<
     Omit<
       // scalar fields
@@ -193,4 +193,4 @@ type UserEntity = InferItem<User>;
 type UserCreate = InferCreateInput<User>;
 type UserFindUnique = InferUniqueInput<User>;
 
-type UserUpdate = InferUpdate<User>;
+type UserUpdate = InferUpdateInput<User>;
