@@ -38,9 +38,10 @@ export type InferItem<T> = Simplify<
 // ============================================================
 // 🔗 unique INPUT
 // ============================================================
+
+
 export type InferUniqueInput<T> = Simplify<
-  // 🔥 scalar unique
-  RequireAtLeastOne<Partial<IdOf<T>> & Partial<UniqueOf<T>>>
+  ExactlyOne<IdOf<T> & UniqueOf<T>>
 >;
 // ============================================================
 // 🔗 POPULATE INPUT
