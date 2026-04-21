@@ -156,19 +156,6 @@ export type InferUpdate<T> = Simplify<
   >
 >;
 
-// ============================================================
-// 🔗 RELATION FILTERS (UNIQUE ONLY)
-// ============================================================
-
-// one-to-one
-type OneRelationFilter<T> = Simplify<InferFindUnique<T>>;
-
-// one-to-many
-type ManyRelationFilter<T> = Simplify<{
-  some?: InferFindUnique<T>;
-  none?: InferFindUnique<T>;
-  every?: InferFindUnique<T>;
-}>;
 
 // ============================================================
 // 🧠 FINAL UNIQUE INPUT
