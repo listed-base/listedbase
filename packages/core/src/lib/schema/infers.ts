@@ -166,10 +166,6 @@ export type InferUpdate<T> = Simplify<
 >;
 
 
-// ============================================================
-// 🧠 FINAL UNIQUE INPUT
-// ============================================================
-
 type Post = {
   id: number | { idField: true };
   title: string;
