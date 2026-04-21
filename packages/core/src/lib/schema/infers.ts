@@ -120,9 +120,9 @@ type UpdateNodeMany<T> = Simplify<{
     create: InferCreate<T>;
   }[];
 
-  delete?: InferFindUnique<T>[];
+  delete?: InferUniqueInput<T>[];
 
-  detach?: InferFindUnique<T>[];
+  detach?: InferUniqueInput<T>[];
 }>;
 
 // ----------------------------------
@@ -193,6 +193,6 @@ type User = {
 
 type UserEntity = InferEntity<User>;
 type UserCreate = InferCreate<User>;
-type UserFindUnique = InferFindUnique<User>;
+type UserFindUnique = InferUniqueInput<User>;
 
 type UserUpdate = InferUpdate<User>;
