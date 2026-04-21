@@ -18,6 +18,10 @@ type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
 // 🔗 ENTITY
 // ============================================================
 
+export type InferUniqueInput<T> = Simplify<
+  // 🔥 scalar unique
+  Partial<IdOf<T>> & Partial<UniqueOf<T>>
+>;
 type ResolveRelation<T> =
   T extends MappingSchema<infer S> ? InferEntity<S> : never;
 
