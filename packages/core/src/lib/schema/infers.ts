@@ -18,7 +18,6 @@ type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
 // 🔗 ENTITY
 // ============================================================
 
-
 type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
@@ -36,14 +35,12 @@ export type InferItem<T> = Simplify<
     }
 >;
 
-
 // ============================================================
 // 🔗 unique INPUT
 // ============================================================
 export type InferUniqueInput<T> = Simplify<
   // 🔥 scalar unique
-  RequireAtLeastOne<
-  Partial<IdOf<T>> & Partial<UniqueOf<T>>>
+  RequireAtLeastOne<Partial<IdOf<T>> & Partial<UniqueOf<T>>>
 >;
 // ============================================================
 // 🔗 POPULATE INPUT
@@ -165,7 +162,6 @@ export type InferUpdate<T> = Simplify<
     >
   >
 >;
-
 
 type Post = {
   id: number | { idField: true };
