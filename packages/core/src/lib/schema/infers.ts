@@ -161,7 +161,7 @@ export type InferUpdate<T> = Simplify<
 // 🧠 FINAL UNIQUE INPUT
 // ============================================================
 
-export type InferFindUnique<T> = Simplify<
+export type InferUnique<T> = Simplify<
   // 🔥 scalar unique
   Partial<IdOf<T>> & Partial<UniqueOf<T>>
 >;
