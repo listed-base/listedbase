@@ -39,6 +39,7 @@ export type InferEntity<T> = Simplify<
 
 // ============================================================
 // 🔗 POPULATE INPUT
+// ============================================================
 // ===
 export type InferUniqueInput<T> = Simplify<
   // 🔥 scalar unique
