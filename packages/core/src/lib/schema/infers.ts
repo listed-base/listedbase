@@ -68,14 +68,11 @@ export type InferCreate<T> = Simplify<
   >
 >;
 
-
 // ============================================================
 // 🧠 Update
 // ============================================================
 
-type AutoGenUpdateOf<T> =
-  MappingSchema<T>['autogenFields']['onUpdate'];
-
+type AutoGenUpdateOf<T> = MappingSchema<T>['autogenFields']['onUpdate'];
 
 // ============================================================
 // 🔗 POPULATE → UPDATE
@@ -133,14 +130,11 @@ type UpdateNodeMany<T> = Simplify<{
 // ----------------------------------
 
 type PopulateToUpdate<T> = {
-  [K in keyof MappingSchema<T>['populateQraph']]?:
-    MappingSchema<T>['populateQraph'][K] extends Array<infer U>
-      ? UpdateNodeMany<ExtractSchema<U>>
-      : UpdateNodeOne<
-          ExtractSchema<
-            MappingSchema<T>['populateQraph'][K]
-          >
-        >;
+  [K in keyof MappingSchema<T>['populateQraph']]?: MappingSchema<T>['populateQraph'][K] extends Array<
+    infer U
+  >
+    ? UpdateNodeMany<ExtractSchema<U>>
+    : UpdateNodeOne<ExtractSchema<MappingSchema<T>['populateQraph'][K]>>;
 };
 
 // ============================================================
@@ -151,19 +145,16 @@ export type InferUpdate<T> = Simplify<
   Partial<
     Omit<
       // scalar fields
-      & MappingSchema<T>['base']
-      & MappingSchema<T>['uniqueFields']
-      & MappingSchema<T>['indexFields']
-
-      // relations
-      & PopulateToUpdate<T>,
-
+      MappingSchema<T>['base'] &
+        MappingSchema<T>['uniqueFields'] &
+        MappingSchema<T>['indexFields'] &
+        // relations
+        PopulateToUpdate<T>,
       // ❌ remove updatedAt
       keyof AutoGenUpdateOf<T>
     >
   >
 >;
-
 
 // ============================================================
 // 🔗 RELATION FILTERS (UNIQUE ONLY)
@@ -179,15 +170,13 @@ type ManyRelationFilter<T> = Simplify<{
   every?: InferFindUnique<T>;
 }>;
 
-
 // ============================================================
 // 🧠 FINAL UNIQUE INPUT
 // ============================================================
 
 export type InferFindUnique<T> = Simplify<
   // 🔥 scalar unique
-  Partial<IdOf<T>> &
-    Partial<UniqueOf<T>> 
+  Partial<IdOf<T>> & Partial<UniqueOf<T>>
 >;
 type Post = {
   id: number | { idField: true };
@@ -220,5 +209,3 @@ type UserCreate = InferCreate<User>;
 type UserFindUnique = InferFindUnique<User>;
 
 type UserUpdate = InferUpdate<User>;
-
-
