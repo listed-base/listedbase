@@ -59,7 +59,7 @@ export type RequireAtLeastOne<T> = {
   [K in keyof T]: Pick<T, K> & Partial<Omit<T, K>>;
 }[keyof T];
 
-type ExactlyOne<T> = {
+export type ExactlyOne<T> = {
   [K in keyof T]: {
     [P in K]: T[P];
   } & Partial<Record<Exclude<keyof T, K>, never>>;
