@@ -20,9 +20,9 @@ type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
 
 
 type ResolveRelation<T> =
-  T extends MappingSchema<infer S> ? InferEntity<S> : never;
+  T extends MappingSchema<infer S> ? InferItem<S> : never;
 
-export type InferEntity<T> = Simplify<
+export type InferItem<T> = Simplify<
   MappingSchema<T>['base'] &
     MappingSchema<T>['idFields'] &
     MappingSchema<T>['uniqueFields'] &
@@ -196,7 +196,7 @@ type User = {
   posts: Post[] | { manyFrom: true };
 };
 
-type UserEntity = InferEntity<User>;
+type UserEntity = InferItem<User>;
 type UserCreate = InferCreate<User>;
 type UserFindUnique = InferUniqueInput<User>;
 
