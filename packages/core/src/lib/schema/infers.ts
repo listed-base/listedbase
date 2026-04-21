@@ -109,8 +109,12 @@ type UpdateNodeOne<T> = Simplify<{
 // 🔧 NODE (many)
 // ----------------------------------
 
+// ----------------------------------
+// UPDATE MANY FIX
+// ----------------------------------
+
 type UpdateNodeMany<T> = Simplify<{
-  attach?: (Partial<IdOf<T>> & Partial<UniqueOf<T>>)[];
+  attach?: InferUniqueInput<T>[];
 
   update?: {
     where: InferUniqueInput<T>;
@@ -126,7 +130,6 @@ type UpdateNodeMany<T> = Simplify<{
   }[];
 
   delete?: InferUniqueInput<T>[];
-
   detach?: InferUniqueInput<T>[];
 }>;
 
