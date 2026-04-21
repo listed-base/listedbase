@@ -19,7 +19,7 @@ type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
 // ============================================================
 
 
-type ResolveRelation<T> =
+type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
 export type InferItem<T> = Simplify<
@@ -31,8 +31,8 @@ export type InferItem<T> = Simplify<
       [K in keyof MappingSchema<T>['populateQraph']]: MappingSchema<T>['populateQraph'][K] extends Array<
         infer U
       >
-        ? ResolveRelation<U>[]
-        : ResolveRelation<MappingSchema<T>['populateQraph'][K]>;
+        ? ResolvePopulate<U>[]
+        : ResolvePopulate<MappingSchema<T>['populateQraph'][K]>;
     }
 >;
 
@@ -105,7 +105,7 @@ type UpdateNodeOne<T> = Simplify<{
     create: InferCreate<T>;
   };
 
-  // remove relation
+  // remove Populate
   detach?: boolean;
 }>;
 
@@ -157,7 +157,7 @@ export type InferUpdate<T> = Simplify<
       MappingSchema<T>['base'] &
         MappingSchema<T>['uniqueFields'] &
         MappingSchema<T>['indexFields'] &
-        // relations
+        // Populates
         PopulateToUpdate<T>,
       // ❌ remove updatedAt
       keyof AutoGenUpdateOf<T>
