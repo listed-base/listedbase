@@ -28,9 +28,9 @@ export type InferItem<T extends ZodObject> = Simplify<
     MappingSchema<z.output<T>>['uniqueFields'] &
     MappingSchema<z.output<T>>['autogenFields']['onCreate'] &
     MappingSchema<z.output<T>>['autogenFields']['onUpdate'] & {
-      [K in keyof MappingSchema<z.output<T>>['populateQraph']]: MappingSchema<z.output<T>>['populateQraph'][K] extends Array<
-        infer U
-      >
+      [K in keyof MappingSchema<z.output<T>>['populateQraph']]: MappingSchema<
+        z.output<T>
+      >['populateQraph'][K] extends Array<infer U>
         ? ResolvePopulate<U>[]
         : ResolvePopulate<MappingSchema<z.output<T>>['populateQraph'][K]>;
     }
@@ -40,7 +40,9 @@ export type InferItem<T extends ZodObject> = Simplify<
 // 🔗 unique INPUT
 // ============================================================
 
-export type InferUniqueInput<T extends ZodObject> = Simplify<ExactlyOne<IdOf<z.output<T>> & UniqueOf<z.output<T>>>>;
+export type InferUniqueInput<T extends ZodObject> = Simplify<
+  ExactlyOne<IdOf<z.output<T>> & UniqueOf<z.output<T>>>
+>;
 // ============================================================
 // 🔗 POPULATE INPUT
 // ============================================================
@@ -195,4 +197,3 @@ type UserEntity = InferItem<User>;
 type UserCreate = InferCreateInput<User>;
 type UserFindUnique = InferUniqueInput<User>;
 type UserUpdate = InferUpdateInput<User>;
-
