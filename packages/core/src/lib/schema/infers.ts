@@ -1,7 +1,7 @@
 import { ExactlyOne, RequireAtLeastOne, Simplify } from './utils';
 
 import { MappingSchema } from './mapping';
-import { ZodObject } from 'zod/v4';
+import { z, ZodObject } from 'zod/v4';
 
 // ============================================================
 // 🧠 HELPERS
