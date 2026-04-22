@@ -23,16 +23,16 @@ type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
 export type InferItem<T extends ZodObject> = Simplify<
-  MappingSchema<ZT>['base'] &
-    MappingSchema<ZT>['idFields'] &
-    MappingSchema<ZT>['uniqueFields'] &
-    MappingSchema<ZT>['autogenFields']['onCreate'] &
-    MappingSchema<ZT>['autogenFields']['onUpdate'] & {
-      [K in keyof MappingSchema<ZT>['populateQraph']]: MappingSchema<ZT>['populateQraph'][K] extends Array<
+  MappingSchema<z.T>['base'] &
+    MappingSchema<z.T>['idFields'] &
+    MappingSchema<z.T>['uniqueFields'] &
+    MappingSchema<z.T>['autogenFields']['onCreate'] &
+    MappingSchema<z.T>['autogenFields']['onUpdate'] & {
+      [K in keyof MappingSchema<z.T>['populateQraph']]: MappingSchema<z.T>['populateQraph'][K] extends Array<
         infer U
       >
         ? ResolvePopulate<U>[]
-        : ResolvePopulate<MappingSchema<ZT>['populateQraph'][K]>;
+        : ResolvePopulate<MappingSchema<z.T>['populateQraph'][K]>;
     }
 >;
 
