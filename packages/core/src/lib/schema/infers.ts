@@ -18,7 +18,7 @@ type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
 // 🔗 ENTITY
 // ============================================================
 
-type ResolvePopulate<T extends ZoD> =
+type ResolvePopulate<T extends ZodObject> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
 export type InferItem<T> = Simplify<
