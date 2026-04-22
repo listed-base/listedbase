@@ -63,7 +63,7 @@ type PopulateToInput<T> = {
 // 🧠 CREATE
 // ============================================================
 
-export type InferCreateInput<T> = Simplify<
+export type InferCreateInput<T extends> = Simplify<
   Omit<
     MappingSchema<T>['base'] &
       MappingSchema<T>['idFields'] &
