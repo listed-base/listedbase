@@ -1,7 +1,6 @@
 import { ExactlyOne, RequireAtLeastOne, Simplify } from './utils';
 
 import { MappingSchema } from './mapping';
-import { ZodObject } from 'zod/v4';
 
 // ============================================================
 // 🧠 HELPERS
@@ -19,7 +18,7 @@ type AutoGenOf<T> = MappingSchema<T>['autogenFields']['onCreate'] &
 // 🔗 ENTITY
 // ============================================================
 
-type ResolvePopulate<T extends ZodObject> =
+type ResolvePopulate<T extends ZoD> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
 export type InferItem<T> = Simplify<
