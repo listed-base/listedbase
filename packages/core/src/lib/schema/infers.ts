@@ -65,12 +65,12 @@ type PopulateToInput<T> = {
 
 export type InferCreateInput<T extends ZodObject> = Simplify<
   Omit<
-    MappingSchema<T>['base'] &
-      MappingSchema<T>['idFields'] &
-      MappingSchema<T>['uniqueFields'] &
-      MappingSchema<T>['indexFields'] &
-      PopulateToInput<T>,
-    keyof AutoGenOf<T>
+    MappingSchema<z.output<T>>['base'] &
+      MappingSchema<z.output<T>>['idFields'] &
+      MappingSchema<z.output<T>>['uniqueFields'] &
+      MappingSchema<z.output<T>>['indexFields'] &
+      PopulateToInput<z.output<T>>,
+    keyof AutoGenOf<z.output<T>>
   >
 >;
 
