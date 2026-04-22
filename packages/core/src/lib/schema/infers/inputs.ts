@@ -1,6 +1,6 @@
 import { Simplify, ExactlyOne, RequireAtLeastOne } from './helpers';
 import { MappingSchema } from '../mapping';
-import { InferItem } from './entries';
+import { InferItem } from './entrie';
 import { InferWhereInput } from './filter';
 
 // ============================================================
