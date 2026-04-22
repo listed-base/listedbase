@@ -1,5 +1,5 @@
 import { Simplify } from './helpers';
-import { InferItem } from './entries';
+import { InferItem } from './entrie';
 
 // ============================================================
 // 🧠 OPERATORS
