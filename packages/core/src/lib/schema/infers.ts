@@ -40,7 +40,7 @@ export type InferItem<T extends ZodObject> = Simplify<
 // 🔗 unique INPUT
 // ============================================================
 
-export type InferUniqueInput<T extends ZodObject> = Simplify<ExactlyOne<IdOf<T> & UniqueOf<T>>>;
+export type InferUniqueInput<T extends ZodObject> = Simplify<ExactlyOne<IdOf<z.output<T>> & UniqueOf<z.output<T>>>>;
 // ============================================================
 // 🔗 POPULATE INPUT
 // ============================================================
