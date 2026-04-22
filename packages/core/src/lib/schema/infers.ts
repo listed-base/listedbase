@@ -90,7 +90,7 @@ type AutoGenUpdateOf<T> = MappingSchema<T>['autogenFields']['onUpdate'];
 // 🔧 NODE (one)
 // ----------------------------------
 
-type UpdateNodeOne<T > = Simplify<{
+type UpdateNodeOne<T ex> = Simplify<{
   // attach existing
   attach?: Partial<IdOf<T>> & Partial<UniqueOf<T>>;
 
