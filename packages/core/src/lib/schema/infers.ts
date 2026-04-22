@@ -63,7 +63,7 @@ type PopulateToInput<T> = {
 // 🧠 CREATE
 // ============================================================
 
-export type InferCreateInput<T extends> = Simplify<
+export type InferCreateInput<T extends ZodObject> = Simplify<
   Omit<
     MappingSchema<T>['base'] &
       MappingSchema<T>['idFields'] &
