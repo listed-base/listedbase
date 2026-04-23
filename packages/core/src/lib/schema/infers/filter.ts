@@ -49,10 +49,11 @@ type Join<K, P> =
       ? `${K}.${P}`
       : never
     : never;
-type PathKeys<T> = {
+
+type Paths<T> = {
   [K in keyof T]:
     T[K] extends object
-      ? K | Join<K, PathKeys<T[K]>>
+      ? K | Join<K, Paths<T[K]>>
       : K
 }[keyof T] & string;
 
