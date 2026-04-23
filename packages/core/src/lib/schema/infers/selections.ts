@@ -25,7 +25,7 @@ type Rewrap<Original, Result> =
 // 🔗 POPULATE GRAPH (from Mapping)
 // ============================================================
 
-type PopulateGraphOf<T extends D> =
+type PopulateGraphOf<T extends AnySchema> =
   MappingSchema<Output<T>>['populateQraph'];
 
 // ============================================================
