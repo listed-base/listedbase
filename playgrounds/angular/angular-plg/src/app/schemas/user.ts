@@ -13,4 +13,4 @@ export const sUser = lSchema({
   }
 })
 
-type 
+type User =
