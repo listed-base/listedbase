@@ -91,3 +91,6 @@ type WhereLogical<T> = {
 };
 
 export type InferWhereInput<T> = Simplify<WhereFields<T> & WhereLogical<T>>;
+
+
+
