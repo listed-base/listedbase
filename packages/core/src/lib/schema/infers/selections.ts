@@ -25,14 +25,14 @@ type Rewrap<Original, Result> =
 // 🔗 POPULATE GRAPH (from Mapping)
 // ============================================================
 
-type PopulateGraphOf<T extends ZO> =
+type PopulateGraphOf<T extends ZodObject> =
   MappingSchema<Output<T>>['populateQraph'];
 
 // ============================================================
 // 🧠 SELECT INPUT
 // ============================================================
 
-export type SelectInput<T extends ZO> =
+export type SelectInput<T extends ZodObject> =
   | {
       pick: readonly (keyof Output<T>)[];
       populate?: PopulateInput<T>;
@@ -49,7 +49,7 @@ export type SelectInput<T extends ZO> =
 // populate input
 // ----------------------------------
 
-type PopulateInput<T extends ZO> = {
+type PopulateInput<T extends ZodObject> = {
   [K in keyof PopulateGraphOf<T>]?:
     PopulateGraphOf<T>[K] extends Array<infer U>
       ? SelectInput<any> // resolved later
@@ -61,7 +61,7 @@ type PopulateInput<T extends ZO> = {
 // ============================================================
 
 export type ResultOf<
-  T extends ZO,
+  T extends ZodObject,
   Sel
 > =
   // ── pluck
@@ -93,7 +93,7 @@ export type ResultOf<
 // ============================================================
 
 type ResolvePopulate<
-  T extends ZO,
+  T extends ZodObject,
   PM
 > = PM extends object
   ? {
@@ -119,7 +119,7 @@ type ResolveRelation<R, Sel> =
 // ============================================================
 
 export function selection<
-  T extends ZO,
+  T extends ZodObject,
   Sel extends SelectInput<T>
 >(
   _schema: T,
