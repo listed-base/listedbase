@@ -121,13 +121,3 @@ type ResolveRelation<R, Sel> =
 // ============================================================
 // 🚀 PUBLIC API
 // ============================================================
-
-export function selection<
-  T extends ZodObject,
-  Sel extends SelectInput<T>
->(
-  _schema: T,
-  _select: Sel
-): ResultOf<T, Sel> {
-  return {} as any;
-}
