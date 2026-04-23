@@ -13,4 +13,4 @@ export const sUser = lSchema({
   }
 })
 
-type User = InferWhereInput<typeof sUser.sc>
+type User = InferWhereInput<typeof sUser.schema>
