@@ -15,7 +15,6 @@ type Output<T extends ZodObject> = z.output<T>;
 // unwrap / rewrap
 // ----------------------------------
 
-type Unwrap<T> = T extends (infer U)[] ? U : T;
 
 type Rewrap<Original, Result> =
   Original extends any[] ? Result[] : Result;
