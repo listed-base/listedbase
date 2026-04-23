@@ -12,3 +12,4 @@ export const sUser = lSchema({
     posts: () => lField.manyFrom(sPosts)
   }
 })
+
