@@ -70,7 +70,7 @@ type PathValue<T, P extends string> =
 // ============================================================
 
 type WhereFields<T> = {
-  [P in PathKeys<InferItem<T>>]?: FieldOps<
+  [P in Paths<InferItem<T>>]?: FieldOps<
     PathValue<InferItem<T>, P>
   >;
 };
