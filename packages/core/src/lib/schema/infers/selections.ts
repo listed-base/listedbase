@@ -2,7 +2,7 @@
 // 🏗️  LISTEDBASE — Selection System (NEW)
 // ============================================================
 
-import { z } from 'zod/v4';
+import { z, ZodObject } from 'zod/v4';
 import {  Simplify, UnwrapArray } from './helpers';
 import { MappingSchema } from '../mapping';
 
@@ -10,7 +10,7 @@ import { MappingSchema } from '../mapping';
 // 🧩 BASE TYPES
 // ============================================================
 
-type Output<T extends ZodO> = z.output<T>;
+type Output<T extends ZodObject> = z.output<T>;
 
 // ----------------------------------
 // unwrap / rewrap
