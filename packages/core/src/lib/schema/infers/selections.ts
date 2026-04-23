@@ -10,7 +10,7 @@ import { MappingSchema } from '../mapping';
 // 🧩 BASE TYPES
 // ============================================================
 
-type Output<T extends AnySchema> = z.output<T>;
+type Output<T extends Z> = z.output<T>;
 
 // ----------------------------------
 // unwrap / rewrap
