@@ -50,12 +50,36 @@ type Join<K, P> =
       : never
     : never;
 
-type Paths<T> = {
-  [K in keyof T]:
-    T[K] extends object
-      ? K | Join<K, Paths<T[K]>>
-      : K
-}[keyof T] & string;
+type Primitive =
+  | string
+  | number
+  | boolean
+  | bigint
+  | symbol
+  | null
+  | undefined;
+
+type Builtin =
+  | Primitive
+  | Date
+  | RegExp
+  | Map<any, any>
+  | Set<any>;
+
+type Prev = [never, 0, 1, 2, 3, 4, 5];
+
+export type Paths<T, D extends number = 5> =
+  [D] extends [never]
+    ? never
+    : T extends Builtin
+      ? never
+      : T extends Array<infer U>
+        ? Paths<U, D>
+        : {
+            [K in keyof T & string]:
+              | K
+              | Join<K, Paths<T[K], Prev[D]>>;
+          }[keyof T & string];
 
 type PathValue<T, P extends string> =
   P extends `${infer K}.${infer R}`
