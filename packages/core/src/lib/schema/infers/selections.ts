@@ -107,7 +107,7 @@ type ResolvePopulate<
           PM[K]
         >;
     }
-  : e;
+  : Empty;
 
 // ----------------------------------
 // relation resolver
