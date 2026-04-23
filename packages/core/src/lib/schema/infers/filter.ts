@@ -58,14 +58,14 @@ type Builtin = Primitive | Date | RegExp | Map<any, any> | Set<any>;
 
 type Prev = [never, 0, 1, 2, 3, 4, 5];
 
-export type Key<T, D extends number = 5> = [D] extends [never]
+export type Paths<T, D extends number = 5> = [D] extends [never]
   ? never
   : T extends Builtin
     ? never
     : T extends Array<infer U>
-      ? Key<U, D>
+      ? Paths<U, D>
       : {
-          [K in keyof T & string]: K | Join<K, Key<T[K], Prev[D]>>;
+          [K in keyof T & string]: K | Join<K, Paths<T[K], Prev[D]>>;
         }[keyof T & string];
 
 type PathValue<T, P extends string> = P extends `${infer K}.${infer R}`
@@ -81,7 +81,7 @@ type PathValue<T, P extends string> = P extends `${infer K}.${infer R}`
 // ============================================================
 
 type WhereFields<T> = {
-  [P in Key<InferItem<T>>]?: FieldOps<PathValue<InferItem<T>, P>>;
+  [P in Paths<InferItem<T>>]?: FieldOps<PathValue<InferItem<T>, P>>;
 };
 
 type WhereLogical<T> = {
