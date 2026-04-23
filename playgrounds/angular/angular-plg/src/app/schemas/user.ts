@@ -1,4 +1,4 @@
-import { lField, lSchema } from "@listedbase/core";
+import { InferWhereInput, lField, lSchema } from "@listedbase/core";
 import { sPosts } from "./post";
 
 export const sUser = lSchema({
