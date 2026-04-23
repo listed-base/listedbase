@@ -91,7 +91,11 @@ export type ResultOf<
 // ============================================================
 // 🔗 POPULATE RESOLUTION
 // ============================================================
-type Empty = Record<s>
+type Empty = Record<string, never>;
+
+// ----------------------------------
+// populate resolver
+// ----------------------------------
 type ResolvePopulate<
   T extends ZodObject,
   PM
