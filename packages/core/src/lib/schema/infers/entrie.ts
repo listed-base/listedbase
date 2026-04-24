@@ -22,5 +22,5 @@ export type InferItem<T> = Simplify<
   }
 >;
 
-type InferItemEntrie<S extends TSchemaRef> = InferItem<z.ou>
+type InferItemEntrie<S extends TSchemaRef> = InferItem<z.>
 
