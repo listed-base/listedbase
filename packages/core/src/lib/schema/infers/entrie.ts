@@ -20,3 +20,4 @@ export type InferItem<T> = Simplify<
         : ResolvePopulate<MappingSchema<T>['populateQraph'][K]>;
   }
 >;
+
