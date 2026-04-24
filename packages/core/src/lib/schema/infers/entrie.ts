@@ -10,7 +10,7 @@ type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
 export type InferItem<S extends TSchemaRef> = Simplify<
-  MappingSchema<S>['base'] &
+  MappingSchema<z.output<S["schema"]>>['base'] &
     MappingSchema<S>['idFields'] &
     MappingSchema<S>['uniqueFields'] &
     MappingSchema<S>['autogenFields']['onCreate'] &
