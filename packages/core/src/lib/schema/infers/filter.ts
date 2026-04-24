@@ -92,5 +92,5 @@ type WhereLogical<T> = {
 
 export type InferWhereInput<T> = Simplify<WhereFields<T> & WhereLogical<T>>;
 
-export LWhere<S extends TSchemaRef>
+exporttype LWhere<S extends TSchemaRef>
 
