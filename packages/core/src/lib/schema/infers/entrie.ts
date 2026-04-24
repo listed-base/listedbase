@@ -8,7 +8,7 @@ import { MappingSchema } from '../mapping';
 type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
-export type InferItem<T extends > = Simplify<
+export type InferItem<T extends Sch> = Simplify<
   MappingSchema<T>['base'] &
   MappingSchema<T>['idFields'] &
   MappingSchema<T>['uniqueFields'] &
