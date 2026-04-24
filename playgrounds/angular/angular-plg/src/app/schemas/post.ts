@@ -14,4 +14,4 @@ export const post = list(sPosts);
 
 const user = post.findMany({ omit: { user: true } });
 
-export type Post = InferItem<typeof sPosts>;
+export type Post = LEntrieItem<typeof sPosts>;
