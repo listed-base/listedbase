@@ -101,7 +101,7 @@ type ExtractBase<T> = DeepClean<{
 // 🧠 FINAL
 // ----------------------------------
 
-export type MappingSchema<T z.output<T["schema"]>> = {
+export type MappingSchema<T e> = {
   __schema: T;
 
   base: ExtractBase<T>;
