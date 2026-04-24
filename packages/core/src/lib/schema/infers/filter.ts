@@ -1,5 +1,6 @@
 import { Simplify } from './helpers';
 import { InferItem } from './entrie';
+import { TSchemaRef } from '../schema';
 
 // ============================================================
 // 🧠 OPERATORS
