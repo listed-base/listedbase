@@ -1,5 +1,5 @@
 import { Simplify } from './helpers';
-import { LEntrieItem } from './entrie';
+import { InferEntrie, LEntrieItem } from './entrie';
 import { TSchemaRef } from '../schema';
 
 // ============================================================
