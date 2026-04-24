@@ -9,7 +9,7 @@ import { TSchemaRef } from '../schema';
 type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
-export type InferItem<T extends TSchemaRef> = Simplify<
+export type InferItem< extends TSchemaRef> = Simplify<
   MappingSchema<S>['base'] &
   MappingSchema<S>['idFields'] &
   MappingSchema<S>['uniqueFields'] &
