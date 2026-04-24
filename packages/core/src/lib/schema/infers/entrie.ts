@@ -22,4 +22,5 @@ export type InferItem<T> = Simplify<
   }
 >;
 
-type InferItemEntrie<S extends TSchemaRef>
+type InferItemEntrie<S extends TSchemaRef> = InferItem<S['zodSchema']>
+
