@@ -21,4 +21,4 @@ export type InferItem<T> = Simplify<
   }
 >;
 
-type InferItemEntrie<S extends MappingSchema<any>
+type InferItemEntrie<S extends S>
