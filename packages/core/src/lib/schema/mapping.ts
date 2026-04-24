@@ -1,4 +1,3 @@
-import { z } from 'zod/v4';
 import { TSchemaRef } from './schema';
 import {
   DeepClean,
@@ -104,7 +103,7 @@ type ExtractBase<T> = DeepClean<{
 // ----------------------------------
 
 export type MappingSchema<S extends TSchemaRef> = {
-  __schema: z.output<S["schema"]>;
+  __schema: S;
 
   base: ExtractBase<S>;
 
