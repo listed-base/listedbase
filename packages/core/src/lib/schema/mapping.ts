@@ -1,3 +1,4 @@
+import { z } from 'zod/v4';
 import { TSchemaRef } from './schema';
 import {
   DeepClean,
