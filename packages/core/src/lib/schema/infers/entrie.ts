@@ -21,4 +21,4 @@ export type InferItem<T> = Simplify<
   }
 >;
 
-type inferItem
+type inferItemEntry
