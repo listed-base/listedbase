@@ -106,12 +106,12 @@ type ExtractBase<T> = DeepClean<{
 export type MappingSchema<S extends TSchemaRef> = {
   __schema: z.output<S["schema"]>;
 
-  base: ExtractBaseddd>;
+  base: ExtractBasez.output<S["schema"]>>;
 
-  idFields: ExtractFields<S, 'idField'>;
-  uniqueFields: ExtractFields<S, 'unique'>;
-  indexFields: ExtractFields<S, 'index'>;
+  idFields: ExtractFieldsz.output<S["schema"]>, 'idField'>;
+  uniqueFields: ExtractFieldsz.output<S["schema"]>, 'unique'>;
+  indexFields: ExtractFieldsz.output<S["schema"]>, 'index'>;
 
-  populateQraph: ExtractPopulates<S>;
-  autogenFields: AutoGenGroup<S>;
+  populateQraph: ExtractPopulatesz.output<S["schema"]>>;
+  autogenFields: AutoGenGroupz.output<S["schema"]>>;
 };
