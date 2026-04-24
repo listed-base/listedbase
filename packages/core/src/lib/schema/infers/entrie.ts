@@ -10,14 +10,14 @@ type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
 export type InferItem<T extends TSchemaRef> = Simplify<
-  MappingSchema<T>['base'] &
-  MappingSchema<T>['idFields'] &
-  MappingSchema<T>['uniqueFields'] &
-  MappingSchema<T>['autogenFields']['onCreate'] &
-  MappingSchema<T>['autogenFields']['onUpdate'] & {
-    [K in keyof MappingSchema<T>['populateQraph']]:
-      MappingSchema<T>['populateQraph'][K] extends Array<infer U>
+  MappingSchema<z>['base'] &
+  MappingSchema<z>['idFields'] &
+  MappingSchema<z>['uniqueFields'] &
+  MappingSchema<z>['autogenFields']['onCreate'] &
+  MappingSchema<z>['autogenFields']['onUpdate'] & {
+    [K in keyof MappingSchema<z>['populateQraph']]:
+      MappingSchema<z>['populateQraph'][K] extends Array<infer U>
         ? ResolvePopulate<U>[]
-        : ResolvePopulate<MappingSchema<T>['populateQraph'][K]>;
+        : ResolvePopulate<MappingSchema<z>['populateQraph'][K]>;
   }
 >;
