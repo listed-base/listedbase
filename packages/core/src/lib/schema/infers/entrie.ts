@@ -8,7 +8,7 @@ import { z } from 'zod/v4';
 // ============================================================
 
 type ResolvePopulate<T> =
-  T extends MappingSchema<infer S> ? InferItem<z.output<S["schema"]>> : never;
+  T extends MappingSchema<infer S> ? InferItem> : never;
 
 export type InferItem<S extends TSchemaRef> = Simplify<
   MappingSchema<z.output<S["schema"]>>['base'] &
