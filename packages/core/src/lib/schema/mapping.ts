@@ -1,3 +1,4 @@
+import { TSchemaRef } from './schema';
 import {
   DeepClean,
 } from './utils';
