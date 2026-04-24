@@ -15,4 +15,4 @@ export const post = list(sPosts)
 
 const user = post.findMany({ omit: { user: true } })
 
-export type Post = LItem<typeof sPosts>
+export type Post = InferItem<typeof sPosts>
