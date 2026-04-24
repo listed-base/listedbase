@@ -93,5 +93,6 @@ type WhereLogical<T> = {
 
 export type InferWhereInput<T> = Simplify<WhereFields<T> & WhereLogical<T>>;
 
-export type LWhere<S extends TSchemaRef> = InferWhereInput<z.output<S['schema']>>;
-
+export type LWhere<S extends TSchemaRef> = InferWhereInput<
+  z.output<S['schema']>
+>;
