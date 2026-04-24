@@ -12,14 +12,14 @@ type ResolvePopulate<T> =
 
 export type InferItem<S extends TSchemaRef> = Simplify<
   MappingSchema<z.output<S["schema"]>>['base'] &
-    MappingSchemaz.output<S["schema"]>>['idFields'] &
-    MappingSchemaz.output<S["schema"]>>['uniqueFields'] &
-    MappingSchemaz.output<S["schema"]>>['autogenFields']['onCreate'] &
-    MappingSchemaz.output<S["schema"]>>['autogenFields']['onUpdate'] & {
-      [K in keyof MappingSchemaz.output<S["schema"]>>['populateQraph']]: MappingSchemaz.output<S["schema"]>>['populateQraph'][K] extends Array<
+    MappingSchema<S>['idFields'] &
+    MappingSchema<S>['uniqueFields'] &
+    MappingSchema<S>['autogenFields']['onCreate'] &
+    MappingSchema<S>['autogenFields']['onUpdate'] & {
+      [K in keyof MappingSchema<S>['populateQraph']]: MappingSchema<S>['populateQraph'][K] extends Array<
         infer U
       >
         ? ResolvePopulate<U>[]
-        : ResolvePopulate<MappingSchemaz.output<S["schema"]>>['populateQraph'][K]>;
+        : ResolvePopulate<MappingSchema<S>['populateQraph'][K]>;
     }
 >;
