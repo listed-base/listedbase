@@ -101,7 +101,7 @@ type ExtractBase<T> = DeepClean<{
 // 🧠 FINAL
 // ----------------------------------
 
-export type MappingSchema<T extends TSchemaRef> = {
+export type MappingSchema<T> = {
   __schema: T;
 
   base: ExtractBase<T>;
