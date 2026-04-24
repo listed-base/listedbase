@@ -16,4 +16,4 @@ const user = post.findMany({ omit: { user: true } });
 
 export type Post = LEntrieItem<typeof sPosts>;
 
-export type User = LEntrieItem<typeof sUser>;w
+export type 
