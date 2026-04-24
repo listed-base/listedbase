@@ -1,5 +1,5 @@
 import { type LEntrieItem,type LWhere, lField, lSchema, list } from '@listedbase/core';
-import { type LEntrieItem,type  LW} from '@listedbase/core';
+import { type LEntrieItem,type  LWhere} from '@listedbase/core';
 import { sUser } from './user';
 
 export const sPosts = lSchema({
