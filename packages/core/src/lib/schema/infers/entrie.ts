@@ -8,18 +8,18 @@ import { z } from 'zod/v4';
 // ============================================================
 
 type ResolvePopulate<T> =
-  T extends MappingSchema<infer S> ? InferItem<S> : never;
+  T extends MappingSchema<infer S> ? InferItemz.output<S["schema"]>> : never;
 
 export type InferItem<S extends TSchemaRef> = Simplify<
   MappingSchema<z.output<S["schema"]>>['base'] &
-    MappingSchema<S>['idFields'] &
-    MappingSchema<S>['uniqueFields'] &
-    MappingSchema<S>['autogenFields']['onCreate'] &
-    MappingSchema<S>['autogenFields']['onUpdate'] & {
-      [K in keyof MappingSchema<S>['populateQraph']]: MappingSchema<S>['populateQraph'][K] extends Array<
+    MappingSchemaz.output<S["schema"]>>['idFields'] &
+    MappingSchemaz.output<S["schema"]>>['uniqueFields'] &
+    MappingSchemaz.output<S["schema"]>>['autogenFields']['onCreate'] &
+    MappingSchemaz.output<S["schema"]>>['autogenFields']['onUpdate'] & {
+      [K in keyof MappingSchemaz.output<S["schema"]>>['populateQraph']]: MappingSchemaz.output<S["schema"]>>['populateQraph'][K] extends Array<
         infer U
       >
         ? ResolvePopulate<U>[]
-        : ResolvePopulate<MappingSchema<S>['populateQraph'][K]>;
+        : ResolvePopulate<MappingSchemaz.output<S["schema"]>>['populateQraph'][K]>;
     }
 >;
