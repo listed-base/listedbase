@@ -4,7 +4,7 @@ export type Operation = 'add' | 'update' | 'delete';
 
 export type Item = {
   _id: string;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 export interface ChangePayload {

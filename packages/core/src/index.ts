@@ -1,9 +1,7 @@
-export * from './lib/list/listedbase';
-// export * from './lib/filters/filter';
-export * from './lib/schema/schema';
-export * from './lib/schema/field';
-export * from './lib/schema/infers/entrie';
-export * from './lib/schema/infers/filter';
-export * from './lib/schema/infers/inputs';
-export * from './lib/schema/infers/selections';
-// export * from './lib/schema/pupolar';
+export * from './lib/schema/index';
+export * from './lib/list/index';
+export * from './lib/query/query';
+export * from './lib/setting'
+export * from './lib/infers2/index'
+
+

@@ -1,110 +1,62 @@
-import { never, z, ZodLazy, ZodObject, ZodUnion } from "zod/v4";
-import core, { util } from "zod/v4/core";
-interface TSchemaOptions<TName extends string, TFields extends core.$ZodLooseShape> {
-    name: TName,
-    fields: TFields
+import { z, ZodObject } from 'zod/v4';
+import core from 'zod/v4/core';
+
+// ============================================================
+// 🔧 LAZY RESOLVER
+// ============================================================
+
+export type ResolveLazy<T> = T extends () => infer R ? ResolveLazy<R> : T;
+export type ResolveFields<T> = { [K in keyof T]: ResolveLazy<T[K]> };
+
+// ============================================================
+// 🏗️ SCHEMA OPTIONS
+// ============================================================
+
+interface TSchemaOptions<
+  TName extends string,
+  TFields extends core.$ZodLooseShape,
+> {
+  name: TName;
+  fields: TFields;
 }
 
-type ResolveLazy<T> =
-    T extends () => infer R
-    ? ResolveLazy<R>
-    : T;
-type ResolveFields<T> = {
-    [K in keyof T]: ResolveLazy<T[K]>;
-};
+// ============================================================
+// 🔥 lSCHEMA
+// ============================================================
 
-/**
- * Extract first schema from ZodUnion
- */
-type FirstFromZodUnion<T> =
-    T extends z.ZodUnion<infer Options>
-    ? Options extends [infer First, ...any[]]
-    ? First
-    : never
-    : T;
-
-/**
- * Apply on object fields
- */
-type PickFirstUnionFields<T> = {
-    [K in keyof T]: FirstFromZodUnion<T[K]>;
-};
-export interface TSchemaRef<S extends ZodObject = ZodObject, Z extends ZodObject = ZodObject> {
-    schema: S
-    zodSchema: Z,
-    // jsonSchema: core.ZodStandardJSONSchemaPayload<S> & { idField: string }
-}
-export const registerSchema = new Map<string, ZodObject>()
 export function lSchema<
-    TName extends string,
-    TFields extends Record<string, any>
->(
-    { name, fields }: TSchemaOptions<TName, TFields>
-): TSchemaRef<ZodObject<ResolveFields<TFields>, core.$strict>, ZodObject<ResolveFields<PickFirstUnionFields<TFields>>, core.$strict>> {
+  TName extends string,
+  TFields extends Record<string, any>,
+>({
+  name,
+  fields,
+}: TSchemaOptions<TName, TFields>): ZodObject<
+  ResolveFields<TFields>,
+  core.$strict
+> {
+  const resolvedShape: any = {};
+  let hasIdField = false;
+  for (const key in fields) {
+    const value = fields[key];
 
-    const resolvedShape: any = {};
-    let hasIdFiled = false
-    for (const key in fields) {
-        const value = fields[key];
-
-        if (typeof value === "function") {
-            resolvedShape[key] = z.lazy(() => value().options[0])
-
-        } else {
-            resolvedShape[key] = value;
-        }
-
-        const field = resolvedShape[key];
-
-
-        if (field instanceof ZodUnion) {
-            if (field.options[1] instanceof ZodObject && Object.prototype.hasOwnProperty.call(field.options[1].shape, "idField")) {
-                hasIdFiled = true
-            }
-            resolvedShape[key] = field.options[0];
-        }
-
+    if (typeof value === 'function') {
+      resolvedShape[key] = z.lazy(() => value());
+    } else {
+      resolvedShape[key] = value;
     }
 
-    if (!hasIdFiled) {
-        throw new Error(`listedbase:Schema ${name} must have an id field`);
+    const field = resolvedShape[key];
+    if (field?.__lMeta?.idField === true) {
+      hasIdField = true;
     }
+    resolvedShape[key] = resolvedShape[key].meta(resolvedShape[key].__lMeta);
+  }
 
-    const def: core.$ZodObjectDef = {
-        type: "object",
-        shape: resolvedShape,
-        catchall: never(),
-    };
+  if (!hasIdField) {
+    throw new Error(`listedbase: Schema "${name}" must have an id field`);
+  }
 
-    const schema = (z.object(def)).meta({ name }) as any
-    z.globalRegistry.add(schema, { id: name })
-
-    return new SchemaRef
-        <ZodObject<ResolveFields<TFields>, core.$strict>, ZodObject<ResolveFields<PickFirstUnionFields<TFields>>, core.$strict>
-        >(schema, schema)
+  const schema = z.object(resolvedShape).meta({ id: name }) as any;
+  z.globalRegistry.add(schema, { id: name });
+  return schema;
 }
-
-class SchemaRef<S extends ZodObject, Z extends ZodObject> implements TSchemaRef<S, Z> {
-    schema: S
-    zodSchema: Z
-    constructor(schema: S, zodSchema: Z) {
-        this.schema = schema
-        this.zodSchema = zodSchema
-    }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

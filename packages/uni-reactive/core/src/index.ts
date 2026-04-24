@@ -3,7 +3,9 @@
 // core/types.ts
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
-export interface ReactiveTypeMap<T> { }
+export interface ReactiveTypeMap<T> { 
+    _T?: T
+}
 
 /**
  * كل adapter يضيف المفتاح الخاص به هنا

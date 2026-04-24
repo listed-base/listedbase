@@ -1,17 +1,44 @@
-import { CreateInput, UpdateInput } from './mutation';
-import { TReadonlyState } from '@listedbase/uni-reactive';
-import { LFilterInput } from '../filters/types';
-export interface ListRef<TOutput, TInput> {
-    items: TReadonlyState<TOutput[]>;
-    findUnique: (where: Partial<TOutput>) => TOutput | undefined;
-    findFirst: (options?: LFilterInput<TOutput>) => TOutput | undefined;
-    findMany: (options?: LFilterInput<TOutput>) => TOutput[];
-    create: (data: CreateInput<TInput>) => TOutput;
-    update: (where: LFilterInput<TOutput>, data: UpdateInput<TInput>) => TOutput | undefined;
-    upsert: (data: UpdateInput<TInput>) => void;
-    delete: (where: LFilterInput<TOutput>) => boolean;
+import { ZodObject } from 'zod/v4';
+import type {
+  CreateIntent,
+  CreateErrorMode,
+  InferCreateResult,
+} from './mutations';
+import { z } from 'zod/v4';
+import { getDriver } from '@listedbase/driver-abstract';
+import { LInfer } from '../infers';
+import { LQueryRef } from '../query/query';
+
+export function list<S extends ZodObject<any>>(query: LQueryRef<S>) {
+  const schema = query.schema
+  const listName = schema.meta()?.id as string;
+  const driver = getDriver();
+  const schemas = z.toJSONSchema(z.globalRegistry);
+  driver.ensureReady(schemas);
+
+  type Infers = LInfer<S>;
+  const items: Infers['base'][] = [];
+
+  return {
+    items,
+
+    async create<
+      Input extends Infers['createInput'],
+      I extends CreateIntent | undefined = undefined,
+      Sel extends I extends 'confirm' | 'id' | 'entity'
+        ? undefined
+        : Infers['selectArgs'] | undefined = undefined,
+    >(opts: {
+      input: Input;
+      refine?: {
+        intent?: I;
+        select?: Sel;
+        errorMode?: CreateErrorMode;
+      };
+    }): Promise<InferCreateResult<S, Input, { intent: I; select: Sel }>> {
+      const parsed = schema.parse(opts.input);
+      const result = await driver.create(listName, parsed);
+      return result as InferCreateResult<S, Input, { intent: I; select: Sel }>;
+    },
+  };
 }
-
-
-
-

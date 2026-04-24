@@ -7,6 +7,7 @@ export default [
   {
     files: ['**/*.vue'],
     languageOptions: {
+      parser: await import('vue-eslint-parser'),
       parserOptions: {
         parser: await import('@typescript-eslint/parser'),
       },

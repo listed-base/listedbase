@@ -1,6 +1,6 @@
 import { DefaultDuct } from './default';
 import type { Duct } from './types';
-import {  } from "@listedbase/core";
+
 function createDuct() {
   let duct: Duct = new DefaultDuct();
 

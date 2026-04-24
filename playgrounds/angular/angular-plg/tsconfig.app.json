@@ -4,11 +4,14 @@
     "outDir": "../../../dist/out-tsc",
     "types": []
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "src/app/schemas/post.ts"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "references": [
     {
       "path": "../../../packages/uni-reactive/adapters/angular-reactive/tsconfig.lib.json"
+    },
+    {
+      "path": "../../../packages/core/tsconfig.lib.json"
     }
   ]
 }

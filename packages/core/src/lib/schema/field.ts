@@ -1,105 +1,124 @@
-/**
- * Zod extensions
- *
- * This file extends the Zod library with additional methods.
- *
- * - `unique()` method to add unique constraints to Zod types
- * - `isUnique()` function to check if a Zod type has a unique constraint
- *
- */
+// field.ts
 import * as z from 'zod/v4';
-import { addMeta } from "./meta";
-import { TSchemaRef } from './schema';
+import { brandMeta, Branded, TMetaFlags } from './meta';
+import { EmptyObject } from '../utils';
+
+// ============================================================
+// 🔗 CHAINABLE INDEX METHODS
+// ============================================================
 
 type IndexType = z.ZodString | z.ZodNumber | z.ZodDate | z.ZodBigInt;
 
-interface TFieldIndex extends z.ZodType {
-  unique(): z.ZodUnion<[this, z.ZodObject<{ unique: z.ZodLiteral<true> }>]>;
-  index(): z.ZodUnion<[this, z.ZodObject<{ index: z.ZodLiteral<true> }>]>;
-}
-declare module "zod/v4" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
-  interface ZodString extends TFieldIndex { }
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
-  interface ZodNumber extends TFieldIndex { }
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
-  interface ZodDate extends TFieldIndex { }
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
-  interface ZodBigInt extends TFieldIndex { }
-}
+export type WithIndexMethods<
+  T extends IndexType,
+  TMeta extends TMetaFlags = EmptyObject,
+> = Branded<T, TMeta> & {
+  unique(): WithIndexMethods<T, TMeta & { unique: true }>;
+  index(): WithIndexMethods<T, TMeta & { index: true }>;
+};
 
-class FieldIndex {
-  unique<T extends IndexType>(this: T) {
-    return addMeta(this, { unique: true })
-  };
-  index<T extends IndexType>(this: T) {
-    return addMeta(this, { index: true })
-  }
-}
-
-
-
-class LField {
-  id = this.createIdField()
-  private createIdField() {
-    const id = <T extends IndexType>(schema: T) => {
-      return addMeta(schema, { idField: true }) as z.ZodUnion<[T, z.ZodObject<{ idField: z.ZodLiteral<true> }>]>;
-    };
-    id.autouuid = () => addMeta(z.uuid().default(() => crypto.randomUUID()), {
-      autogen: true, idField: true,
-      unique: true, index: true
-    });
-    id.autoincrement = () => addMeta(z.number().default(0), { autogen: true, idField: true, unique: true, index: true });
-    return id;
-  }
-  autouuid = () => {
-    return addMeta(
-      z.uuid().default(() => crypto.randomUUID()),
-      { autogen: true }
-    );
-  }
-
-  autoincrement = () => {
-    return addMeta(
-      z.number(),
-      { autogen: true }
-    );
-  }
-
-  now = () => {
-    return addMeta(
-      z.iso.datetime().default(() => new Date().toISOString()),
-      { autogen: true, date: true }
-    );
-  }
-
-  updatedAt = () => {
-    return addMeta(
-      z.iso.datetime().nullable().default(() => null),
-      { autogen: true, date: true }
-    );
-  }
-  oneFrom = <S extends z.ZodObject, Z extends z.ZodObject>(ref: TSchemaRef<S, Z>) => {
-    return addMeta(ref.schema, { oneFrom: true })
-  }
-  manyFrom = <S extends z.ZodObject, Z extends z.ZodObject>(ref: TSchemaRef<S, Z>) => {
-    return addMeta(z.array(ref.schema.optional()), { manyFrom: true })
-  }
-}
-function withIndexMethods<T extends z.ZodType>(schema: T): T & FieldIndex {
-  return Object.assign(schema, {
+function withIndexMethods<
+  T extends IndexType,
+  TMeta extends TMetaFlags = EmptyObject,
+>(schema: T, meta: TMeta = {} as TMeta): WithIndexMethods<T, TMeta> {
+  const branded = Object.assign(schema, { __lMeta: meta });
+  return Object.assign(branded, {
     unique() {
-      return addMeta(schema, { unique: true });
+      return withIndexMethods(schema, { ...meta, unique: true as const });
     },
     index() {
-      return addMeta(schema, { index: true });
-    }
-  });
+      return withIndexMethods(schema, { ...meta, index: true as const });
+    },
+  }) as WithIndexMethods<T, TMeta>;
 }
-const { string, number, date, bigint, ...rest } = z
-export const lField = Object.assign({
-  string: () => withIndexMethods(string()),
-  number: () => withIndexMethods(number()),
-  date: () => withIndexMethods(date()),
-  bigint: () => withIndexMethods(bigint())
-}, rest, new LField()) as typeof z & LField;
+
+// ============================================================
+// 🏗️ LFIELD
+// ============================================================
+
+class LField {
+  id = this.createIdField();
+
+  private createIdField() {
+    const id = <T extends IndexType>(schema: T) =>
+      brandMeta(schema, { idField: true as const });
+
+    id.autouuid = () =>
+      brandMeta(
+        z.uuid().default(() => crypto.randomUUID()),
+        {
+          autogen: true as const,
+          idField: true as const,
+          unique: true as const,
+          index: true as const,
+        },
+      );
+
+    id.autoincrement = () =>
+      brandMeta(z.number(), {
+        autogen: true as const,
+        idField: true as const,
+        autoIncrement: true as const,
+        unique: true as const,
+        index: true as const,
+      });
+
+    return id;
+  }
+
+  autouuid = () =>
+    brandMeta(
+      z.uuid().default(() => crypto.randomUUID()),
+      { autogen: true as const },
+    );
+  autoincrement = () =>
+    brandMeta(z.number(), {
+      autogen: true as const,
+      autoIncrement: true as const,
+    });
+  now = () =>
+    brandMeta(
+      z.iso.datetime().default(() => new Date().toISOString()),
+      { autogen: true as const, now: true as const },
+    );
+  updatedAt = () =>
+    brandMeta(
+      z.iso
+        .datetime()
+        .nullable()
+        .default(() => null),
+      { autogen: true as const, updatedAt: true as const },
+    );
+
+  oneFrom = <S extends z.ZodObject>(schema: S) =>
+    brandMeta(schema, { oneFrom: true as const });
+
+  manyFrom = <S extends z.ZodObject>(schema: S) =>
+    brandMeta(z.array(schema), { manyFrom: true as const });
+}
+
+// ============================================================
+// 🔥 EXPORT
+// ============================================================
+
+const { string, number, date, bigint, ...rest } = z;
+
+export const lField = Object.assign(
+  {
+    string: (): WithIndexMethods<z.ZodString, EmptyObject> =>
+      withIndexMethods(z.string()),
+    number: (): WithIndexMethods<z.ZodNumber, EmptyObject> =>
+      withIndexMethods(z.number()),
+    date: (): WithIndexMethods<z.ZodDate, EmptyObject> =>
+      withIndexMethods(z.date()),
+    bigint: (): WithIndexMethods<z.ZodBigInt, EmptyObject> =>
+      withIndexMethods(z.bigint()),
+  },
+  rest,
+  new LField(),
+) as Omit<typeof z, 'string' | 'number' | 'date' | 'bigint'> & {
+  string: () => WithIndexMethods<z.ZodString, EmptyObject>;
+  number: () => WithIndexMethods<z.ZodNumber, EmptyObject>;
+  date: () => WithIndexMethods<z.ZodDate, EmptyObject>;
+  bigint: () => WithIndexMethods<z.ZodBigInt, EmptyObject>;
+} & LField;

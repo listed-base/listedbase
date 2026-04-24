@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
+    "skipDefaultLibCheck": true,
     "declarationMap": false,
     "declaration": false,
     "importHelpers": true,
@@ -19,17 +19,17 @@
     "target": "es2022",
     "customConditions": ["@listedbase/source"],
     "paths": {
-      // "@listedbase/uni-reactive": ["packages/uni-reactive/core/src/index.ts"],
+      "@listedbase/uni-rective": ["packages/uni-reactive/core/src/index.ts"],
       "@listedbase/angular-reactive": [
         "packages/uni-reactive/adapters/angular-reactive/src/index.ts"
       ],
       "@listedbase/core": ["packages/core/src/index.ts"],
-      // "@listedbase/vue-reactive": [
-      //   "packages/uni-reactive/adapters/vue-reactive/src/index.ts"
-      // ],
-      // "@listedbase/react-reactive": [
-      //   "packages/uni-reactive/adapters/react-reactive/src/index.ts"
-      // ]
+      "@listedbase/driver-abstract": [
+        "./packages/drivers/abstract/src/index.ts"
+      ],
+      "@listedbase/supabase": ["./packages/drivers/supabase/src/index.ts"],
+      "@listedbase/firestore": ["./packages/drivers/firestore/src/index.ts"],
+      "@listedbase/indexeddb": ["./packages/drivers/indexeddb/src/index.ts"]
     }
   }
 }

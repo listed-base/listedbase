@@ -1,6 +1,6 @@
 // angular-adapter/types.ts
 
-import { Signal } from '@angular/core'
+import {  Signal } from '@angular/core'
 import { IReactive, ReactiveFactory } from '@listedbase/uni-reactive'
 
 declare module '@listedbase/uni-reactive' {
@@ -23,7 +23,6 @@ import { signal, WritableSignal } from '@angular/core'
 class AngularReactive<T> implements IReactive<T> {
 
   private state!: WritableSignal<T>
-
 
   init(initial: T) {
     this.state = signal(initial);

@@ -1,20 +1,43 @@
-import { lField, lSchema, list } from '@listedbase/core';
-import type { LEntrieItem, LWhere } from '@listedbase/core';
+import { lField, LInfer, lSchema } from '@listedbase/core';
 import { sUser } from './user';
-
+const sTag = lSchema({
+  name: 'tags',
+  fields: {
+    id: lField.id.autouuid(),
+    name: lField.string(),
+  },
+});
 export const sPosts = lSchema({
   name: 'posts',
   fields: {
     id: lField.id.autouuid(),
-    obj: lField.strictObject({ one: lField.string() }),
-    user: () => lField.oneFrom(sUser),
+    no: lField.number().unique(),
+    title: lField.string().index(),
+    content: lField.string(),
+    paid: lField.boolean(),
+    published: lField.boolean(),
+    createdAt: lField.now(),
+    updatedAt: lField.updatedAt(),
+    views: lField.number(),
+    author: () => lField.oneFrom(sUser),
+    tags: () => lField.manyFrom(sTag),
   },
 });
 
-export const post = list(sPosts);
 
-const user = post.findMany({ omit: { user: true } });
+type PostInfers = LInfer<typeof sPosts>;
 
-export type Post = LEntrieItem<typeof sPosts>;
 
-export type wPost = LWhere<typeof sPosts>;
+export type Post = PostInfers["base"] & PostInfers["populations"] 
+export type PostCreateInput = PostInfers["createInput"]
+export type PostUpdateInput = PostInfers["updateInput"]
+export type PostUpsertInput = PostInfers["upsertInput"]
+export type Where = PostInfers["whereArgs"]
+
+
+
+
+
+
+
+

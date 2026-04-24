@@ -46,3 +46,5 @@ vitest.config.*.timestamp*
 __screenshots__/
 
 vite.config.*.timestamp*
+.nx/polygraph
+.nx/self-healing

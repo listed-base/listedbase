@@ -1,6 +1,24 @@
 <div>
- 
-  <a routerLink="/reactive-playground" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded inline-block">Go to Reactive Playground</a>
- 
-  <router-outlet></router-outlet>
+  <button
+    (click)="add()"
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+  >
+    Add Post
+  </button>
+  <h3>{{  query.value() | json }}</h3>
+
+  <!-- Items with tailwind -->
+  <ol class="list-decimal list-inside mt-4">
+    <!-- @for (post of posts.items; track post.id) {
+      <li class="mb-4 p-4 border rounded">
+        <h3 class="text-xl font-bold">{{post.title}}</h3>
+        <p class="text-gray-700">{{post.content}}</p>
+        <div class="text-sm text-gray-500 mt-2">
+          <span>Published: {{post.published}}</span> |
+          <span>Paid: {{post.paid}}</span> |
+          <span>Views: {{post.views}}</span>
+        </div>
+      </li>
+    } -->
+  </ol>
 </div>
