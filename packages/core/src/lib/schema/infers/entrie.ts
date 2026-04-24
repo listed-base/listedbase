@@ -1,5 +1,6 @@
 import { Simplify, UnwrapArray } from './helpers';
 import { MappingSchema } from '../mapping';
+import { TSchemaRef } from '../schema';
 
 // ============================================================
 // 🧠 ENTITY (READ MODEL)
@@ -21,4 +22,4 @@ export type InferItem<T> = Simplify<
   }
 >;
 
-type InferItemEntrie<S extends S>
+type InferItemEntrie<S extends TSchemaRef>
