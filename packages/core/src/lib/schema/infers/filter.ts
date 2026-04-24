@@ -82,7 +82,7 @@ type PathValue<T, P extends string> = P extends `${infer K}.${infer R}`
 // ============================================================
 
 type WhereFields<T> = {
-  [P in PathsKeys<InferItem<T>>]?: FieldOps<PathValue<InferItem<T>, P>>;
+  [P in PathsKeys<LEntrieItem<T>>]?: FieldOps<PathValue<LEntrieItem<T>, P>>;
 };
 
 type WhereLogical<T> = {
