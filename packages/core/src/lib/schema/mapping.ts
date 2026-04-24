@@ -1,4 +1,3 @@
-import { TSchemaRef } from './schema';
 import {
   DeepClean,
 } from './utils';
@@ -102,15 +101,15 @@ type ExtractBase<T> = DeepClean<{
 // 🧠 FINAL
 // ----------------------------------
 
-export type MappingSchema<S extends TSchemaRef> = {
-  __schema: S;
+export type MappingSchema<T extends TSchemaRef> = {
+  __schema: T;
 
-  base: ExtractBase<S>;
+  base: ExtractBase<T>;
 
-  idFields: ExtractFields<S, 'idField'>;
-  uniqueFields: ExtractFields<S, 'unique'>;
-  indexFields: ExtractFields<S, 'index'>;
+  idFields: ExtractFields<T, 'idField'>;
+  uniqueFields: ExtractFields<T, 'unique'>;
+  indexFields: ExtractFields<T, 'index'>;
 
-  populateQraph: ExtractPopulates<S>;
-  autogenFields: AutoGenGroup<S>;
+  populateQraph: ExtractPopulates<T>;
+  autogenFields: AutoGenGroup<T>;
 };
