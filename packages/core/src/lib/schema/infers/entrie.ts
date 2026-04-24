@@ -10,7 +10,7 @@ import { z } from 'zod/v4';
 type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
-export type InferItem<T> = Simplify<
+export type InferEn<T> = Simplify<
   MappingSchema<T>['base'] &
   MappingSchema<T>['idFields'] &
   MappingSchema<T>['uniqueFields'] &
