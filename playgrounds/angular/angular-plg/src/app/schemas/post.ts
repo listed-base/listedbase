@@ -1,4 +1,4 @@
-import { type LEntrieItem, lField, lSchema, list } from '@listedbase/core';
+import { type LEntrieItem, LWhere, lField, lSchema, list } from '@listedbase/core';
 import { sUser } from './user';
 
 export const sPosts = lSchema({
@@ -16,4 +16,4 @@ const user = post.findMany({ omit: { user: true } });
 
 export type Post = LEntrieItem<typeof sPosts>;
 
-export type wPost = LW
+export type wPost = LWhere
