@@ -18,4 +18,3 @@ export type Post = LEntrieItem<typeof sPosts>;
 
 export type wPost = LWhere<typeof sPosts>;
 
-export type wUser = LWhere<typeof sUser>;
