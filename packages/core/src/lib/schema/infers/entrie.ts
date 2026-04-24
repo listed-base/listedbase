@@ -23,5 +23,5 @@ export type InferEntrie<T> = Simplify<
   }
 >;
 
-type InferItemEntrie<S extends TSchemaRef> = InferItem<z.output<S['schema']>>
+type InferItem<S extends TSchemaRef> = InferItem<z.output<S['schema']>>
 
