@@ -1,5 +1,5 @@
 import { Simplify } from './helpers';
-import { L } from './entrie';
+import { LEntrieItem } from './entrie';
 import { TSchemaRef } from '../schema';
 
 // ============================================================
