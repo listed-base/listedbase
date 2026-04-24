@@ -1,4 +1,4 @@
-import { type L, lField, lSchema, list } from '@listedbase/core';
+import { type LI, lField, lSchema, list } from '@listedbase/core';
 import { sUser } from './user';
 
 export const sPosts = lSchema({
