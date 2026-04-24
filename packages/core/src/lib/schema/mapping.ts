@@ -71,7 +71,7 @@ type PopulateMetaOf<T> = Extract<T, { oneFrom: true } | { manyFrom: true }>;
 type HasPopulate<T> =
   [PopulateMetaOf<T>] extends [never] ? false : true;
 
-type ExtractPopulateValue<T > = Exclude<T, TMeta>;
+type ExtractPopulateValue<T> = Exclude<T, TMeta>;
 
 type ExtractPopulates<T> = {
   [K in keyof T as HasPopulate<T[K]> extends true ? K : never]:
