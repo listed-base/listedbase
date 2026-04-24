@@ -1,6 +1,7 @@
 import { Simplify, UnwrapArray } from './helpers';
 import { MappingSchema } from '../mapping';
 import { TSchemaRef } from '../schema';
+import { z } from 'zod/v4';
 
 // ============================================================
 // 🧠 ENTITY (READ MODEL)
