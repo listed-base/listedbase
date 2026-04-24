@@ -1,6 +1,5 @@
 import { Simplify, UnwrapArray } from './helpers';
 import { MappingSchema } from '../mapping';
-import { TSchemaRef } from '../schema';
 
 // ============================================================
 // 🧠 ENTITY (READ MODEL)
@@ -9,7 +8,7 @@ import { TSchemaRef } from '../schema';
 type ResolvePopulate<T> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
-export type InferItem<T extends TSchemaRef> = Simplify<
+export type InferItem<T> = Simplify<
   MappingSchema<T>['base'] &
   MappingSchema<T>['idFields'] &
   MappingSchema<T>['uniqueFields'] &
