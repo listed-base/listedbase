@@ -7,7 +7,7 @@ import { z } from 'zod/v4';
 // 🧠 ENTITY (READ MODEL)
 // ============================================================
 
-type ResolvePopulate<T extends TSchemaRef> =
+type ResolvePopulate<> =
   T extends MappingSchema<infer S> ? InferItem<S> : never;
 
 export type InferItem<T extends TSchemaRef> = Simplify<
