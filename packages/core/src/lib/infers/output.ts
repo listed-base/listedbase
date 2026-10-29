@@ -1,11 +1,5 @@
-// output.ts
-
 import type { TSelectRaw } from "./select";
 import type { EmptyObject, Simplify } from "../utils";
-
-// ============================================================
-// 🔧 APPLY BASE SELECTION
-// ============================================================
 
 type ApplyPick<TEntity, R> =
   R extends { pick: readonly (infer K)[] }
@@ -36,10 +30,6 @@ type ApplyBaseSelection<TEntity, R> =
       : R extends { omit: any }
         ? ApplyOmit<TEntity, R>
         : TEntity;
-
-// ============================================================
-// 🔧 APPLY INCLUDE
-// ============================================================
 
 type ApplyOneFromInclude<TRelated, RInclude> =
   RInclude extends { pluck: infer K }
@@ -73,7 +63,7 @@ type ApplyManyFromInclude<TRelated, RInclude> =
 
 type ApplyInclude<TPopulate, R> =
   R extends { pluck: any }
-    ? EmptyObject  // pluck → لا include
+    ? EmptyObject
     : R extends { include: infer I }
       ? {
           [K in keyof I & keyof TPopulate]?:
@@ -83,14 +73,6 @@ type ApplyInclude<TPopulate, R> =
         }
       : EmptyObject;
 
-// ============================================================
-// 🔥 APPLY Select
-// ============================================================
-
-// ============================================================
-// 🔥 APPLY Select
-// ============================================================
-
 export type ApplySelect<
   TEntity,
   TPopulate,
@@ -98,11 +80,9 @@ export type ApplySelect<
 > =
   R extends { pluck: infer K }
     ? K extends keyof TEntity
-      ? TEntity[K]              // ← القيمة مباشرة بدون object
+      ? TEntity[K]
       : never
     : Simplify<
         ApplyBaseSelection<TEntity, R> &
         ApplyInclude<TPopulate, R>
       >;
-
-    
