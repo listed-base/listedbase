@@ -1,6 +1,6 @@
 import { createReactive } from '@listedbase/uni-reactive';
 import { ZodObject } from 'zod/v4';
-import { LInfer } from '../infers2';
+import { LInfer } from '../infers';
 export interface QueryOptions<S extends ZodObject> {
   where?: LInfer<S>['whereArgs'];
   sort?: LInfer<S>['sortArgs'];

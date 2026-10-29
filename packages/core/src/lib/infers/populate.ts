@@ -1,13 +1,8 @@
-// populate.ts
 import { z } from 'zod/v4';
 import type { IsOneFrom, IsManyFrom, IsRelation } from '../schema/meta';
 import type { ExactlyOne, RequireAtLeastOne } from '../utils';
 import type { UniqueFields } from './unique';
 import type { InferCreateInput, InferUpdateInput } from './inputs';
-
-// ============================================================
-// 🔗 ZOD UNWRAPPERS
-// ============================================================
 
 export type UnwrapBranded<F> =
   F extends z.ZodType & { __lMeta: any } ? Omit<F, '__lMeta'> : F;
@@ -21,10 +16,6 @@ export type ArrayItem<F> =
   F extends z.ZodArray<infer Item>                ? Item :
   UnwrapBranded<F> extends z.ZodArray<infer Item> ? Item :
   never;
-
-// ============================================================
-// 🔗 RELATED TYPE EXTRACTORS
-// ============================================================
 
 export type RelatedAttach<F> =
   IsOneFrom<F> extends true
@@ -47,10 +38,6 @@ export type RelatedUpdate<F> =
       ? InferUpdateInput<ZodObjectFields<ArrayItem<F>>>
       : never;
 
-// ============================================================
-// 🔗 CREATE — RELATION INPUT SHAPES
-// ============================================================
-
 interface OneRelationCreateInput<TAttach, TCreate> {
   field:
     | { attach:         TAttach;                                      create?: never; attachOrCreate?: never }
@@ -65,10 +52,6 @@ interface ManyRelationCreateInput<TAttach, TCreate> {
     | { attachOrCreate: { attach: TAttach; create: TCreate }[];                      attach?: never;        create?: never        }
     | { attach:         TAttach[];          create: TCreate[];                        attachOrCreate?: never                       };
 }
-
-// ============================================================
-// 🔗 UPDATE — RELATION INPUT SHAPES
-// ============================================================
 
 interface OneRelationUpdateInput<TAttach, TCreate, TUpdate> {
   field:
@@ -93,10 +76,6 @@ interface ManyRelationUpdateInput<TAttach, TCreate, TUpdate> {
   }>;
 }
 
-// ============================================================
-// 🔗 RELATION FIELD INPUT — CREATE
-// ============================================================
-
 export type RelationFieldInputForCreate<F> =
   IsOneFrom<F> extends true
     ? OneRelationCreateInput<
@@ -107,10 +86,6 @@ export type RelationFieldInputForCreate<F> =
         RelatedAttach<F>,
         RelatedCreate<F>
       >['field'];
-
-// ============================================================
-// 🔗 RELATION FIELD INPUT — UPDATE
-// ============================================================
 
 export type RelationFieldInputForUpdate<F> =
   IsOneFrom<F> extends true
@@ -124,10 +99,6 @@ export type RelationFieldInputForUpdate<F> =
         RelatedCreate<F>,
         RelatedUpdate<F>
       >['field'];
-
-// ============================================================
-// 🔗 RELATION FIELDS MAPS
-// ============================================================
 
 export type RelationFieldsForCreate<T> = {
   [K in keyof T as IsRelation<T[K]> extends true ? K : never]?:
