@@ -8,7 +8,11 @@ import { sPosts } from './schemas/post';
 import { lIndexeddb } from '@listedbase/indexeddb';
 // import { sUser } from './schemas/user';
 lSetting.reactive(angularReactive);
-lSetting.driver(lIndexeddb());
+lSetting.sources({
+  primary: {
+    data: lIndexeddb(),
+  },
+});
 // import { z } from 'zod/v4';
 @Component({
   selector: 'app-root',

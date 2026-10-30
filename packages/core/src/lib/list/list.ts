@@ -5,14 +5,15 @@ import type {
   InferCreateResult,
 } from './mutations';
 import { z } from 'zod/v4';
-import { getDriver } from '@listedbase/driver-abstract';
+import { getPrimarySource } from '@listedbase/driver-abstract';
 import { LInfer } from '../infers';
 import { LQueryRef } from '../query/query';
 
 export function list<S extends ZodObject<any>>(query: LQueryRef<S>) {
-  const schema = query.schema
+  const schema = query.schema;
   const listName = schema.meta()?.id as string;
-  const driver = getDriver();
+  const source = getPrimarySource();
+  const driver = source.data;
   const schemas = z.toJSONSchema(z.globalRegistry);
   driver.ensureReady(schemas);
 
