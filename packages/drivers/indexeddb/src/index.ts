@@ -12,6 +12,7 @@ class LIndexeddb extends LDataDriver {
     updatedAt: false,
     subscription: false,
     nativeConstraints: false,
+    transactions: true,
   };
 
   database: Database;
@@ -35,12 +36,17 @@ class LIndexeddb extends LDataDriver {
     where: any,
     input: any
   ): Promise<any> {
-    const data = await this.database.db.put(list, { ...where, ...input });
-    return data;
+    const key = typeof where === 'object' ? where.id || where : where;
+    const existing = await this.database.db.get(list, key);
+    if (!existing) return null;
+    const updated = { ...existing, ...input };
+    await this.database.db.put(list, updated);
+    return updated;
   }
 
   protected override async _delete(list: string, where: any): Promise<any> {
-    const data = await this.database.db.delete(list, where);
+    const key = typeof where === 'object' ? where.id || where : where;
+    const data = await this.database.db.delete(list, key);
     return data;
   }
 
@@ -48,7 +54,8 @@ class LIndexeddb extends LDataDriver {
     list: string,
     where: any
   ): Promise<any> {
-    const data = await this.database.db.get(list, where);
+    const key = typeof where === 'object' ? where.id || where : where;
+    const data = await this.database.db.get(list, key);
     return data;
   }
 }
