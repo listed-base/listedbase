@@ -9,6 +9,7 @@ export interface LDriverCapabilities {
   updatedAt: boolean;
   subscription: boolean;
   nativeConstraints: boolean;
+  transactions: boolean;
 }
 
 export interface IDataDriver {
@@ -25,10 +26,10 @@ export interface IDataDriver {
 export interface IFilesDriver {
   put(
     path: string,
-    file: Blob | Buffer | Uint8Array,
+    file: Blob | Uint8Array,
     options?: any
   ): Promise<{ path: string; url?: string }>;
-  get(path: string): Promise<Blob | Buffer | Uint8Array>;
+  get(path: string): Promise<Blob | Uint8Array>;
   remove(path: string): Promise<void>;
   getUrl(path: string): Promise<string>;
 }
@@ -53,9 +54,14 @@ export abstract class LDataDriver implements IDataDriver {
   async ensureReady(schemas: any): Promise<void> {
     if (this._isReady) return;
     if (!this._readyPromise) {
-      this._readyPromise = this._init(schemas).then(() => {
-        this._isReady = true;
-      });
+      this._readyPromise = this._init(schemas)
+        .then(() => {
+          this._isReady = true;
+        })
+        .catch((err) => {
+          this._readyPromise = null;
+          throw err;
+        });
     }
     return this._readyPromise;
   }
