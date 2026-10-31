@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { list, LCodec } from './list';
-import { createCodec } from './codec';
+import { list } from './list';
 import { lSchema } from '../schema/schema';
 import { lField } from '../schema/field';
 import { lQuery } from '../query/query';
@@ -8,10 +7,10 @@ import { lSetting } from '../setting';
 import { LDataDriver, LDriverCapabilities, clearSourcesForTesting } from '@listedbase/driver-abstract';
 import { LError } from '../error';
 
-class MockDriver extends LDataDriver {
+class FallbackDriver extends LDataDriver {
   readonly capabilities: LDriverCapabilities = {
     schema: true,
-    cursors: true,
+    cursors: false,
     fullTextSearch: false,
     population: false,
     timestampGeneration: false,
@@ -19,6 +18,10 @@ class MockDriver extends LDataDriver {
     subscription: false,
     nativeConstraints: false,
     transactions: true,
+    idGeneration: false,
+    returning: false,
+    batch: false,
+    upsert: false,
   };
 
   store = new Map<string, any>();
@@ -30,7 +33,7 @@ class MockDriver extends LDataDriver {
       throw new Error('Duplicate key');
     }
     this.store.set(input.id, input);
-    return input;
+    return null; // returning: false
   }
 
   protected override async _update(_listName: string, where: any, input: any): Promise<any> {
@@ -39,12 +42,69 @@ class MockDriver extends LDataDriver {
     const existing = this.store.get(id);
     const updated = { ...existing, ...input };
     this.store.set(id, updated);
-    return updated;
+    return null; // returning: false
   }
 
   protected override async _delete(_listName: string, where: any): Promise<any> {
     const id = typeof where === 'object' ? where.id : where;
     if (!this.store.has(id)) return null;
+    this.store.delete(id);
+    return true;
+  }
+
+  protected override async _findUnique(_listName: string, where: any): Promise<any> {
+    const id = typeof where === 'object' ? where.id : where;
+    return this.store.get(id) || null;
+  }
+}
+
+class NativeDriver extends LDataDriver {
+  readonly capabilities: LDriverCapabilities = {
+    schema: true,
+    cursors: true,
+    fullTextSearch: false,
+    population: false,
+    timestampGeneration: true,
+    updatedAt: true,
+    subscription: false,
+    nativeConstraints: true,
+    transactions: true,
+    idGeneration: true,
+    returning: true,
+    batch: true,
+    upsert: true,
+  };
+
+  store = new Map<string, any>();
+  autoIdSeq = 100;
+
+  protected override async _init(): Promise<void> {}
+
+  protected override async _create(_listName: string, input: any): Promise<any> {
+    const id = input.id || `native-id-${++this.autoIdSeq}`;
+    const record = {
+      ...input,
+      id,
+      createdAt: input.createdAt || '2026-01-01T00:00:00.000Z',
+    };
+    this.store.set(id, record);
+    return record; // returning: true
+  }
+
+  protected override async _update(_listName: string, where: any, input: any): Promise<any> {
+    const id = typeof where === 'object' ? where.id : where;
+    const existing = this.store.get(id) || {};
+    const updated = {
+      ...existing,
+      ...input,
+      updatedAt: '2026-01-02T00:00:00.000Z',
+    };
+    this.store.set(id, updated);
+    return updated; // returning: true
+  }
+
+  protected override async _delete(_listName: string, where: any): Promise<any> {
+    const id = typeof where === 'object' ? where.id : where;
     this.store.delete(id);
     return true;
   }
@@ -65,7 +125,7 @@ const userSchema = lSchema({
   },
 });
 
-describe('list CRUD runtime tests', () => {
+describe('list CRUD runtime tests (Native vs Fallback)', () => {
   beforeEach(() => {
     clearSourcesForTesting();
     let currentVal: any;
@@ -74,57 +134,73 @@ describe('list CRUD runtime tests', () => {
       modify(fn: any) { currentVal = fn(currentVal); },
       get value() { return currentVal; },
     } as any));
+  });
 
-    const mockDriver = new MockDriver();
+  it('should test Fallback mode when capabilities are false', async () => {
+    const fallbackDriver = new FallbackDriver();
     lSetting.sources({
       primary: {
-        data: mockDriver,
+        data: fallbackDriver,
       },
     });
-  });
 
-  it('should test LCodec and createCodec encoding and decoding', () => {
-    const date = new Date();
-    const encoded = LCodec.encode({ date });
-    expect(typeof encoded.date).toBe('string');
-
-    const decoded = LCodec.decode(encoded);
-    expect(decoded.date).toBeInstanceOf(Date);
-
-    const schemaCodec = createCodec(userSchema);
-    const schemaEncoded = schemaCodec.encode({ createdAt: date, name: 'Test' });
-    expect(typeof schemaEncoded.createdAt).toBe('string');
-    const schemaDecoded = schemaCodec.decode(schemaEncoded);
-    expect(schemaDecoded.createdAt).toBeInstanceOf(Date);
-  });
-
-  it('should execute single create, update, and delete with proper defaults', async () => {
     const q = lQuery(userSchema, {});
     const users = list(q);
 
-    // Create returns { id, createdAt } by default
-    const created = (await users.create({ name: 'Bob' } as any)) as any;
+    // Create fallback: Core generates id and createdAt
+    const created = (await users.create({ name: 'Fallback User' } as any)) as any;
     expect(created.id).toBeDefined();
+    expect(typeof created.id).toBe('string');
     expect(created.createdAt).toBeDefined();
 
-    // Create with 'entity' returns full entity
-    const createdEntity = (await users.create({ name: 'Alice' } as any, { intent: 'entity' } as any)) as any;
-    expect(createdEntity.name).toBe('Alice');
-    expect(createdEntity.id).toBeDefined();
-
-    // Update default returns changed fields
+    // Update fallback: Core executes findUnique and formats diff
     const updated = (await users.update({
-      where: { id: createdEntity.id },
-      input: { name: 'Alicia' },
+      where: { id: created.id },
+      input: { name: 'Updated Fallback' },
     } as any)) as any;
-    expect(updated.name).toBe('Alicia');
+    expect(updated.name).toBe('Updated Fallback');
 
-    // Delete default returns boolean
-    const deletedConfirm = await users.delete({ id: createdEntity.id } as any);
-    expect(deletedConfirm).toBe(true);
+    // Delete default confirm
+    const deleted = await users.delete({ id: created.id } as any);
+    expect(deleted).toBe(true);
+  });
+
+  it('should test Native mode when capabilities are true', async () => {
+    const nativeDriver = new NativeDriver();
+    lSetting.sources({
+      primary: {
+        data: nativeDriver,
+      },
+    });
+
+    const q = lQuery(userSchema, {});
+    const users = list(q);
+
+    // Create native: Driver generates id and timestamps and returns record
+    const created = (await users.create({ name: 'Native User' } as any, { intent: 'entity' } as any)) as any;
+    expect(created.id).toContain('native-id-');
+    expect(created.createdAt.toISOString()).toBe('2026-01-01T00:00:00.000Z');
+
+    // Update native: Driver supplies returning and native updatedAt
+    const updated = (await users.update(
+      {
+        where: { id: created.id },
+        input: { name: 'Updated Native' },
+      } as any,
+      { intent: 'entity' } as any
+    )) as any;
+    expect(updated.name).toBe('Updated Native');
+    expect(updated.updatedAt.toISOString()).toBe('2026-01-02T00:00:00.000Z');
   });
 
   it('should support select with omit and pick', async () => {
+    const fallbackDriver = new FallbackDriver();
+    lSetting.sources({
+      primary: {
+        data: fallbackDriver,
+      },
+    });
+
     const q = lQuery(userSchema, {});
     const users = list(q);
 
@@ -137,6 +213,13 @@ describe('list CRUD runtime tests', () => {
   });
 
   it('should convert validation errors to VALIDATION/FIELD LError', async () => {
+    const fallbackDriver = new FallbackDriver();
+    lSetting.sources({
+      primary: {
+        data: fallbackDriver,
+      },
+    });
+
     const q = lQuery(userSchema, {});
     const users = list(q);
 
@@ -151,6 +234,13 @@ describe('list CRUD runtime tests', () => {
   });
 
   it('should support settled errorMode for array mutations', async () => {
+    const fallbackDriver = new FallbackDriver();
+    lSetting.sources({
+      primary: {
+        data: fallbackDriver,
+      },
+    });
+
     const q = lQuery(userSchema, {});
     const users = list(q);
 

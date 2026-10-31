@@ -1,7 +1,8 @@
 import { LListContext } from '../../context';
-import { LError } from '../../../error';
+import { LError, LErrorCode } from '../../../error';
 import { RefineOptions } from '../index';
 import { toLError } from './errors';
+import { planMutation, MutationOpName, MutationPlan } from './plan';
 
 export async function runGroup<
   TItem,
@@ -9,19 +10,22 @@ export async function runGroup<
   TRefine extends RefineOptions<any, any> | undefined
 >(
   ctx: LListContext<any>,
+  op: MutationOpName,
   items: TItem | TItem[],
-  execute: (item: TItem) => Promise<TResult>,
+  execute: (item: TItem, plan: MutationPlan) => Promise<TResult>,
   refine?: TRefine,
-  fallbackErrorCode: import('../../../error').LErrorCode = 'DRIVER/UNKNOWN',
+  fallbackErrorCode: LErrorCode = 'DRIVER/UNKNOWN',
   fallbackMessage = 'Operation failed'
 ): Promise<any> {
   const driver = ctx.driver();
+  const plan = planMutation(op, driver.capabilities);
+
   const isArray = Array.isArray(items);
   const itemsToProcess = isArray ? (items as TItem[]) : [items];
 
   if (
     isArray &&
-    !driver.capabilities.transactions &&
+    plan.atomicity === 'unsupported' &&
     refine?.errorMode !== 'settled'
   ) {
     throw new LError({
@@ -35,7 +39,7 @@ export async function runGroup<
 
   for (const item of itemsToProcess) {
     try {
-      const result = await execute(item);
+      const result = await execute(item, plan);
       ctx.onMutated(ctx.name);
       if (refine?.errorMode === 'settled') {
         results.push({ status: 'fulfilled', data: result });
