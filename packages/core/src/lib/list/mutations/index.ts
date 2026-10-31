@@ -83,6 +83,14 @@ export type InferMutationResult<
   ? SettledResult<InferSingleShape<S, I, Ref extends { select?: infer Sel } ? Sel : undefined>>
   : InferSingleShape<S, I, Ref extends { select?: infer Sel } ? Sel : undefined>;
 
+export type InferGroupMutationResult<
+  S extends ZodObject<any>,
+  I extends MutationIntent | undefined,
+  Ref extends RefineOptions<S, I> | undefined
+> = Ref extends { errorMode: 'settled' }
+  ? SettledResult<InferSingleShape<S, I, Ref extends { select?: infer Sel } ? Sel : undefined>>[]
+  : InferSingleShape<S, I, Ref extends { select?: infer Sel } ? Sel : undefined>[];
+
 export type InferDeleteMutationResult<
   S extends ZodObject<any>,
   I extends MutationIntent | undefined,
@@ -106,19 +114,3 @@ export type InferDeleteGroupMutationResult<
 export type ManyResult = {
   count: number;
 };
-
-export type InferMutationResult<
-  S extends ZodObject<any>,
-  I extends MutationIntent | undefined,
-  Ref extends RefineOptions<S, I> | undefined
-> = Ref extends { errorMode: 'settled' }
-  ? SettledResult<InferSingleShape<S, I, Ref extends { select?: infer Sel } ? Sel : undefined>>
-  : InferSingleShape<S, I, Ref extends { select?: infer Sel } ? Sel : undefined>;
-
-export type InferGroupMutationResult<
-  S extends ZodObject<any>,
-  I extends MutationIntent | undefined,
-  Ref extends RefineOptions<S, I> | undefined
-> = Ref extends { errorMode: 'settled' }
-  ? SettledResult<InferSingleShape<S, I, Ref extends { select?: infer Sel } ? Sel : undefined>>[]
-  : InferSingleShape<S, I, Ref extends { select?: infer Sel } ? Sel : undefined>[];
