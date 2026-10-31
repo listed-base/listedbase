@@ -5,6 +5,7 @@
     "declarationMap": false,
     "declaration": false,
     "importHelpers": true,
+    "ignoreDeprecations": "6.0",
     "isolatedModules": true,
     "lib": ["es2022", "dom"],
     "module": "esnext",

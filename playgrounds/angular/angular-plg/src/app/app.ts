@@ -29,7 +29,9 @@ export class App {
   // users = list(sUser)
   
   async add() {
-    this.query.modify((prev) => {return {where: {no: 3}}})
+   this.posts.create({
+    
+   })
   
   }
 }
