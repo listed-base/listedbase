@@ -5,6 +5,7 @@ import { runGroup } from '../runtime/runGroup';
 import { project } from '../refine/project';
 import { normalizeWhere } from '../runtime/normalize';
 import { LError } from '../../../error';
+import { MutationPlan } from '../runtime/plan';
 
 export function updateOp<S extends ZodObject<any>>(
   ctx: LListContext<S>
@@ -14,25 +15,29 @@ export function updateOp<S extends ZodObject<any>>(
   return async (opts: any, refine?: any): Promise<any> => {
     return runGroup(
       ctx,
+      'update',
       opts,
-      async (itemOpt: any) => {
+      async (itemOpt: any, plan: MutationPlan) => {
         const driver = ctx.driver();
         const normalizedWhere = normalizeWhere(itemOpt.where, driver);
-        const beforeRaw = await driver.findUnique(ctx.name, normalizedWhere);
 
-        if (!beforeRaw) {
-          throw new LError({
-            code: 'DB/NOT_FOUND',
-            message: 'Record not found for update.',
-          });
+        let beforeRaw: any = null;
+        if (plan.before === 'core' || refine?.intent === 'diff' || !refine?.intent) {
+          beforeRaw = await driver.findUnique(ctx.name, normalizedWhere);
+          if (!beforeRaw) {
+            throw new LError({
+              code: 'DB/NOT_FOUND',
+              message: 'Record not found for update.',
+            });
+          }
         }
 
-        // Validate partial update with Zod before writing
+        // Validate partial update with Zod
         const validatedInput = partialSchema.parse(itemOpt.input);
 
         const updateData = {
           ...validatedInput,
-          updatedAt: new Date(),
+          ...(plan.timestamps === 'core' ? { updatedAt: new Date() } : {}),
         };
 
         const encodedInput = ctx.codec.encode(updateData);
@@ -42,11 +47,16 @@ export function updateOp<S extends ZodObject<any>>(
           encodedInput
         );
 
+        const resultRecord =
+          plan.returning === 'driver' && updatedRaw
+            ? updatedRaw
+            : { ...(beforeRaw || {}), ...encodedInput };
+
         return project(
           'update',
           refine?.intent,
           beforeRaw,
-          updatedRaw || { ...beforeRaw, ...encodedInput },
+          resultRecord,
           refine?.select,
           driver,
           ctx.codec.decode

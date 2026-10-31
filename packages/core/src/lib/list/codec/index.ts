@@ -24,15 +24,15 @@ export function createCodec<S extends ZodObject<any>>(schema: S): ILCodec {
     }
   }
 
-  return {
+  const codecInstance: ILCodec = {
     encode(data: any): any {
       if (!data || typeof data !== 'object') return data;
       const result = Array.isArray(data) ? [...data] : { ...data };
       for (const key of Object.keys(result)) {
         if (dateFieldKeys.has(key) && result[key] instanceof Date) {
           result[key] = result[key].toISOString();
-        } else if (typeof result[key] === 'object') {
-          result[key] = this.encode(result[key]);
+        } else if (typeof result[key] === 'object' && result[key] !== null) {
+          result[key] = codecInstance.encode(result[key]);
         }
       }
       return result;
@@ -48,13 +48,15 @@ export function createCodec<S extends ZodObject<any>>(schema: S): ILCodec {
           /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(result[key])
         ) {
           result[key] = new Date(result[key]);
-        } else if (typeof result[key] === 'object') {
-          result[key] = this.decode(result[key]);
+        } else if (typeof result[key] === 'object' && result[key] !== null) {
+          result[key] = codecInstance.decode(result[key]);
         }
       }
       return result;
     },
   };
+
+  return codecInstance;
 }
 
 export class LCodec {

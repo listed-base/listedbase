@@ -46,7 +46,7 @@ export function project(
   if (!intent) {
     if (op === 'create') {
       const decoded = decode(afterItem);
-      return applySelect({ id: driver.serializeId(decoded.id), createdAt: decoded.createdAt }, select);
+      return applySelect({ id: driver.serializeId(afterItem?.id || decoded.id), createdAt: decoded.createdAt }, select);
     }
     if (op === 'update') {
       const decodedBefore = decode(beforeItem);
@@ -64,5 +64,10 @@ export function project(
   }
 
   // 'entity' intent (or explicit 'entity')
-  return applySelect(decode(afterItem || beforeItem), select);
+  const record = afterItem || beforeItem;
+  const decoded = decode(record);
+  if (record?.id) {
+    decoded.id = driver.serializeId(record.id);
+  }
+  return applySelect(decoded, select);
 }

@@ -13,6 +13,10 @@ class LIndexeddb extends LDataDriver {
     subscription: false,
     nativeConstraints: false,
     transactions: true,
+    idGeneration: false,
+    returning: true,
+    batch: false,
+    upsert: false,
   };
 
   database: Database;

@@ -10,6 +10,10 @@ export interface LDriverCapabilities {
   subscription: boolean;
   nativeConstraints: boolean;
   transactions: boolean;
+  idGeneration: boolean;
+  returning: boolean;
+  batch: boolean;
+  upsert: boolean;
 }
 
 export interface IDataDriver {

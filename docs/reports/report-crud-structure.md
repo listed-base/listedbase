@@ -1,121 +1,88 @@
-# تقرير إعادة تنظيم وهيكلة list CRUD — المرحلة 3ب (`docs/reports/report-crud-structure.md`)
+# تقرير بنية list CRUD ومنظومة Native-First والتخطيط (`docs/reports/report-crud-structure.md`)
 
-## 1. جرد `list.ts` وملفات `mutations/*` القديمة
+## 1. القرارات المستقرة: معمارية Native-First بحسب الـ Capabilities
 
-### أ) جرد `list.ts` الحالي
-يحتوي `packages/core/src/lib/list/list.ts` على حوالي 330 سطرًا تشمل:
-- فئة `LCodec` المسؤولة عن تحويل التواريخ والـ Codec.
-- دالة `list()` المركزية التي تنشئ `getDriver` و`applySelect` و`normalizeWhere` و`formatResult`.
-- كتل تنفيذ العمليات:
-  - `create` (المفردة والمصفوفة، مع فحص الذرية والتحقق عبر Zod).
-  - `update` (المفردة والمصفوفة، مع استدعاء findUnique والتحديث والتسجيل).
-  - `delete` (المفردة والمصفوفة، مع التحقق والحذف).
-  - Stubs لـ `upsert` و`updateMany` و`deleteMany`.
-
-### ب) جرد ملفات `mutations/` المتبقية
-ما تزال مجلدات `mutations/` تحتوي على بقايا الهيكلية القديمة (12 method):
-- `create/single.ts`, `create/group.ts`, `create/result.ts`
-- `update/single.ts`, `update/group.ts`, `update/result.ts`
-- `delete/single.ts`, `delete/group.ts`, `delete/result.ts`
-- `upsert/single.ts`, `upsert/group.ts`, `upsert/result.ts`
-هذه الملفات القديمة كانت مبنية للتعامل مع الـ 12 method القديمة وتعتمد على intents مهجورة كـ `fullSelect`, `actions`, `patch`. سيتم استبدالها ودمج تعريفات الأنواع في مجلدات العمليات المخصصة:
-- `mutations/create/create.types.ts`
-- `mutations/update/update.types.ts`
-- `mutations/delete/delete.types.ts`
-- `mutations/upsert/upsert.types.ts`
-- `mutations/update-many/update-many.types.ts`
-- `mutations/delete-many/delete-many.types.ts`
+- **المبدأ الأساسي (Native-first):**
+  إن أعلن الـ Driver دعم ميزة عبر أعلام الـ capabilities، يُعهد تنفيذها لمحرك الـ driver بدلاً من Core. ويوفر Core طبقة بديلة (fallback) فقط عند غياب الـ capability. الميزات التي لا يمكن توفير fallback لها برمجياً تُرفض بـ `LError('DRIVER/UNSUPPORTED')`.
+- **معرفات السجلات (IDs):**
+  يولّد الـ Driver معرف `lField.id.autogen()` إذا كانت `idGeneration: true`، وإلا يولّدها Core عبر `crypto.randomUUID()`. وتُحوَّل كافة المعرفات في النهاية إلى `string` عبر `serializeId`. (ملحوظة: `autoIncrement` خاص بالمحرك فقط ولا fallback له).
+- **التحقق من البيانات (Validation):**
+  Zod يتحقق في Core دائماً قبل إرسال البيانات للمحرك. أما علم `nativeConstraints` فيعبر عن قيود المحرك وقواعد البيانات ذاتها.
+- **التشفير وفك التشفير:**
+  `createCodec(schema)` طبقة مستقلة فوق المحرك.
+- **استعلامات `TWhere`:**
+  IR موحد، ويُترجم محلياً في المحرك، ولا فلترة في الذاكرة.
 
 ---
 
-## 2. خريطة النقل والتوزيع المعماري (File Mapping)
+## 2. جدول قرارات Native-First vs Fallback
 
-| المقطع الحالي في `list.ts` | الملف الهدف | الدور والمسؤولية |
-|---|---|---|
-| `LCodec` | `packages/core/src/lib/list/codec/index.ts` | إدارة تشفير وفك تشفير البيانات والتوافق مع التواريخ. |
-| تعريف واجهة `LListContext` | `packages/core/src/lib/list/context.ts` | سياق القائمة يحمل `schema`, `name`, `driver()` (كسول), `codec`, و `onMutated`. |
-| تعريف عقد الـ API العام للقائمة | `packages/core/src/lib/list/api.ts` | تعريف واجهة `LList<S>` الموحدة للـ 6 methods و `items`. |
-| دالة `list()` الإنشائية | `packages/core/src/lib/list/list.ts` | مصنع رقيق (Thin Factory) ينشئ الـ context ويركّب الدوال. |
-| معالجة المصفوفات والـ ErrorModes | `packages/core/src/lib/list/mutations/runtime/runGroup.ts` | دالة قالبية موحدة (Template Method) لإدارة المفرد والمصفوفة و `rejectAll` و `settled`. |
-| `normalizeWhere` | `packages/core/src/lib/list/mutations/runtime/normalize.ts` | استخراج وتطبيع فلاتر الـ where وتطبيق `serializeId`. |
-| `toLError` | `packages/core/src/lib/list/mutations/runtime/errors.ts` | تحويل أخطاء Zod وأخطاء المحرك المجهولة إلى `LError`. |
-| `applySelect` | `packages/core/src/lib/list/mutations/refine/select.ts` | تطبيق `pick` و `omit` على مخرجات السجلات. |
-| خريطة Defaults والـ Project | `packages/core/src/lib/list/mutations/refine/project.ts` و `defaults.ts` | تنسيق وإسقاط المخرجات بناء على الـ `intent` والعملية. |
-| تنفيذ `create` | `packages/core/src/lib/list/mutations/create/create.op.ts` | المنطق التنفيذي لـ create. |
-| تنفيذ `update` | `packages/core/src/lib/list/mutations/update/update.op.ts` | المنطق التنفيذي لـ update. |
-| تنفيذ `delete` | `packages/core/src/lib/list/mutations/delete/delete.op.ts` | المنطق التنفيذي لـ delete. |
-| stubs للعمليات المؤجلة | `packages/core/src/lib/list/mutations/{upsert,update-many,delete-many}/` | تعريفات الأنواع مع دوال stub ترفض بـ `DRIVER/UNSUPPORTED`. |
+| الجانب (Aspect) | Flag في الـ Capabilities | التنفيذ عند `true` (Native) | المسار البديل عند `false` (Fallback في Core) | الحالة الحالية في الكود |
+|---|---|---|---|---|
+| **توليد المعرفات (id)** | `idGeneration` | يترك الحقل للمحرك ليولّده | يولّد Core المعرف بـ `crypto.randomUUID()` | كان Core يولده دائماً؛ تم تحويله لـ Native-first |
+| **التوقيت التلقائي (timestamps)** | `timestampGeneration` | المحرك يولّد `createdAt` / `updatedAt` | Core يولّدها بـ `new Date()` | كان Core يولّدها يدوياً؛ سيتّبع الخطة |
+| **إرجاع السجل (returning)** | `returning` | المحرك يرجع السجل المحدث/المنشأ مباشرة | Core يقوم بقراءة إضافية أو دمج الحقول | ينفّذ قراءة/دمج في Core؛ سيستغل returning |
+| **قراءة الحالة السابقة (before)** | `returning` (أو transaction read) | يرجع المحرك الحالة القديمة مباشرة إذا دعمه | قراءة `findUnique` منفصلة في Core | قراءة `findUnique` في Core |
+| **العمليات الجماعية (batch)** | `batch` | استدعاء دالة المحرك الجماعية دفعة واحدة | Core يكرر العملية عبر حلقة | ينفّذ بحلقة في `runGroup` |
+| **الذرية (atomicity)** | `transactions` | المحرك يضمن ذرية العملية | رفض نمط `rejectAll` بـ `DRIVER/UNSUPPORTED` | يرفض نمط `rejectAll` عند غياب transactions |
+| **الدمج/الإنشاء (upsert)** | `upsert` | استدعاء `_upsert` في المحرك | سؤال مفتوح (محاكاة findUnique ثم update/create) | Stub يرمي `DRIVER/UNSUPPORTED` |
 
 ---
 
-## 3. عقود الأنواع الأساسية (Context & Helpers Contracts)
+## 3. الأعلام المطلوبة في `LDriverCapabilities` ومتطلبات `IDataDriver`
 
-### أ) `LListContext`
+الأعلام الجديدة الموسعة:
 ```typescript
-export interface LListContext<S extends ZodObject<any>> {
-  schema: S;
-  name: string;
-  driver: () => IDataDriver;
-  codec: {
-    encode: (data: any) => any;
-    decode: (data: any) => any;
-  };
-  onMutated: (listName: string) => void;
+export interface LDriverCapabilities {
+  schema: boolean;
+  cursors: boolean;
+  fullTextSearch: boolean;
+  population: boolean;
+  timestampGeneration: boolean;
+  updatedAt: boolean;
+  subscription: boolean;
+  nativeConstraints: boolean;
+  transactions: boolean;
+  idGeneration: boolean;
+  returning: boolean;
+  batch: boolean;
+  upsert: boolean;
 }
 ```
 
-### ب) `runGroup`
-```typescript
-export async function runGroup<TItem, TResult, TRefine extends RefineOptions<any, any>>(
-  ctx: LListContext<any>,
-  items: TItem | TItem[],
-  execute: (item: TItem) => Promise<TResult>,
-  refine?: TRefine
-): Promise<TResult | TResult[] | SettledResult<TResult> | SettledResult<TResult>[]>
-```
+### متطلباتها في عقد `IDataDriver`:
+- `idGeneration`: السماح لمدخلات `_create` بعدم احتواء حقل `id` واستلامه من المحرك بعد الإنشاء.
+- `returning`: تضمن دوال `_create` و `_update` و `_delete` إرجاع السجل الناتج أو السابق دون الحاجة لقراءة إضافية.
+- `batch`: إضافة توقيع مستقبلي للعمليات الجماعية مثل `_createMany` و `_updateMany` عند الحاجة.
+- `upsert`: توفير دالة `_upsert(list, where, createInput, updateInput)`.
 
-### ج) `project`
+---
+
+## 4. نمط `planMutation(op, capabilities)`
+
+يتم تعريف مخطط وموجه العمليات في `mutations/runtime/plan.ts`:
 ```typescript
-export function project<T>(
+export interface MutationPlan {
+  id: 'driver' | 'core';
+  timestamps: 'driver' | 'core';
+  returning: 'driver' | 'core';
+  before: 'driver' | 'core';
+  batch: 'driver' | 'core';
+  atomicity: 'driver' | 'unsupported';
+  upsert: 'driver' | 'fallback' | 'unsupported';
+}
+
+export function planMutation(
   op: 'create' | 'update' | 'delete' | 'upsert',
-  intent: MutationIntent | undefined,
-  before: any,
-  after: any,
-  select: any,
-  driver: IDataDriver
-): any
+  capabilities: LDriverCapabilities
+): MutationPlan;
 ```
+تقوم دالة `runGroup` بتنفيذ الخطة الموجهة بالكامل، مما يمنع منعاً باتاً أي فحص مباشر لـ `capabilities` داخل ملفات العمليات `*.op.ts`.
 
 ---
 
-## 4. الحفاظ على الـ Overloads والـ Type Inference
+## 5. سؤال مفتوح: Fallback لعملية الـ `upsert` عند غياب الدعم
 
-عند فصل الـ types في ملفات مستقلة `<op>.types.ts`، يتم تصدير Type signature صريح لـ Op Function بالشكل:
-
-```typescript
-export interface CreateOp<S extends ZodObject<any>> {
-  <
-    Input extends LInfer<S>['createInput'] | LInfer<S>['createInput'][],
-    I extends MutationIntent | undefined = undefined,
-    Ref extends RefineOptions<S, I> | undefined = undefined
-  >(
-    input: Input,
-    refine?: Ref
-  ): Promise<
-    Input extends any[]
-      ? InferGroupMutationResult<S, I, Ref>
-      : InferMutationResult<S, I, Ref>
-  >;
-}
-```
-وهذا يضمن عدم فقدان دقة الـ inference عند استدعاء `list(query).create(...)` من الكود الخارجي.
-
----
-
-## 5. الأسئلة المفتوحة (Open Questions)
-
-1. **التعامل مع ملفات `single.ts/group.ts/result.ts` القديمة:** هل نعتمد حذفها نهائياً واستبدالها بنظام `<op>.types.ts` و `<op>.op.ts`؟ (نعم، متسق مع المطلوب).
-2. **عقد `onMutated`:** سيتم تزويد `LListContext` بـ no-op hook: `onMutated: (name) => {}` ليكون جاهزاً للربط اللاحق مع `items.invalidate()`.
-
----
-**أنا الآن متوقف بانتظار موافقتك على هذا التقرير والتصميم قبل الانتقال للخطوتين ب وج.**
+عند غياب ميزة `upsert: false` في الـ driver:
+- **الخيار الأول (الموصى به حالياً):** رفض العملية فوراً برمي استثناء `LError('DRIVER/UNSUPPORTED')` للحفاظ على السلامة والذرية وتجنب الـ Race condition في بيئات التخزين غير الذرية.
+- **الخيار الثاني:** توفير fallback بمحاكاة التحقق: استدعاء `findUnique` أولاً، ثم استدعاء `update` في حال وجوده أو `create` في حال عدم وجوده، بشرط توفر `transactions: true`.
