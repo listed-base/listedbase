@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { list } from './list';
 import { lSchema } from '../schema/schema';
 import { lField } from '../schema/field';
-import { lQuery } from '../query/query';
 import { lSetting } from '../setting';
 import { LDataDriver, LDriverCapabilities, clearSourcesForTesting } from '@listedbase/driver-abstract';
 import { LError } from '../error';
@@ -55,6 +54,14 @@ class FallbackDriver extends LDataDriver {
   protected override async _findUnique(_listName: string, where: any): Promise<any> {
     const id = typeof where === 'object' ? where.id : where;
     return this.store.get(id) || null;
+  }
+
+  protected override async _findMany(_listName: string, _options: any): Promise<any> {
+    return { items: Array.from(this.store.values()) };
+  }
+
+  protected override async _count(_listName: string, _where?: any): Promise<number> {
+    return this.store.size;
   }
 }
 
@@ -113,6 +120,14 @@ class NativeDriver extends LDataDriver {
     const id = typeof where === 'object' ? where.id : where;
     return this.store.get(id) || null;
   }
+
+  protected override async _findMany(_listName: string, _options: any): Promise<any> {
+    return { items: Array.from(this.store.values()) };
+  }
+
+  protected override async _count(_listName: string, _where?: any): Promise<number> {
+    return this.store.size;
+  }
 }
 
 const userSchema = lSchema({
@@ -144,8 +159,7 @@ describe('list CRUD runtime tests (Native vs Fallback)', () => {
       },
     });
 
-    const q = lQuery(userSchema, {});
-    const users = list(q);
+    const users = list(userSchema);
 
     // Create fallback: Core generates id and createdAt
     const created = (await users.create({ name: 'Fallback User' } as any)) as any;
@@ -173,8 +187,7 @@ describe('list CRUD runtime tests (Native vs Fallback)', () => {
       },
     });
 
-    const q = lQuery(userSchema, {});
-    const users = list(q);
+    const users = list(userSchema);
 
     // Create native: Driver generates id and timestamps and returns record
     const created = (await users.create({ name: 'Native User' } as any, { intent: 'entity' } as any)) as any;
@@ -201,8 +214,7 @@ describe('list CRUD runtime tests (Native vs Fallback)', () => {
       },
     });
 
-    const q = lQuery(userSchema, {});
-    const users = list(q);
+    const users = list(userSchema);
 
     const created = (await users.create(
       { name: 'Charlie' } as any,
@@ -220,8 +232,7 @@ describe('list CRUD runtime tests (Native vs Fallback)', () => {
       },
     });
 
-    const q = lQuery(userSchema, {});
-    const users = list(q);
+    const users = list(userSchema);
 
     try {
       await users.create({ name: 123 as any } as any);
@@ -241,8 +252,7 @@ describe('list CRUD runtime tests (Native vs Fallback)', () => {
       },
     });
 
-    const q = lQuery(userSchema, {});
-    const users = list(q);
+    const users = list(userSchema);
 
     const settledResults = (await users.create(
       [{ name: 'David' }, { name: 999 as any }] as any,

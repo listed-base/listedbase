@@ -16,6 +16,18 @@ export interface LDriverCapabilities {
   upsert: boolean;
 }
 
+export interface FindManyOptions {
+  where?: any;
+  sort?: any;
+  take?: number;
+  cursor?: string;
+}
+
+export interface FindManyResult<T = any> {
+  items: T[];
+  nextCursor?: string | null;
+}
+
 export interface IDataDriver {
   readonly capabilities: LDriverCapabilities;
   serializeId(id: unknown): string;
@@ -25,6 +37,8 @@ export interface IDataDriver {
   update(list: string, where: any, input: any): Promise<any>;
   delete(list: string, where: any): Promise<any>;
   findUnique(list: string, where: any): Promise<any>;
+  findMany(list: string, options: FindManyOptions): Promise<FindManyResult>;
+  count(list: string, where?: any): Promise<number>;
 }
 
 export interface IFilesDriver {
@@ -100,10 +114,22 @@ export abstract class LDataDriver implements IDataDriver {
     return this._findUnique(list, where);
   }
 
+  async findMany(list: string, options: FindManyOptions): Promise<FindManyResult> {
+    await this.ensureReady(null);
+    return this._findMany(list, options);
+  }
+
+  async count(list: string, where?: any): Promise<number> {
+    await this.ensureReady(null);
+    return this._count(list, where);
+  }
+
   protected abstract _create(list: string, input: any): Promise<any>;
   protected abstract _update(list: string, where: any, input: any): Promise<any>;
   protected abstract _delete(list: string, where: any): Promise<any>;
   protected abstract _findUnique(list: string, where: any): Promise<any>;
+  protected abstract _findMany(list: string, options: FindManyOptions): Promise<FindManyResult>;
+  protected abstract _count(list: string, where?: any): Promise<number>;
 }
 
 let sourcesConfig: LSourcesConfig | null = null;

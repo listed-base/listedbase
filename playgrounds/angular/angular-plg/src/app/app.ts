@@ -23,10 +23,8 @@ lSetting.sources({
 })
 export class App {
   inj = inject(Injector);
-  query = lQuery(sPosts, {});
-  posts = list(this.query);
-  // posts = list(sPosts)
-  // users = list(sUser)
+  posts = list(sPosts);
+  postsQuery = lQuery(this.posts, { take: 20 });
   
   async add() {
    this.posts.create({
