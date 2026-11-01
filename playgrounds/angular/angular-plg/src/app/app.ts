@@ -27,6 +27,9 @@ export class App {
   postsQuery = lQuery(this.posts, { take: 20 });
   
   async add() {
-    this.postsQuery.modify((prev) => ({ ...prev, where: { no: 3 } }));
+   this.posts.create({
+    
+   })
+  
   }
 }
