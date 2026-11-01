@@ -15,8 +15,8 @@ export type { LListContext } from './context';
 export function list<S extends ZodObject<any>>(schema: S): LList<S> {
   const ctx = createListContext(schema);
 
-  return {
-    schema,
+  return { 
+    items: [],
     create: createOp(ctx),
     update: updateOp(ctx),
     delete: deleteOp(ctx),

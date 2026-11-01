@@ -1,9 +1,8 @@
 import { Component, inject, Injector } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
 
-import { lQuery } from '@listedbase/core';
 import { angularReactive } from '@listedbase/angular-reactive';
-import { lSetting,list } from '@listedbase/core';
+import { lSetting,list, lQuery} from '@listedbase/core';
 import { sPosts } from './schemas/post';
 import { lIndexeddb } from '@listedbase/indexeddb';
 // import { sUser } from './schemas/user';
@@ -27,9 +26,7 @@ export class App {
   postsQuery = lQuery(this.posts, { take: 20 });
   
   async add() {
-   this.posts.create({
-    
-   })
+  
   
   }
 }
