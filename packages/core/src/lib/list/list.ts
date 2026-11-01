@@ -1,5 +1,4 @@
 import { ZodObject } from 'zod/v4';
-import { LQueryRef } from '../query/query';
 import { createListContext } from './context';
 import { LList } from './api';
 import { createOp } from './mutations/create/create.op';
@@ -10,17 +9,20 @@ import { updateManyOp } from './mutations/update-many/update-many.op';
 import { deleteManyOp } from './mutations/delete-many/delete-many.op';
 
 export { LCodec } from './codec';
+export type { LList } from './api';
+export type { LListContext } from './context';
 
-export function list<S extends ZodObject<any>>(query: LQueryRef<S>): LList<S> {
-  const ctx = createListContext(query.schema);
+export function list<S extends ZodObject<any>>(schema: S): LList<S> {
+  const ctx = createListContext(schema);
 
   return {
-    items: [],
+    schema,
     create: createOp(ctx),
     update: updateOp(ctx),
     delete: deleteOp(ctx),
     upsert: upsertOp(ctx),
     updateMany: updateManyOp(ctx),
     deleteMany: deleteManyOp(ctx),
+    context: ctx,
   };
 }

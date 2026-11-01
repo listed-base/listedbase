@@ -3,12 +3,38 @@ import { IDataDriver, getPrimarySource } from '@listedbase/driver-abstract';
 import { z } from 'zod/v4';
 import { createCodec, ILCodec } from './codec';
 
+export interface ListChangeEmitter {
+  subscribe: (listener: () => void) => () => void;
+  emit: () => void;
+}
+
+export function createChangeEmitter(): ListChangeEmitter {
+  const listeners = new Set<() => void>();
+  return {
+    subscribe(listener: () => void): () => void {
+      listeners.add(listener);
+      return () => {
+        listeners.delete(listener);
+      };
+    },
+    emit(): void {
+      for (const listener of Array.from(listeners)) {
+        try {
+          listener();
+        } catch (err) {
+          console.error('Error in list change listener:', err);
+        }
+      }
+    },
+  };
+}
+
 export interface LListContext<S extends ZodObject<any>> {
   schema: S;
   name: string;
   driver: () => IDataDriver;
   codec: ILCodec;
-  onMutated: (listName: string) => void;
+  changes: ListChangeEmitter;
 }
 
 export function createListContext<S extends ZodObject<any>>(
@@ -36,8 +62,6 @@ export function createListContext<S extends ZodObject<any>>(
     name,
     driver: getDriver,
     codec: createCodec(schema),
-    onMutated: (_listName: string) => {
-      // no-op for now; will invalidate items later
-    },
+    changes: createChangeEmitter(),
   };
 }

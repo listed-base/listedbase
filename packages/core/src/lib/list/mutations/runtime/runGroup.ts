@@ -37,10 +37,11 @@ export async function runGroup<
 
   const results: any[] = [];
 
+  let hasSuccess = false;
   for (const item of itemsToProcess) {
     try {
       const result = await execute(item, plan);
-      ctx.onMutated(ctx.name);
+      hasSuccess = true;
       if (refine?.errorMode === 'settled') {
         results.push({ status: 'fulfilled', data: result });
       } else {
@@ -54,6 +55,12 @@ export async function runGroup<
         throw lErr;
       }
     }
+  }
+
+  if (hasSuccess) {
+    queueMicrotask(() => {
+      ctx.changes.emit();
+    });
   }
 
   return isArray ? results : results[0];
