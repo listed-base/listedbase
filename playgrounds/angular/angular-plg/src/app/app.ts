@@ -1,7 +1,6 @@
 import { Component, inject, Injector } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
 
-import { lQuery } from '@listedbase/core';
 import { angularReactive } from '@listedbase/angular-reactive';
 import { lSetting,list } from '@listedbase/core';
 import { sPosts } from './schemas/post';
@@ -24,12 +23,7 @@ lSetting.sources({
 export class App {
   inj = inject(Injector);
   posts = list(sPosts);
-  postsQuery = lQuery(this.posts, { take: 20 });
   
   async add() {
-   this.posts.create({
-    
-   })
-  
   }
 }
