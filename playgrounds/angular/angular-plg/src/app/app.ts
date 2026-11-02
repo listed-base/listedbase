@@ -2,7 +2,7 @@ import { Component, inject, Injector } from '@angular/core';
 import { CommonModule, JsonPipe } from '@angular/common';
 
 import { angularReactive } from '@listedbase/angular-reactive';
-import { lSetting,list } from '@listedbase/core';
+import { lSetting,list, lQuery} from '@listedbase/core';
 import { sPosts } from './schemas/post';
 import { lIndexeddb } from '@listedbase/indexeddb';
 // import { sUser } from './schemas/user';
@@ -25,5 +25,7 @@ export class App {
   posts = list(sPosts);
   
   async add() {
+  
+  
   }
 }

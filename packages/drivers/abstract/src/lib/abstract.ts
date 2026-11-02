@@ -1,4 +1,4 @@
-import { LError } from '@listedbase/core';
+
 
 export interface LDriverCapabilities {
   schema: boolean;
@@ -133,27 +133,19 @@ export abstract class LDataDriver implements IDataDriver {
 }
 
 let sourcesConfig: LSourcesConfig | null = null;
-
 export function registerSources(config: LSourcesConfig): void {
   if (sourcesConfig) {
-    throw new LError({
-      code: 'OP/INVALID',
-      message: 'Sources have already been registered. Duplicate registration is forbidden.',
-    });
+    throw new Error('[OP/INVALID]: Sources have already been registered. Duplicate registration is forbidden.'
+    );
   }
 
   if (!config || !config.primary || !config.primary.data) {
-    throw new LError({
-      code: 'VALIDATION/REQUIRED',
-      message: 'Primary data source is required in LSourcesConfig.',
-    });
+    throw new Error('[VALIDATION/REQUIRED]: Primary data source is required in LSourcesConfig.');
   }
 
   if (config.replica && config.primary.data === config.replica.data) {
-    throw new LError({
-      code: 'OP/INVALID',
-      message: 'Primary and Replica cannot use the exact same IDataDriver instance.',
-    });
+    throw new Error('[OP/INVALID]: Primary and Replica cannot use the exact same IDataDriver instance.');
+     
   }
 
   sourcesConfig = config;
@@ -161,10 +153,7 @@ export function registerSources(config: LSourcesConfig): void {
 
 export function getPrimarySource(): LSourceDefinition {
   if (!sourcesConfig) {
-    throw new LError({
-      code: 'DRIVER/CONNECTION',
-      message: 'No sources registered. Call lSetting.sources(...) first.',
-    });
+    throw new Error('[DRIVER/CONNECTION]: No sources registered. Call lSetting.sources(...) first.');
   }
   return sourcesConfig.primary;
 }
