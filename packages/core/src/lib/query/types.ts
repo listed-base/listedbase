@@ -1,5 +1,7 @@
 import { ZodObject } from 'zod/v4';
+import { IReactive } from '@listedbase/uni-reactive';
 import { LInfer } from '../infers';
+import { ApplySelect } from '../infers/output';
 import { LList } from '../list/api';
 import { LError } from '../error';
 
@@ -7,60 +9,84 @@ export interface QueryManyArgs<S extends ZodObject<any>> {
   where?: LInfer<S>['whereArgs'];
   sort?: LInfer<S>['sortArgs'];
   take?: number;
+  select?: LInfer<S>['selectArgs'];
 }
 
-export interface StatusSelection {
+export type ResolveSelected<S extends ZodObject<any>, Sel> = Sel extends LInfer<S>['selectArgs']
+  ? ApplySelect<LInfer<S>['base'], LInfer<S>['populations'], Sel>
+  : LInfer<S>['base'];
+
+// ============================================================
+// Status Selections
+// ============================================================
+
+export interface ManyStatusSelection {
   count?: boolean;
+  exists?: boolean;
   error?: boolean;
-  loading?: boolean;
-  refreshing?: boolean;
 }
 
-export type SelectedStatus<Sel extends StatusSelection> = {
+export interface SingleStatusSelection {
+  exists?: boolean;
+  error?: boolean;
+}
+
+export type SelectedStatus<Sel extends ManyStatusSelection> = {
   [K in keyof Sel as Sel[K] extends true ? K : never]: K extends 'count'
     ? () => number
+    : K extends 'exists'
+    ? () => boolean
     : K extends 'error'
     ? () => LError | null
-    : K extends 'loading'
-    ? () => boolean
-    : K extends 'refreshing'
-    ? () => boolean
     : never;
 };
 
-export interface LQueryBase<TData, TArgs> {
-  data: () => TData;
-  value: () => TArgs;
-  modify: (updater: (prev: TArgs) => TArgs) => void;
-  status: <Sel extends StatusSelection>(selection?: Sel) => SelectedStatus<Sel>;
-  destroy: () => void;
-}
+// ============================================================
+// Query Instances
+// ============================================================
 
-export interface LQueryManyInstance<S extends ZodObject<any>>
-  extends LQueryBase<LInfer<S>['base'][], QueryManyArgs<S>> {
+export interface LQueryManyInstance<S extends ZodObject<any>, Args extends QueryManyArgs<S> = QueryManyArgs<S>> {
+  data: IReactive<ResolveSelected<S, Args['select']>[]>['value'];
+  value: () => Args;
+  modify: (updater: (prev: Args) => Args) => void;
+  status: <Sel extends ManyStatusSelection>(selection?: Sel) => SelectedStatus<Sel>;
   hasNext: () => boolean;
   loadNext: () => Promise<void>;
 }
 
-export interface LQueryIdsInstance<S extends ZodObject<any>>
-  extends LQueryBase<LInfer<S>['base'][], string[]> {}
+export interface LQueryIdsInstance<S extends ZodObject<any>, Sel extends LInfer<S>['selectArgs'] | undefined = undefined> {
+  data: IReactive<ResolveSelected<S, Sel>[]>['value'];
+  value: () => string[];
+  modify: (updater: (prev: string[]) => string[]) => void;
+  status: <SelStatus extends ManyStatusSelection>(selection?: SelStatus) => SelectedStatus<SelStatus>;
+}
 
-export interface LQuerySingleInstance<S extends ZodObject<any>>
-  extends LQueryBase<LInfer<S>['base'] | null, { where: LInfer<S>['whereArgs'] }> {}
+export interface LQuerySingleInstance<S extends ZodObject<any>, Sel extends LInfer<S>['selectArgs'] | undefined = undefined> {
+  data: IReactive<ResolveSelected<S, Sel> | null>['value'];
+  value: () => { where: LInfer<S>['whereArgs']; select?: Sel };
+  modify: (updater: (prev: { where: LInfer<S>['whereArgs']; select?: Sel }) => { where: LInfer<S>['whereArgs']; select?: Sel }) => void;
+  status: <SelStatus extends SingleStatusSelection>(selection?: SelStatus) => SelectedStatus<SelStatus>;
+}
+
+// ============================================================
+// Main lQuery Function Interface
+// ============================================================
 
 export interface LQueryFunction {
-  <S extends ZodObject<any>>(
+  <S extends ZodObject<any>, Args extends QueryManyArgs<S>>(
     list: LList<S>,
-    args?: QueryManyArgs<S>
-  ): LQueryManyInstance<S>;
+    args?: Args
+  ): LQueryManyInstance<S, Args>;
 
   <S extends ZodObject<any>>(
     list: LList<S>,
     ids: string[]
   ): LQueryIdsInstance<S>;
 
-  single<S extends ZodObject<any>>(
+  single<S extends ZodObject<any>, Args extends { where: LInfer<S>['whereArgs']; select?: LInfer<S>['selectArgs'] }>(
     list: LList<S>,
-    args: { where: LInfer<S>['whereArgs'] }
-  ): LQuerySingleInstance<S>;
+    args: Args
+  ): LQuerySingleInstance<S, Args['select']>;
 }
+
+export declare const lQuery: LQueryFunction;
